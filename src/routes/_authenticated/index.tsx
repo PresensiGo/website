@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/")({
@@ -6,14 +5,5 @@ export const Route = createFileRoute("/_authenticated/")({
 });
 
 function Page() {
-  return (
-    <>
-      <div>
-        <Button>Angkatan</Button>
-        <Button>Jurusan</Button>
-        <Button>Kelas</Button>
-        <Button>Siswa</Button>
-      </div>
-    </>
-  );
+  return <></>;
 }

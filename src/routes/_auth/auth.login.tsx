@@ -16,7 +16,7 @@ import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const Route = createFileRoute("/auth/login")({
+export const Route = createFileRoute("/_auth/auth/login")({
   component: Page,
 });
 
