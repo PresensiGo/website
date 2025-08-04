@@ -1,8 +1,12 @@
 import type { Middleware } from "openapi-fetch";
+import { auth } from "./auth";
 
 export const middleware: Middleware = {
   onRequest: async ({ request }) => {
-    console.log({ request });
+    const token = auth.get();
+    if (token) {
+      request.headers.set("Authorization", `Bearer ${token.accessToken}`);
+    }
   },
   onResponse: async ({ response }) => {
     console.log("response", { response });

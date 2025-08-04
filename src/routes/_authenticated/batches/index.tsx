@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/batches/")({
 });
 
 function Page() {
-  const { data, isLoading, error } = $api.useQuery(
+  const { isLoading, isSuccess, data } = $api.useQuery(
     "get",
     "/api/v1/batch",
     undefined,
@@ -40,15 +41,14 @@ function Page() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 10 }).map((_, index) => (
-              <TableRow key={index}>
-                <td>Angkatan {index + 1}</td>
-                <td>
-                  <Button variant="ghost">Edit</Button>
-                  <Button variant="destructive">Hapus</Button>
-                </td>
-              </TableRow>
-            ))}
+            {isSuccess &&
+              data &&
+              data.batches.map((batch, index) => (
+                <TableRow key={"batch-item-" + index}>
+                  <TableCell>{batch.batch.name}</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </div>

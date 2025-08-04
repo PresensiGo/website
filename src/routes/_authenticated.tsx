@@ -1,6 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  redirect,
+} from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated")({
   component: RouteComponent,
@@ -10,14 +15,22 @@ export const Route = createFileRoute("/_authenticated")({
   },
 });
 
+const menus: { title: string; href: string }[] = [
+  { title: "Halaman Utama", href: "/" },
+  { title: "Manajemen Angkatan", href: "/batches" },
+  { title: "Manajemen Jurusan", href: "/majors" },
+  { title: "Manajemen Kelas", href: "/classrooms" },
+];
+
 function RouteComponent() {
   return (
     <>
       <div>
-        <Button>Manajemen Angkatan</Button>
-        <Button>Manajemen Jurusan</Button>
-        <Button>Manajemen Kelas</Button>
-        <Button>Manajemen Siswa</Button>
+        {menus.map((item, index) => (
+          <Button key={"menu-item-" + index} asChild>
+            <Link to={item.href}>{item.title}</Link>
+          </Button>
+        ))}
       </div>
 
       <Outlet />
