@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { Edit2Icon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/batches/")({
@@ -20,6 +20,10 @@ export const Route = createFileRoute("/_authenticated/batches/")({
 function Page() {
   const [dialogUpsertBatchState, setDialogUpsertBatchState] = useState<{
     open: boolean;
+    data?: {
+      id: number;
+      name: string;
+    };
   }>({ open: false });
 
   const { isLoading, isSuccess, data, refetch } = $api.useQuery(
@@ -50,7 +54,18 @@ function Page() {
               data.batches.map((batch, index) => (
                 <TableRow key={"batch-item-" + index}>
                   <TableCell>{batch.batch.name}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() =>
+                        setDialogUpsertBatchState({
+                          open: true,
+                          data: { id: batch.batch.id, name: batch.batch.name },
+                        })
+                      }
+                    >
+                      <Edit2Icon />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -61,9 +76,10 @@ function Page() {
       <UpsertBatchDialog
         open={dialogUpsertBatchState.open}
         onOpenChange={(open, status) => {
-          setDialogUpsertBatchState({ open });
+          setDialogUpsertBatchState({ open, data: undefined });
           if (status) refetch();
         }}
+        data={dialogUpsertBatchState.data}
       />
     </>
   );

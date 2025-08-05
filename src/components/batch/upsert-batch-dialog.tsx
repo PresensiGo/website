@@ -1,6 +1,7 @@
 import { $api } from "@/lib/api/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -27,7 +28,10 @@ import { Input } from "../ui/input";
 interface UpsertBatchDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
-  data?: {};
+  data?: {
+    id: number;
+    name: string;
+  };
 }
 
 const formSchema = z.object({
@@ -45,6 +49,10 @@ export const UpsertBatchDialog = ({
     resolver: zodResolver(formSchema),
   });
 
+  useEffect(() => {
+    if (data) form.reset({ name: data.name });
+  }, [data]);
+
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
     "/api/v1/batches",
@@ -58,13 +66,30 @@ export const UpsertBatchDialog = ({
       },
     }
   );
+  const { mutate: mutateUpdate, isPending: isPendingUpdate } = $api.useMutation(
+    "put",
+    "/api/v1/batches/{batch_id}",
+    {
+      onSuccess: () => {
+        toast.success("Berhasil!", {
+          description: "Perubahan data angkatan berhasil disimpan.",
+          position: "top-right",
+        });
+        onOpenChange(false, true);
+      },
+    }
+  );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutateCreate({
-      body: {
-        name: values.name,
-      },
-    });
+    if (data)
+      mutateUpdate({
+        params: { path: { batch_id: data.id } },
+        body: { name: values.name },
+      });
+    else
+      mutateCreate({
+        body: { name: values.name },
+      });
   };
 
   return (
@@ -72,9 +97,12 @@ export const UpsertBatchDialog = ({
       <Dialog open={open} onOpenChange={(e) => onOpenChange(e)}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Tambah Angkatan</DialogTitle>
+            <DialogTitle>
+              {data ? "Edit Angkatan" : "Tambah Angkatan"}
+            </DialogTitle>
             <DialogDescription>
-              Masukkan data berikut untuk menambahkan angkatan baru.
+              Masukkan data berikut untuk {data ? "mengedit" : "menambahkan"}{" "}
+              angkatan.
             </DialogDescription>
           </DialogHeader>
 
@@ -97,14 +125,16 @@ export const UpsertBatchDialog = ({
           </Form>
 
           <DialogFooter>
-            <DialogClose asChild disabled={isPendingCreate}>
+            <DialogClose asChild disabled={isPendingCreate || isPendingUpdate}>
               <Button>Batal</Button>
             </DialogClose>
             <Button
-              disabled={isPendingCreate}
+              disabled={isPendingCreate || isPendingUpdate}
               onClick={() => form.handleSubmit(onSubmit)()}
             >
-              {isPendingCreate && <Loader2Icon className="animate-spin" />}
+              {(isPendingCreate || isPendingUpdate) && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Simpan
             </Button>
           </DialogFooter>

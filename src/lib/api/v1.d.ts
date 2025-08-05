@@ -148,6 +148,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateBatch"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/classrooms/batches/{batch_id}": {
         parameters: {
             query?: never;
@@ -395,6 +411,9 @@ export interface components {
             name: string;
             /** @default password */
             password: string;
+        };
+        "requests.Update": {
+            name?: string;
         };
         "responses.ClassroomMajor": {
             classroom: components["schemas"]["domains.Classroom"];
@@ -681,6 +700,34 @@ export interface operations {
         requestBody: {
             content: {
                 "*/*": components["schemas"]["requests.Create"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["domains.Batch"];
+                };
+            };
+        };
+    };
+    updateBatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.Update"];
             };
         };
         responses: {
