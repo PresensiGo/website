@@ -27,10 +27,7 @@ function Page() {
     data?: { id: number; name: string };
   }>({ open: false });
 
-  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
-    "get",
-    "/api/v1/batches"
-  );
+  const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/batches");
 
   return (
     <>

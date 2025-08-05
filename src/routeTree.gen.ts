@@ -14,6 +14,7 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authenticated/setting/index'
 import { Route as AuthenticatedMajorsIndexRouteImport } from './routes/_authenticated/majors/index'
+import { Route as AuthenticatedClassroomsIndexRouteImport } from './routes/_authenticated/classrooms/index'
 import { Route as AuthenticatedBatchesIndexRouteImport } from './routes/_authenticated/batches/index'
 import { Route as AuthAuthRegisterRouteImport } from './routes/_auth/auth.register'
 import { Route as AuthAuthLoginRouteImport } from './routes/_auth/auth.login'
@@ -43,6 +44,12 @@ const AuthenticatedMajorsIndexRoute =
     path: '/majors/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedClassroomsIndexRoute =
+  AuthenticatedClassroomsIndexRouteImport.update({
+    id: '/classrooms/',
+    path: '/classrooms/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedBatchesIndexRoute =
   AuthenticatedBatchesIndexRouteImport.update({
     id: '/batches/',
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthAuthLoginRoute
   '/auth/register': typeof AuthAuthRegisterRoute
   '/batches': typeof AuthenticatedBatchesIndexRoute
+  '/classrooms': typeof AuthenticatedClassroomsIndexRoute
   '/majors': typeof AuthenticatedMajorsIndexRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
 }
@@ -73,6 +81,7 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthAuthLoginRoute
   '/auth/register': typeof AuthAuthRegisterRoute
   '/batches': typeof AuthenticatedBatchesIndexRoute
+  '/classrooms': typeof AuthenticatedClassroomsIndexRoute
   '/majors': typeof AuthenticatedMajorsIndexRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
 }
@@ -84,6 +93,7 @@ export interface FileRoutesById {
   '/_auth/auth/login': typeof AuthAuthLoginRoute
   '/_auth/auth/register': typeof AuthAuthRegisterRoute
   '/_authenticated/batches/': typeof AuthenticatedBatchesIndexRoute
+  '/_authenticated/classrooms/': typeof AuthenticatedClassroomsIndexRoute
   '/_authenticated/majors/': typeof AuthenticatedMajorsIndexRoute
   '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
 }
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/batches'
+    | '/classrooms'
     | '/majors'
     | '/setting'
   fileRoutesByTo: FileRoutesByTo
@@ -102,6 +113,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/batches'
+    | '/classrooms'
     | '/majors'
     | '/setting'
   id:
@@ -112,6 +124,7 @@ export interface FileRouteTypes {
     | '/_auth/auth/login'
     | '/_auth/auth/register'
     | '/_authenticated/batches/'
+    | '/_authenticated/classrooms/'
     | '/_authenticated/majors/'
     | '/_authenticated/setting/'
   fileRoutesById: FileRoutesById
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMajorsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/classrooms/': {
+      id: '/_authenticated/classrooms/'
+      path: '/classrooms'
+      fullPath: '/classrooms'
+      preLoaderRoute: typeof AuthenticatedClassroomsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/batches/': {
       id: '/_authenticated/batches/'
       path: '/batches'
@@ -197,6 +217,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBatchesIndexRoute: typeof AuthenticatedBatchesIndexRoute
+  AuthenticatedClassroomsIndexRoute: typeof AuthenticatedClassroomsIndexRoute
   AuthenticatedMajorsIndexRoute: typeof AuthenticatedMajorsIndexRoute
   AuthenticatedSettingIndexRoute: typeof AuthenticatedSettingIndexRoute
 }
@@ -204,6 +225,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBatchesIndexRoute: AuthenticatedBatchesIndexRoute,
+  AuthenticatedClassroomsIndexRoute: AuthenticatedClassroomsIndexRoute,
   AuthenticatedMajorsIndexRoute: AuthenticatedMajorsIndexRoute,
   AuthenticatedSettingIndexRoute: AuthenticatedSettingIndexRoute,
 }

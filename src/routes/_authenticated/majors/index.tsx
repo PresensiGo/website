@@ -34,10 +34,7 @@ function Page() {
     };
   }>({ open: false });
 
-  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
-    "get",
-    "/api/v1/majors"
-  );
+  const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/majors");
 
   return (
     <>
