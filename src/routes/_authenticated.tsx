@@ -23,6 +23,8 @@ const menus: { title: string; href: string }[] = [
   { title: "Manajemen Jurusan", href: "/majors" },
   { title: "Manajemen Kelas", href: "/classrooms" },
   { title: "Pengaturan", href: "/setting" },
+  { title: "Presensi Kehadiran", href: "/general-attendance" },
+  { title: "Presensi Mata Pelajaran", href: "/subject-attendance" },
 ];
 
 function RouteComponent() {

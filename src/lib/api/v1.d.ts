@@ -212,6 +212,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/general_attendances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllGeneralAttendances"];
+        put?: never;
+        post: operations["createGeneralAttendance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/latenesses": {
         parameters: {
             query?: never;
@@ -428,6 +444,13 @@ export interface components {
             major_id: number;
             name: string;
         };
+        "domains.GeneralAttendance": {
+            code: string;
+            datetime: string;
+            id: number;
+            note: string;
+            school_id: number;
+        };
         "domains.Lateness": {
             date: string;
             id: number;
@@ -451,6 +474,10 @@ export interface components {
         };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
+        "requests.CreateGeneralAttendance": {
+            datetime?: string;
+            note?: string;
+        };
         "requests.Login": {
             /** @default email@email.com */
             email: string;
@@ -475,6 +502,9 @@ export interface components {
             classroom: components["schemas"]["domains.Classroom"];
             major: components["schemas"]["domains.Major"];
         };
+        "responses.CreateGeneralAttendance": {
+            general_attendance: components["schemas"]["domains.GeneralAttendance"];
+        };
         "responses.GetAll": {
             classrooms: components["schemas"]["domains.Classroom"][];
         };
@@ -483,6 +513,9 @@ export interface components {
         };
         "responses.GetAllClassroomWithMajors": {
             data: components["schemas"]["responses.ClassroomMajor"][];
+        };
+        "responses.GetAllGeneralAttendances": {
+            general_attendances: components["schemas"]["domains.GeneralAttendance"][];
         };
         "responses.GetAllMajorsByBatchId": {
             majors: components["schemas"]["domains.Major"][];
@@ -883,6 +916,51 @@ export interface operations {
                 };
                 content: {
                     "*/*": string;
+                };
+            };
+        };
+    };
+    getAllGeneralAttendances: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllGeneralAttendances"];
+                };
+            };
+        };
+    };
+    createGeneralAttendance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.CreateGeneralAttendance"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.CreateGeneralAttendance"];
                 };
             };
         };
