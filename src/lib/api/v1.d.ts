@@ -228,7 +228,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/majors/batch/{batch_id}": {
+    "/api/v1/majors": {
         parameters: {
             query?: never;
             header?: never;
@@ -236,6 +236,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["getAllMajors"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/majors/batch/{batch_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllMajorsByBatchId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -425,7 +441,7 @@ export interface components {
         "responses.GetAllClassroomWithMajors": {
             data: components["schemas"]["responses.ClassroomMajor"][];
         };
-        "responses.GetAllMajors": {
+        "responses.GetAllMajorsByBatchId": {
             majors: components["schemas"]["domains.Major"][];
         };
         "responses.Login": {
@@ -908,6 +924,26 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["domains.Major"][];
+                };
+            };
+        };
+    };
+    getAllMajorsByBatchId: {
+        parameters: {
+            query?: never;
+            header?: never;
             path: {
                 /** @description Batch Id */
                 batch_id: number;
@@ -922,7 +958,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["responses.GetAllMajors"];
+                    "*/*": components["schemas"]["responses.GetAllMajorsByBatchId"];
                 };
             };
         };
