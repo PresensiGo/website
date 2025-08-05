@@ -245,7 +245,7 @@
                 }
             }
         },
-        "/api/v1/batch": {
+        "/api/v1/batches": {
             "get": {
                 "tags": [
                     "batch"
@@ -256,6 +256,31 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.GetAllBatches"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "batch"
+                ],
+                "operationId": "createBatch",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.Create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domains.Batch"
                         }
                     }
                 }
@@ -558,7 +583,7 @@
                 "attendances": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Attendance"
+                        "$ref": "#/definitions/domains.Attendance"
                     }
                 }
             }
@@ -572,7 +597,7 @@
                 "latenesses": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Lateness"
+                        "$ref": "#/definitions/domains.Lateness"
                     }
                 }
             }
@@ -586,7 +611,7 @@
                 "students": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Student"
+                        "$ref": "#/definitions/domains.Student"
                     }
                 }
             }
@@ -600,7 +625,7 @@
                 "students": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/combined.StudentMajorClassroom"
+                        "$ref": "#/definitions/domains.StudentMajorClassroom"
                     }
                 }
             }
@@ -613,10 +638,10 @@
             ],
             "properties": {
                 "attendanceStudent": {
-                    "$ref": "#/definitions/dto.AttendanceDetail"
+                    "$ref": "#/definitions/domains.AttendanceDetail"
                 },
                 "student": {
-                    "$ref": "#/definitions/dto.Student"
+                    "$ref": "#/definitions/domains.Student"
                 }
             }
         },
@@ -628,7 +653,7 @@
             ],
             "properties": {
                 "attendance": {
-                    "$ref": "#/definitions/dto.Attendance"
+                    "$ref": "#/definitions/domains.Attendance"
                 },
                 "items": {
                     "type": "array",
@@ -648,11 +673,11 @@
                 "items": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/combined.StudentMajorClassroom"
+                        "$ref": "#/definitions/domains.StudentMajorClassroom"
                     }
                 },
                 "lateness": {
-                    "$ref": "#/definitions/dto.Lateness"
+                    "$ref": "#/definitions/domains.Lateness"
                 }
             }
         },
@@ -664,45 +689,7 @@
                 }
             }
         },
-        "combined.BatchInfo": {
-            "type": "object",
-            "required": [
-                "batch",
-                "classrooms_count",
-                "majors_count"
-            ],
-            "properties": {
-                "batch": {
-                    "$ref": "#/definitions/dto.Batch"
-                },
-                "classrooms_count": {
-                    "type": "integer"
-                },
-                "majors_count": {
-                    "type": "integer"
-                }
-            }
-        },
-        "combined.StudentMajorClassroom": {
-            "type": "object",
-            "required": [
-                "classroom",
-                "major",
-                "student"
-            ],
-            "properties": {
-                "classroom": {
-                    "$ref": "#/definitions/dto.Classroom"
-                },
-                "major": {
-                    "$ref": "#/definitions/dto.Major"
-                },
-                "student": {
-                    "$ref": "#/definitions/dto.Student"
-                }
-            }
-        },
-        "dto.Attendance": {
+        "domains.Attendance": {
             "type": "object",
             "required": [
                 "classroom_id",
@@ -721,7 +708,7 @@
                 }
             }
         },
-        "dto.AttendanceDetail": {
+        "domains.AttendanceDetail": {
             "type": "object",
             "required": [
                 "attendance_id",
@@ -748,7 +735,7 @@
                 }
             }
         },
-        "dto.Batch": {
+        "domains.Batch": {
             "type": "object",
             "required": [
                 "id",
@@ -767,7 +754,26 @@
                 }
             }
         },
-        "dto.Classroom": {
+        "domains.BatchInfo": {
+            "type": "object",
+            "required": [
+                "batch",
+                "classrooms_count",
+                "majors_count"
+            ],
+            "properties": {
+                "batch": {
+                    "$ref": "#/definitions/domains.Batch"
+                },
+                "classrooms_count": {
+                    "type": "integer"
+                },
+                "majors_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domains.Classroom": {
             "type": "object",
             "required": [
                 "id",
@@ -786,7 +792,7 @@
                 }
             }
         },
-        "dto.Lateness": {
+        "domains.Lateness": {
             "type": "object",
             "required": [
                 "date",
@@ -805,7 +811,7 @@
                 }
             }
         },
-        "dto.Major": {
+        "domains.Major": {
             "type": "object",
             "required": [
                 "batch_id",
@@ -824,7 +830,7 @@
                 }
             }
         },
-        "dto.Student": {
+        "domains.Student": {
             "type": "object",
             "required": [
                 "classroom_id",
@@ -847,6 +853,25 @@
                 }
             }
         },
+        "domains.StudentMajorClassroom": {
+            "type": "object",
+            "required": [
+                "classroom",
+                "major",
+                "student"
+            ],
+            "properties": {
+                "classroom": {
+                    "$ref": "#/definitions/domains.Classroom"
+                },
+                "major": {
+                    "$ref": "#/definitions/domains.Major"
+                },
+                "student": {
+                    "$ref": "#/definitions/domains.Student"
+                }
+            }
+        },
         "models.AttendanceStatus": {
             "type": "string",
             "enum": [
@@ -861,6 +886,14 @@
                 "AttendanceSick",
                 "AttendanceAlpha"
             ]
+        },
+        "requests.Create": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
         },
         "requests.Login": {
             "type": "object",
@@ -921,10 +954,10 @@
             ],
             "properties": {
                 "classroom": {
-                    "$ref": "#/definitions/dto.Classroom"
+                    "$ref": "#/definitions/domains.Classroom"
                 },
                 "major": {
-                    "$ref": "#/definitions/dto.Major"
+                    "$ref": "#/definitions/domains.Major"
                 }
             }
         },
@@ -937,7 +970,7 @@
                 "batches": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/combined.BatchInfo"
+                        "$ref": "#/definitions/domains.BatchInfo"
                     }
                 }
             }
@@ -965,7 +998,7 @@
                 "majors": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Major"
+                        "$ref": "#/definitions/domains.Major"
                     }
                 }
             }

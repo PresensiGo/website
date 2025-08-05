@@ -132,7 +132,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/batch": {
+    "/api/v1/batches": {
         parameters: {
             query?: never;
             header?: never;
@@ -141,7 +141,7 @@ export interface paths {
         };
         get: operations["getAllBatches"];
         put?: never;
-        post?: never;
+        post: operations["createBatch"];
         delete?: never;
         options?: never;
         head?: never;
@@ -297,82 +297,85 @@ export interface components {
             date: string;
         };
         GetAllAttendancesRes: {
-            attendances: components["schemas"]["dto.Attendance"][];
+            attendances: components["schemas"]["domains.Attendance"][];
         };
         GetAllLatenessesRes: {
-            latenesses: components["schemas"]["dto.Lateness"][];
+            latenesses: components["schemas"]["domains.Lateness"][];
         };
         GetAllStudentsByClassroomIdRes: {
-            students: components["schemas"]["dto.Student"][];
+            students: components["schemas"]["domains.Student"][];
         };
         GetAllStudentsRes: {
-            students: components["schemas"]["combined.StudentMajorClassroom"][];
+            students: components["schemas"]["domains.StudentMajorClassroom"][];
         };
         GetAttendanceItemRes: {
-            attendanceStudent: components["schemas"]["dto.AttendanceDetail"];
-            student: components["schemas"]["dto.Student"];
+            attendanceStudent: components["schemas"]["domains.AttendanceDetail"];
+            student: components["schemas"]["domains.Student"];
         };
         GetAttendanceRes: {
-            attendance: components["schemas"]["dto.Attendance"];
+            attendance: components["schemas"]["domains.Attendance"];
             items: components["schemas"]["GetAttendanceItemRes"][];
         };
         GetLatenessRes: {
-            items: components["schemas"]["combined.StudentMajorClassroom"][];
-            lateness: components["schemas"]["dto.Lateness"];
+            items: components["schemas"]["domains.StudentMajorClassroom"][];
+            lateness: components["schemas"]["domains.Lateness"];
         };
         RefreshTokenTTLReq: {
             refresh_token?: string;
         };
-        "combined.BatchInfo": {
-            batch: components["schemas"]["dto.Batch"];
-            classrooms_count: number;
-            majors_count: number;
-        };
-        "combined.StudentMajorClassroom": {
-            classroom: components["schemas"]["dto.Classroom"];
-            major: components["schemas"]["dto.Major"];
-            student: components["schemas"]["dto.Student"];
-        };
-        "dto.Attendance": {
+        "domains.Attendance": {
             classroom_id: number;
             date: string;
             id: number;
         };
-        "dto.AttendanceDetail": {
+        "domains.AttendanceDetail": {
             attendance_id: number;
             id: number;
             note: string;
             status: components["schemas"]["models.AttendanceStatus"];
             student_id: number;
         };
-        "dto.Batch": {
+        "domains.Batch": {
             id: number;
             name: string;
             school_id: number;
         };
-        "dto.Classroom": {
+        "domains.BatchInfo": {
+            batch: components["schemas"]["domains.Batch"];
+            classrooms_count: number;
+            majors_count: number;
+        };
+        "domains.Classroom": {
             id: number;
             major_id: number;
             name: string;
         };
-        "dto.Lateness": {
+        "domains.Lateness": {
             date: string;
             id: number;
             school_id: number;
         };
-        "dto.Major": {
+        "domains.Major": {
             batch_id: number;
             id: number;
             name: string;
         };
-        "dto.Student": {
+        "domains.Student": {
             classroom_id: number;
             id: number;
             name: string;
             nis: string;
         };
+        "domains.StudentMajorClassroom": {
+            classroom: components["schemas"]["domains.Classroom"];
+            major: components["schemas"]["domains.Major"];
+            student: components["schemas"]["domains.Student"];
+        };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
+        "requests.Create": {
+            name?: string;
+        };
         "requests.Login": {
             /** @default email@email.com */
             email: string;
@@ -394,17 +397,17 @@ export interface components {
             password: string;
         };
         "responses.ClassroomMajor": {
-            classroom: components["schemas"]["dto.Classroom"];
-            major: components["schemas"]["dto.Major"];
+            classroom: components["schemas"]["domains.Classroom"];
+            major: components["schemas"]["domains.Major"];
         };
         "responses.GetAllBatches": {
-            batches: components["schemas"]["combined.BatchInfo"][];
+            batches: components["schemas"]["domains.BatchInfo"][];
         };
         "responses.GetAllClassroomWithMajors": {
             data: components["schemas"]["responses.ClassroomMajor"][];
         };
         "responses.GetAllMajors": {
-            majors: components["schemas"]["dto.Major"][];
+            majors: components["schemas"]["domains.Major"][];
         };
         "responses.Login": {
             access_token: string;
@@ -663,6 +666,31 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.GetAllBatches"];
+                };
+            };
+        };
+    };
+    createBatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.Create"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["domains.Batch"];
                 };
             };
         };

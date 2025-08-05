@@ -1,3 +1,4 @@
+import { UpsertBatchDialog } from "@/components/batch";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,20 +11,28 @@ import {
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/batches/")({
   component: Page,
 });
 
 function Page() {
-  const { isLoading, isSuccess, data } = $api.useQuery("get", "/api/v1/batch");
+  const [dialogUpsertBatchState, setDialogUpsertBatchState] = useState<{
+    open: boolean;
+  }>({ open: false });
+
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
+    "get",
+    "/api/v1/batches"
+  );
 
   return (
     <>
       <div className="container mx-auto">
         <p>halaman daftar angkatan</p>
 
-        <Button>
+        <Button onClick={() => setDialogUpsertBatchState({ open: true })}>
           <PlusIcon />
           Angkatan Baru
         </Button>
@@ -47,6 +56,15 @@ function Page() {
           </TableBody>
         </Table>
       </div>
+
+      {/* dialogs */}
+      <UpsertBatchDialog
+        open={dialogUpsertBatchState.open}
+        onOpenChange={(open, status) => {
+          setDialogUpsertBatchState({ open });
+          if (status) refetch();
+        }}
+      />
     </>
   );
 }
