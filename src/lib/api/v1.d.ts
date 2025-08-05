@@ -260,6 +260,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/majors/{major_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateMajor"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/reset": {
         parameters: {
             query?: never;
@@ -358,7 +374,14 @@ export interface components {
         "api_internal_features_batch_dto_requests.Create": {
             name?: string;
         };
+        "api_internal_features_batch_dto_requests.Update": {
+            name?: string;
+        };
         "api_internal_features_major_dto_requests.Create": {
+            batch_id: number;
+            name: string;
+        };
+        "api_internal_features_major_dto_requests.Update": {
             batch_id: number;
             name: string;
         };
@@ -431,9 +454,6 @@ export interface components {
             name: string;
             /** @default password */
             password: string;
-        };
-        "requests.Update": {
-            name?: string;
         };
         "responses.ClassroomMajor": {
             classroom: components["schemas"]["domains.Classroom"];
@@ -747,7 +767,7 @@ export interface operations {
         /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.Update"];
+                "*/*": components["schemas"]["api_internal_features_batch_dto_requests.Update"];
             };
         };
         responses: {
@@ -988,6 +1008,34 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.GetAllMajorsByBatchId"];
+                };
+            };
+        };
+    };
+    updateMajor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description major id */
+                major_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["api_internal_features_major_dto_requests.Update"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["domains.Major"];
                 };
             };
         };

@@ -25,6 +25,7 @@ import {
 import { $api } from "@/lib/api/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -43,7 +44,11 @@ const formSchema = z.object({
 interface UpsertMajorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
-  data?: {};
+  data?: {
+    id: number;
+    batchId: number;
+    name: string;
+  };
 }
 
 export const UpsertMajorDialog = ({
@@ -56,6 +61,14 @@ export const UpsertMajorDialog = ({
     isSuccess: isSuccessBatches,
     data: dataBatches,
   } = $api.useQuery("get", "/api/v1/batches");
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+
+  useEffect(() => {
+    if (data) form.reset({ batchId: data.batchId, name: data.name });
+  }, [data]);
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
@@ -70,13 +83,28 @@ export const UpsertMajorDialog = ({
       },
     }
   );
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-  });
+  const { mutate: mutateUpdate, isPending: isPendingUpdate } = $api.useMutation(
+    "put",
+    "/api/v1/majors/{major_id}",
+    {
+      onSuccess: () => {
+        toast.success("Berhasil!", {
+          description: "Perubahan jurusan berhasil disimpan.",
+          position: "top-right",
+        });
+        onOpenChange(false, true);
+      },
+    }
+  );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    mutateCreate({ body: { batch_id: values.batchId, name: values.name } });
+    if (data)
+      mutateUpdate({
+        params: { path: { major_id: data.id } },
+        body: { batch_id: values.batchId, name: values.name },
+      });
+    else
+      mutateCreate({ body: { batch_id: values.batchId, name: values.name } });
   };
 
   return (
@@ -144,14 +172,16 @@ export const UpsertMajorDialog = ({
           </Form>
 
           <DialogFooter>
-            <DialogClose asChild disabled={isPendingCreate}>
+            <DialogClose asChild disabled={isPendingCreate || isPendingUpdate}>
               <Button>Batal</Button>
             </DialogClose>
             <Button
-              disabled={isPendingCreate}
+              disabled={isPendingCreate || isPendingUpdate}
               onClick={() => form.handleSubmit(onSubmit)()}
             >
-              {isPendingCreate && <Loader2Icon className="animate-spin" />}
+              {(isPendingCreate || isPendingUpdate) && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Simpan
             </Button>
           </DialogFooter>

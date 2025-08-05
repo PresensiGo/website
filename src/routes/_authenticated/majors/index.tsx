@@ -20,6 +20,11 @@ export const Route = createFileRoute("/_authenticated/majors/")({
 function Page() {
   const [upsertMajorDialogState, setUpsertMajorDialogState] = useState<{
     open: boolean;
+    data?: {
+      id: number;
+      batchId: number;
+      name: string;
+    };
   }>({ open: false });
 
   const { isLoading, isSuccess, data, refetch } = $api.useQuery(
@@ -51,7 +56,19 @@ function Page() {
                 <TableRow key={"major-item-" + index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
-                    <Button size={"icon"}>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setUpsertMajorDialogState({
+                          open: true,
+                          data: {
+                            id: item.id,
+                            batchId: item.batch_id,
+                            name: item.name,
+                          },
+                        })
+                      }
+                    >
                       <Edit2Icon />
                     </Button>
                     <Button size={"icon"}>
@@ -71,6 +88,7 @@ function Page() {
           setUpsertMajorDialogState({ open });
           if (status) refetch();
         }}
+        data={upsertMajorDialogState.data}
       />
     </>
   );
