@@ -164,6 +164,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/classrooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllClassrooms"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/classrooms/batches/{batch_id}": {
         parameters: {
             query?: never;
@@ -458,6 +474,9 @@ export interface components {
         "responses.ClassroomMajor": {
             classroom: components["schemas"]["domains.Classroom"];
             major: components["schemas"]["domains.Major"];
+        };
+        "responses.GetAll": {
+            classrooms: components["schemas"]["domains.Classroom"][];
         };
         "responses.GetAllBatches": {
             batches: components["schemas"]["domains.BatchInfo"][];
@@ -801,6 +820,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": string;
+                };
+            };
+        };
+    };
+    getAllClassrooms: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAll"];
                 };
             };
         };
