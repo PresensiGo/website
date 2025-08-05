@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { $api } from "@/lib/api/api";
 import { auth } from "@/lib/auth";
 import {
   createFileRoute,
@@ -6,6 +7,7 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
   component: RouteComponent,
@@ -20,9 +22,25 @@ const menus: { title: string; href: string }[] = [
   { title: "Manajemen Angkatan", href: "/batches" },
   { title: "Manajemen Jurusan", href: "/majors" },
   { title: "Manajemen Kelas", href: "/classrooms" },
+  { title: "Pengaturan", href: "/setting" },
 ];
 
 function RouteComponent() {
+  const { mutate: mutateRefreshTokenTTL } = $api.useMutation(
+    "post",
+    "/api/v1/auth/refresh-token-ttl"
+  );
+
+  useEffect(() => {
+    const token = auth.get();
+    if (token)
+      mutateRefreshTokenTTL({
+        body: {
+          refresh_token: token.refreshToken,
+        },
+      });
+  }, []);
+
   return (
     <>
       <div>

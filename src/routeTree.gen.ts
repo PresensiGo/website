@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authenticated/setting/index'
 import { Route as AuthenticatedMajorsIndexRouteImport } from './routes/_authenticated/majors/index'
 import { Route as AuthenticatedBatchesIndexRouteImport } from './routes/_authenticated/batches/index'
 import { Route as AuthAuthRegisterRouteImport } from './routes/_auth/auth.register'
@@ -30,6 +31,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSettingIndexRoute =
+  AuthenticatedSettingIndexRouteImport.update({
+    id: '/setting/',
+    path: '/setting/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedMajorsIndexRoute =
   AuthenticatedMajorsIndexRouteImport.update({
     id: '/majors/',
@@ -59,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthAuthRegisterRoute
   '/batches': typeof AuthenticatedBatchesIndexRoute
   '/majors': typeof AuthenticatedMajorsIndexRoute
+  '/setting': typeof AuthenticatedSettingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthAuthRegisterRoute
   '/batches': typeof AuthenticatedBatchesIndexRoute
   '/majors': typeof AuthenticatedMajorsIndexRoute
+  '/setting': typeof AuthenticatedSettingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -76,12 +85,25 @@ export interface FileRoutesById {
   '/_auth/auth/register': typeof AuthAuthRegisterRoute
   '/_authenticated/batches/': typeof AuthenticatedBatchesIndexRoute
   '/_authenticated/majors/': typeof AuthenticatedMajorsIndexRoute
+  '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/login' | '/auth/register' | '/batches' | '/majors'
+  fullPaths:
+    | '/'
+    | '/auth/login'
+    | '/auth/register'
+    | '/batches'
+    | '/majors'
+    | '/setting'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login' | '/auth/register' | '/batches' | '/majors'
+  to:
+    | '/'
+    | '/auth/login'
+    | '/auth/register'
+    | '/batches'
+    | '/majors'
+    | '/setting'
   id:
     | '__root__'
     | '/_auth'
@@ -91,6 +113,7 @@ export interface FileRouteTypes {
     | '/_auth/auth/register'
     | '/_authenticated/batches/'
     | '/_authenticated/majors/'
+    | '/_authenticated/setting/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/setting/': {
+      id: '/_authenticated/setting/'
+      path: '/setting'
+      fullPath: '/setting'
+      preLoaderRoute: typeof AuthenticatedSettingIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/majors/': {
@@ -168,12 +198,14 @@ interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBatchesIndexRoute: typeof AuthenticatedBatchesIndexRoute
   AuthenticatedMajorsIndexRoute: typeof AuthenticatedMajorsIndexRoute
+  AuthenticatedSettingIndexRoute: typeof AuthenticatedSettingIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBatchesIndexRoute: AuthenticatedBatchesIndexRoute,
   AuthenticatedMajorsIndexRoute: AuthenticatedMajorsIndexRoute,
+  AuthenticatedSettingIndexRoute: AuthenticatedSettingIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

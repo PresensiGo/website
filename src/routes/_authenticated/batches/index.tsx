@@ -16,12 +16,7 @@ export const Route = createFileRoute("/_authenticated/batches/")({
 });
 
 function Page() {
-  const { isLoading, isSuccess, data } = $api.useQuery(
-    "get",
-    "/api/v1/batch",
-    undefined,
-    { retry: false }
-  );
+  const { isLoading, isSuccess, data } = $api.useQuery("get", "/api/v1/batch");
 
   return (
     <>
