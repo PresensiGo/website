@@ -1,4 +1,4 @@
-import { UpsertBatchDialog } from "@/components/batch";
+import { DeleteBatchDialog, UpsertBatchDialog } from "@/components/batch";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { Edit2Icon, PlusIcon } from "lucide-react";
+import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/batches/")({
@@ -20,10 +20,11 @@ export const Route = createFileRoute("/_authenticated/batches/")({
 function Page() {
   const [dialogUpsertBatchState, setDialogUpsertBatchState] = useState<{
     open: boolean;
-    data?: {
-      id: number;
-      name: string;
-    };
+    data?: { id: number; name: string };
+  }>({ open: false });
+  const [dialogDeleteBatchState, setDialogDeleteBatchState] = useState<{
+    open: boolean;
+    data?: { id: number; name: string };
   }>({ open: false });
 
   const { isLoading, isSuccess, data, refetch } = $api.useQuery(
@@ -56,6 +57,7 @@ function Page() {
                   <TableCell>{batch.batch.name}</TableCell>
                   <TableCell>
                     <Button
+                      size={"icon"}
                       onClick={() =>
                         setDialogUpsertBatchState({
                           open: true,
@@ -64,6 +66,17 @@ function Page() {
                       }
                     >
                       <Edit2Icon />
+                    </Button>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setDialogDeleteBatchState({
+                          open: true,
+                          data: { id: batch.batch.id, name: batch.batch.name },
+                        })
+                      }
+                    >
+                      <TrashIcon />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -80,6 +93,14 @@ function Page() {
           if (status) refetch();
         }}
         data={dialogUpsertBatchState.data}
+      />
+      <DeleteBatchDialog
+        open={dialogDeleteBatchState.open}
+        onOpenChange={(open, status) => {
+          setDialogDeleteBatchState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        data={dialogDeleteBatchState.data}
       />
     </>
   );

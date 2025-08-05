@@ -158,7 +158,7 @@ export interface paths {
         get?: never;
         put: operations["updateBatch"];
         post?: never;
-        delete?: never;
+        delete: operations["deleteBatch"];
         options?: never;
         head?: never;
         patch?: never;
@@ -738,6 +738,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["domains.Batch"];
+                };
+            };
+        };
+    };
+    deleteBatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
                 };
             };
         };
