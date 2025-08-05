@@ -1,3 +1,4 @@
+import { UpsertMajorDialog } from "@/components/major";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,21 +10,29 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/majors/")({
   component: Page,
 });
 
 function Page() {
-  const { isLoading, isSuccess, data } = $api.useQuery("get", "/api/v1/majors");
+  const [upsertMajorDialogState, setUpsertMajorDialogState] = useState<{
+    open: boolean;
+  }>({ open: false });
+
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
+    "get",
+    "/api/v1/majors"
+  );
 
   return (
     <>
       <div className="container mx-auto">
         <p>halaman daftar jurusan</p>
 
-        <Button>
+        <Button onClick={() => setUpsertMajorDialogState({ open: true })}>
           <PlusIcon />
           Jurusan Baru
         </Button>
@@ -41,11 +50,28 @@ function Page() {
               data.map((item, index) => (
                 <TableRow key={"major-item-" + index}>
                   <TableCell>{item.name}</TableCell>
+                  <TableCell>
+                    <Button size={"icon"}>
+                      <Edit2Icon />
+                    </Button>
+                    <Button size={"icon"}>
+                      <TrashIcon />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
       </div>
+
+      {/* dialogs */}
+      <UpsertMajorDialog
+        open={upsertMajorDialogState.open}
+        onOpenChange={(open, status) => {
+          setUpsertMajorDialogState({ open });
+          if (status) refetch();
+        }}
+      />
     </>
   );
 }

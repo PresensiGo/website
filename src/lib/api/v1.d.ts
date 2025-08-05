@@ -237,7 +237,7 @@ export interface paths {
         };
         get: operations["getAllMajors"];
         put?: never;
-        post?: never;
+        post: operations["createMajor"];
         delete?: never;
         options?: never;
         head?: never;
@@ -355,6 +355,13 @@ export interface components {
         RefreshTokenTTLReq: {
             refresh_token?: string;
         };
+        "api_internal_features_batch_dto_requests.Create": {
+            name?: string;
+        };
+        "api_internal_features_major_dto_requests.Create": {
+            batch_id: number;
+            name: string;
+        };
         "domains.Attendance": {
             classroom_id: number;
             date: string;
@@ -405,9 +412,6 @@ export interface components {
         };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
-        "requests.Create": {
-            name?: string;
-        };
         "requests.Login": {
             /** @default email@email.com */
             email: string;
@@ -715,7 +719,7 @@ export interface operations {
         /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.Create"];
+                "*/*": components["schemas"]["api_internal_features_batch_dto_requests.Create"];
             };
         };
         responses: {
@@ -936,6 +940,31 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["domains.Major"][];
+                };
+            };
+        };
+    };
+    createMajor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["api_internal_features_major_dto_requests.Create"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["domains.Major"];
                 };
             };
         };
