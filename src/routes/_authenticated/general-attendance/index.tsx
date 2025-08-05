@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/general-attendance/")({
@@ -20,7 +20,11 @@ export const Route = createFileRoute("/_authenticated/general-attendance/")({
 function RouteComponent() {
   const [upsertDialogState, setUpsertDialogState] = useState<{
     open: boolean;
-    data?: {};
+    data?: {
+      id: number;
+      datetime: string;
+      note: string;
+    };
   }>({ open: false });
 
   const { isSuccess, data, refetch } = $api.useQuery(
@@ -56,6 +60,26 @@ function RouteComponent() {
               data.general_attendances.map((item, index) => (
                 <TableRow key={"general-attendance-item-" + index}>
                   <TableCell>{item.datetime}</TableCell>
+                  <TableCell>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setUpsertDialogState({
+                          open: true,
+                          data: {
+                            id: item.id,
+                            datetime: item.datetime,
+                            note: item.note,
+                          },
+                        })
+                      }
+                    >
+                      <Edit2Icon />
+                    </Button>
+                    <Button size={"icon"}>
+                      <TrashIcon />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

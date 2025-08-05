@@ -228,6 +228,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/general_attendances/{general_attendance_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateGeneralAttendances"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/latenesses": {
         parameters: {
             query?: never;
@@ -498,6 +514,10 @@ export interface components {
             /** @default password */
             password: string;
         };
+        "requests.UpdateGeneralAttendance": {
+            datetime?: string;
+            note?: string;
+        };
         "responses.ClassroomMajor": {
             classroom: components["schemas"]["domains.Classroom"];
             major: components["schemas"]["domains.Major"];
@@ -532,6 +552,9 @@ export interface components {
         "responses.Register": {
             access_token: string;
             refresh_token: string;
+        };
+        "responses.UpdateGeneralAttendance": {
+            general_attendance: components["schemas"]["domains.GeneralAttendance"];
         };
     };
     responses: never;
@@ -961,6 +984,34 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.CreateGeneralAttendance"];
+                };
+            };
+        };
+    };
+    updateGeneralAttendances: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description general attendance id */
+                general_attendance_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.UpdateGeneralAttendance"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.UpdateGeneralAttendance"];
                 };
             };
         };

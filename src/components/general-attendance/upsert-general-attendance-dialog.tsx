@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2Icon } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -38,7 +39,11 @@ const formSchema = z.object({
 interface UpsertGeneralAttendanceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
-  data?: {};
+  data?: {
+    id: number;
+    datetime: string;
+    note: string;
+  };
 }
 export const UpsertGeneralAttendanceDialog = ({
   open,
@@ -53,6 +58,19 @@ export const UpsertGeneralAttendanceDialog = ({
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      const date = format(data.datetime, "yyyy-MM-dd");
+      const time = format(data.datetime, "HH:mm:ss");
+
+      form.reset({
+        date: new Date(date),
+        time,
+        note: data.note,
+      });
+    }
+  }, [data]);
+
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
     "/api/v1/general_attendances",
@@ -66,13 +84,30 @@ export const UpsertGeneralAttendanceDialog = ({
       },
     }
   );
+  const { mutate: mutateUpdate, isPending: isPendingUpdate } = $api.useMutation(
+    "put",
+    "/api/v1/general_attendances/{general_attendance_id}",
+    {
+      onSuccess: () => {
+        toast.success("Berhasil!", {
+          description: "Presensi Kehadiran berhasil diperbarui.",
+          position: "top-right",
+        });
+        onOpenChange(false, true);
+      },
+    }
+  );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const formattedDate = format(values.date, "yyyy-MM-dd");
     const datetime = `${formattedDate} ${values.time}`;
 
-    if (data) {
-    } else
+    if (data)
+      mutateUpdate({
+        params: { path: { general_attendance_id: data.id } },
+        body: { datetime, note: values.note },
+      });
+    else
       mutateCreate({
         body: {
           datetime,
