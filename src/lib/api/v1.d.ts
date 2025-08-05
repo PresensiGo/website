@@ -270,7 +270,7 @@ export interface paths {
         get?: never;
         put: operations["updateMajor"];
         post?: never;
-        delete?: never;
+        delete: operations["deleteMajor"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1036,6 +1036,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["domains.Major"];
+                };
+            };
+        };
+    };
+    deleteMajor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description major id */
+                major_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
                 };
             };
         };

@@ -1,4 +1,4 @@
-import { UpsertMajorDialog } from "@/components/major";
+import { DeleteMajorDialog, UpsertMajorDialog } from "@/components/major";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -23,6 +23,13 @@ function Page() {
     data?: {
       id: number;
       batchId: number;
+      name: string;
+    };
+  }>({ open: false });
+  const [deleteMajorDialogState, setDeleteMajorDialogState] = useState<{
+    open: boolean;
+    data?: {
+      id: number;
       name: string;
     };
   }>({ open: false });
@@ -71,7 +78,15 @@ function Page() {
                     >
                       <Edit2Icon />
                     </Button>
-                    <Button size={"icon"}>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setDeleteMajorDialogState({
+                          open: true,
+                          data: { id: item.id, name: item.name },
+                        })
+                      }
+                    >
                       <TrashIcon />
                     </Button>
                   </TableCell>
@@ -89,6 +104,14 @@ function Page() {
           if (status) refetch();
         }}
         data={upsertMajorDialogState.data}
+      />
+      <DeleteMajorDialog
+        open={deleteMajorDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteMajorDialogState({ open });
+          if (status) refetch();
+        }}
+        data={deleteMajorDialogState.data}
       />
     </>
   );
