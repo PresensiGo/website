@@ -8,6 +8,8 @@ import TanStackQueryLayout from "../integrations/tanstack-query/layout.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
 import type { QueryClient } from "@tanstack/react-query";
 
+import { IntlProvider } from "react-intl";
+
 interface MyRouterContext {
   queryClient: QueryClient;
 }
@@ -16,7 +18,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
       {/* <Header /> */}
-      <Outlet />
+      <IntlProvider locale="id" defaultLocale="id">
+        <Outlet />
+      </IntlProvider>
+
       <TanStackRouterDevtools />
       <TanStackQueryLayout />
 

@@ -372,6 +372,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/subject-attendances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllSubjectAttendances"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/subjects": {
         parameters: {
             query?: never;
@@ -525,6 +541,14 @@ export interface components {
             name: string;
             school_id: number;
         };
+        "domains.SubjectAttendance": {
+            classroom_id: number;
+            code: string;
+            date_time: string;
+            id: number;
+            note: string;
+            subject_id: number;
+        };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
         "requests.CreateGeneralAttendance": {
@@ -591,6 +615,9 @@ export interface components {
         };
         "responses.GetAllMajorsByBatchId": {
             majors: components["schemas"]["domains.Major"][];
+        };
+        "responses.GetAllSubjectAttendances": {
+            subject_attendances: components["schemas"]["domains.SubjectAttendance"][];
         };
         "responses.GetAllSubjects": {
             subjects: components["schemas"]["domains.Subject"][];
@@ -1400,6 +1427,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetAllStudentsByClassroomIdRes"];
+                };
+            };
+        };
+    };
+    getAllSubjectAttendances: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllSubjectAttendances"];
                 };
             };
         };
