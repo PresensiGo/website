@@ -1,3 +1,4 @@
+import { UpsertSubjectAttendanceDialog } from "@/components/subject-attendance";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -50,6 +51,9 @@ function RouteComponent() {
           </TableBody>
         </Table>
       </div>
+
+      {/* dialogs */}
+      <UpsertSubjectAttendanceDialog />
     </>
   );
 }
