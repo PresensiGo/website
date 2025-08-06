@@ -1,4 +1,4 @@
-import { UpsertSubjectDialog } from "@/components/subject";
+import { DeleteSubjectDialog, UpsertSubjectDialog } from "@/components/subject";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { Edit2Icon, PlusIcon } from "lucide-react";
+import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/subjects/")({
@@ -19,6 +19,10 @@ export const Route = createFileRoute("/_authenticated/subjects/")({
 
 function RouteComponent() {
   const [upsertDialogState, setUpsertDialogState] = useState<{
+    open: boolean;
+    data?: { id: number; name: string };
+  }>({ open: false });
+  const [deleteDialogState, setDeleteDialogState] = useState<{
     open: boolean;
     data?: { id: number; name: string };
   }>({ open: false });
@@ -60,6 +64,17 @@ function RouteComponent() {
                     >
                       <Edit2Icon />
                     </Button>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setDeleteDialogState({
+                          open: true,
+                          data: { id: item.id, name: item.name },
+                        })
+                      }
+                    >
+                      <TrashIcon />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -78,6 +93,17 @@ function RouteComponent() {
           if (status) refetch();
         }}
         data={upsertDialogState.data}
+      />
+      <DeleteSubjectDialog
+        open={deleteDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteDialogState({
+            open,
+            data: undefined,
+          });
+          if (status) refetch();
+        }}
+        data={deleteDialogState.data}
       />
     </>
   );
