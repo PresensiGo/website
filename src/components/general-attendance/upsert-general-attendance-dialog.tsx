@@ -206,14 +206,16 @@ export const UpsertGeneralAttendanceDialog = ({
           </Form>
 
           <DialogFooter>
-            <DialogClose asChild disabled={isPendingCreate}>
+            <DialogClose asChild disabled={isPendingCreate || isPendingUpdate}>
               <Button>Batal</Button>
             </DialogClose>
             <Button
-              disabled={isPendingCreate}
+              disabled={isPendingCreate || isPendingUpdate}
               onClick={form.handleSubmit(onSubmit)}
             >
-              {isPendingCreate && <Loader2Icon className="animate-spin" />}
+              {(isPendingCreate || isPendingUpdate) && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Simpan
             </Button>
           </DialogFooter>
