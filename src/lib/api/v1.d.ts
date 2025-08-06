@@ -235,7 +235,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["getGeneralAttendance"];
         put: operations["updateGeneralAttendance"];
         post?: never;
         delete: operations["deleteGeneralAttendance"];
@@ -542,6 +542,9 @@ export interface components {
         };
         "responses.GetAllMajorsByBatchId": {
             majors: components["schemas"]["domains.Major"][];
+        };
+        "responses.GetGeneralAttendance": {
+            general_attendance: components["schemas"]["domains.GeneralAttendance"];
         };
         "responses.Login": {
             access_token: string;
@@ -987,6 +990,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.CreateGeneralAttendance"];
+                };
+            };
+        };
+    };
+    getGeneralAttendance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description general attendance id */
+                general_attendance_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetGeneralAttendance"];
                 };
             };
         };
