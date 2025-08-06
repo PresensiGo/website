@@ -8,10 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { EyeIcon } from "lucide-react";
 
-export const Route = createFileRoute("/_authenticated/batches/$batchId/")({
+export const Route = createFileRoute(
+  "/_authenticated/_data-management/batches/$batchId/majors/"
+)({
   component: RouteComponent,
 });
 
@@ -31,6 +33,12 @@ function RouteComponent() {
     <>
       <div className="container mx-auto p-4">
         <p>Daftar Jurusan</p>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque
+          corporis nam quam laboriosam reiciendis mollitia, iure doloribus
+          blanditiis animi, dignissimos voluptates ut porro esse itaque officia
+          possimus voluptatem unde quia?
+        </p>
 
         <Table>
           <TableHeader>
@@ -46,8 +54,13 @@ function RouteComponent() {
                 <TableRow key={"major-item-" + index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
-                    <Button size={"icon"}>
-                      <EyeIcon />
+                    <Button size={"icon"} asChild>
+                      <Link
+                        to="/batches/$batchId/majors/$majorId/classrooms"
+                        params={{ batchId, majorId: String(item.id) }}
+                      >
+                        <EyeIcon />
+                      </Link>
                     </Button>
                   </TableCell>
                 </TableRow>

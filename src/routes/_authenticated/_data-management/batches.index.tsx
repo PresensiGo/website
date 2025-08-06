@@ -13,7 +13,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_authenticated/batches/")({
+export const Route = createFileRoute(
+  "/_authenticated/_data-management/batches/"
+)({
   component: Page,
 });
 
@@ -55,7 +57,7 @@ function Page() {
                   <TableCell>
                     <Button size={"icon"} asChild>
                       <Link
-                        to="/batches/$batchId"
+                        to="/batches/$batchId/majors"
                         params={{ batchId: String(batch.batch.id) }}
                       >
                         <EyeIcon />
