@@ -1,4 +1,7 @@
-import { UpsertGeneralAttendanceDialog } from "@/components/general-attendance";
+import {
+  DeleteGeneralAttendanceDialog,
+  UpsertGeneralAttendanceDialog,
+} from "@/components/general-attendance";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -26,6 +29,10 @@ function RouteComponent() {
       note: string;
     };
   }>({ open: false });
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    open: boolean;
+    data?: { id: number };
+  }>({ open: false });
 
   const { isSuccess, data, refetch } = $api.useQuery(
     "get",
@@ -51,6 +58,7 @@ function RouteComponent() {
           <TableHeader>
             <TableRow>
               <TableHead>Tanggal</TableHead>
+              <TableHead>Kode Presensi</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
@@ -60,6 +68,7 @@ function RouteComponent() {
               data.general_attendances.map((item, index) => (
                 <TableRow key={"general-attendance-item-" + index}>
                   <TableCell>{item.datetime}</TableCell>
+                  <TableCell>{item.code}</TableCell>
                   <TableCell>
                     <Button
                       size={"icon"}
@@ -76,7 +85,15 @@ function RouteComponent() {
                     >
                       <Edit2Icon />
                     </Button>
-                    <Button size={"icon"}>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setDeleteDialogState({
+                          open: true,
+                          data: { id: item.id },
+                        })
+                      }
+                    >
                       <TrashIcon />
                     </Button>
                   </TableCell>
@@ -94,6 +111,14 @@ function RouteComponent() {
           if (status) refetch();
         }}
         data={upsertDialogState.data}
+      />
+      <DeleteGeneralAttendanceDialog
+        open={deleteDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteDialogState({ open });
+          if (status) refetch();
+        }}
+        data={deleteDialogState.data}
       />
     </>
   );
