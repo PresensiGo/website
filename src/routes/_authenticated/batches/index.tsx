@@ -9,8 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
-import { createFileRoute } from "@tanstack/react-router";
-import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/batches/")({
@@ -53,6 +53,14 @@ function Page() {
                 <TableRow key={"batch-item-" + index}>
                   <TableCell>{batch.batch.name}</TableCell>
                   <TableCell>
+                    <Button size={"icon"} asChild>
+                      <Link
+                        to="/batches/$batchId"
+                        params={{ batchId: String(batch.batch.id) }}
+                      >
+                        <EyeIcon />
+                      </Link>
+                    </Button>
                     <Button
                       size={"icon"}
                       onClick={() =>

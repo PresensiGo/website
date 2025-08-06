@@ -164,6 +164,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllMajorsByBatchId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/classrooms": {
         parameters: {
             query?: never;
@@ -324,22 +340,6 @@ export interface paths {
         get: operations["getAllMajors"];
         put?: never;
         post: operations["createMajor"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/majors/batch/{batch_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAllMajorsByBatchId"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1009,6 +1009,29 @@ export interface operations {
             };
         };
     };
+    getAllMajorsByBatchId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllMajorsByBatchId"];
+                };
+            };
+        };
+    };
     getAllClassrooms: {
         parameters: {
             query?: never;
@@ -1328,29 +1351,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["domains.Major"];
-                };
-            };
-        };
-    };
-    getAllMajorsByBatchId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Batch Id */
-                batch_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["responses.GetAllMajorsByBatchId"];
                 };
             };
         };

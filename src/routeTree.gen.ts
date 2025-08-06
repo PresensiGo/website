@@ -22,6 +22,7 @@ import { Route as AuthenticatedBatchesIndexRouteImport } from './routes/_authent
 import { Route as AuthAuthRegisterRouteImport } from './routes/_auth/auth.register'
 import { Route as AuthAuthLoginRouteImport } from './routes/_auth/auth.login'
 import { Route as AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRouteImport } from './routes/_authenticated/general-attendance/$generalAttendanceId/index'
+import { Route as AuthenticatedBatchesBatchIdIndexRouteImport } from './routes/_authenticated/batches/$batchId/index'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -94,6 +95,12 @@ const AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute =
     path: '/general-attendance/$generalAttendanceId/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedBatchesBatchIdIndexRoute =
+  AuthenticatedBatchesBatchIdIndexRouteImport.update({
+    id: '/batches/$batchId/',
+    path: '/batches/$batchId/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-attendance': typeof AuthenticatedSubjectAttendanceIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
+  '/batches/$batchId': typeof AuthenticatedBatchesBatchIdIndexRoute
   '/general-attendance/$generalAttendanceId': typeof AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -119,6 +127,7 @@ export interface FileRoutesByTo {
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-attendance': typeof AuthenticatedSubjectAttendanceIndexRoute
   '/subjects': typeof AuthenticatedSubjectsIndexRoute
+  '/batches/$batchId': typeof AuthenticatedBatchesBatchIdIndexRoute
   '/general-attendance/$generalAttendanceId': typeof AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute
 }
 export interface FileRoutesById {
@@ -135,6 +144,7 @@ export interface FileRoutesById {
   '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
   '/_authenticated/subject-attendance/': typeof AuthenticatedSubjectAttendanceIndexRoute
   '/_authenticated/subjects/': typeof AuthenticatedSubjectsIndexRoute
+  '/_authenticated/batches/$batchId/': typeof AuthenticatedBatchesBatchIdIndexRoute
   '/_authenticated/general-attendance/$generalAttendanceId/': typeof AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/setting'
     | '/subject-attendance'
     | '/subjects'
+    | '/batches/$batchId'
     | '/general-attendance/$generalAttendanceId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/setting'
     | '/subject-attendance'
     | '/subjects'
+    | '/batches/$batchId'
     | '/general-attendance/$generalAttendanceId'
   id:
     | '__root__'
@@ -178,6 +190,7 @@ export interface FileRouteTypes {
     | '/_authenticated/setting/'
     | '/_authenticated/subject-attendance/'
     | '/_authenticated/subjects/'
+    | '/_authenticated/batches/$batchId/'
     | '/_authenticated/general-attendance/$generalAttendanceId/'
   fileRoutesById: FileRoutesById
 }
@@ -279,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/batches/$batchId/': {
+      id: '/_authenticated/batches/$batchId/'
+      path: '/batches/$batchId'
+      fullPath: '/batches/$batchId'
+      preLoaderRoute: typeof AuthenticatedBatchesBatchIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -303,6 +323,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSettingIndexRoute: typeof AuthenticatedSettingIndexRoute
   AuthenticatedSubjectAttendanceIndexRoute: typeof AuthenticatedSubjectAttendanceIndexRoute
   AuthenticatedSubjectsIndexRoute: typeof AuthenticatedSubjectsIndexRoute
+  AuthenticatedBatchesBatchIdIndexRoute: typeof AuthenticatedBatchesBatchIdIndexRoute
   AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute: typeof AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute
 }
 
@@ -317,6 +338,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSubjectAttendanceIndexRoute:
     AuthenticatedSubjectAttendanceIndexRoute,
   AuthenticatedSubjectsIndexRoute: AuthenticatedSubjectsIndexRoute,
+  AuthenticatedBatchesBatchIdIndexRoute: AuthenticatedBatchesBatchIdIndexRoute,
   AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute:
     AuthenticatedGeneralAttendanceGeneralAttendanceIdIndexRoute,
 }
