@@ -12,7 +12,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { EyeIcon } from "lucide-react";
 
 export const Route = createFileRoute(
-  "/_authenticated/_data-management/batches/$batchId/majors/"
+  "/_authenticated/data-management/batches/$batchId/majors/"
 )({
   component: RouteComponent,
 });
@@ -56,7 +56,7 @@ function RouteComponent() {
                   <TableCell>
                     <Button size={"icon"} asChild>
                       <Link
-                        to="/batches/$batchId/majors/$majorId/classrooms"
+                        to="/data-management/batches/$batchId/majors/$majorId/classrooms"
                         params={{ batchId, majorId: String(item.id) }}
                       >
                         <EyeIcon />

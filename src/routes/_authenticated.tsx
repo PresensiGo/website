@@ -19,9 +19,7 @@ export const Route = createFileRoute("/_authenticated")({
 
 const menus: { title: string; href: string }[] = [
   { title: "Halaman Utama", href: "/" },
-  { title: "Manajemen Angkatan", href: "/batches" },
-  { title: "Manajemen Jurusan", href: "/majors" },
-  { title: "Manajemen Kelas", href: "/classrooms" },
+  { title: "Manajemen Data", href: "/data-management/batches" },
   { title: "Pengaturan", href: "/setting" },
   { title: "Presensi Kehadiran", href: "/general-attendance" },
   { title: "Presensi Mata Pelajaran", href: "/subject-attendance" },

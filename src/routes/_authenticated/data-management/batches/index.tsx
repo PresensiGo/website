@@ -14,7 +14,7 @@ import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute(
-  "/_authenticated/_data-management/batches/"
+  "/_authenticated/data-management/batches/"
 )({
   component: Page,
 });
@@ -57,7 +57,7 @@ function Page() {
                   <TableCell>
                     <Button size={"icon"} asChild>
                       <Link
-                        to="/batches/$batchId/majors"
+                        to="/data-management/batches/$batchId/majors"
                         params={{ batchId: String(batch.batch.id) }}
                       >
                         <EyeIcon />
