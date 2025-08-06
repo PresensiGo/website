@@ -372,6 +372,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/subjects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllSubjects"];
+        put?: never;
+        post: operations["createSubject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subjects/{subject_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateSubject"];
+        post?: never;
+        delete: operations["deleteSubject"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -488,11 +520,19 @@ export interface components {
             major: components["schemas"]["domains.Major"];
             student: components["schemas"]["domains.Student"];
         };
+        "domains.Subject": {
+            id: number;
+            name: string;
+            school_id: number;
+        };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
         "requests.CreateGeneralAttendance": {
             datetime?: string;
             note?: string;
+        };
+        "requests.CreateSubject": {
+            name: string;
         };
         "requests.Login": {
             /** @default email@email.com */
@@ -518,6 +558,9 @@ export interface components {
             datetime?: string;
             note?: string;
         };
+        "requests.UpdateSubject": {
+            name: string;
+        };
         "responses.ClassroomMajor": {
             classroom: components["schemas"]["domains.Classroom"];
             major: components["schemas"]["domains.Major"];
@@ -525,8 +568,14 @@ export interface components {
         "responses.CreateGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
         };
+        "responses.CreateSubject": {
+            subject: components["schemas"]["domains.Subject"];
+        };
         "responses.DeleteGeneralAttendance": {
             message?: string;
+        };
+        "responses.DeleteSubject": {
+            message: string;
         };
         "responses.GetAll": {
             classrooms: components["schemas"]["domains.Classroom"][];
@@ -542,6 +591,9 @@ export interface components {
         };
         "responses.GetAllMajorsByBatchId": {
             majors: components["schemas"]["domains.Major"][];
+        };
+        "responses.GetAllSubjects": {
+            subjects: components["schemas"]["domains.Subject"][];
         };
         "responses.GetGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
@@ -561,6 +613,9 @@ export interface components {
         };
         "responses.UpdateGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
+        };
+        "responses.UpdateSubject": {
+            subject: components["schemas"]["domains.Subject"];
         };
     };
     responses: never;
@@ -1345,6 +1400,102 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetAllStudentsByClassroomIdRes"];
+                };
+            };
+        };
+    };
+    getAllSubjects: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllSubjects"];
+                };
+            };
+        };
+    };
+    createSubject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.CreateSubject"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.CreateSubject"];
+                };
+            };
+        };
+    };
+    updateSubject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description subject id */
+                subject_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.UpdateSubject"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.UpdateSubject"];
+                };
+            };
+        };
+    };
+    deleteSubject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description subject id */
+                subject_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.DeleteSubject"];
                 };
             };
         };
