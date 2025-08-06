@@ -49,7 +49,15 @@ function RouteComponent() {
                 <TableRow key={"subject-item-" + index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
-                    <Button size={"icon"}>
+                    <Button
+                      size={"icon"}
+                      onClick={() =>
+                        setUpsertDialogState({
+                          open: true,
+                          data: { id: item.id, name: item.name },
+                        })
+                      }
+                    >
                       <Edit2Icon />
                     </Button>
                   </TableCell>
