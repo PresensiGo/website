@@ -220,6 +220,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/students": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getAllStudentsByClassroomId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/classrooms": {
         parameters: {
             query?: never;
@@ -388,22 +404,6 @@ export interface paths {
             cookie?: never;
         };
         get: operations["getAllStudents"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/students/classrooms/{classroom_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAllStudentsByClassroomId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1034,6 +1034,33 @@ export interface operations {
             };
         };
     };
+    getAllStudentsByClassroomId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+                /** @description classroom id */
+                classroom_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetAllStudentsByClassroomIdRes"];
+                };
+            };
+        };
+    };
     getAllClassrooms: {
         parameters: {
             query?: never;
@@ -1447,29 +1474,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetAllStudentsRes"];
-                };
-            };
-        };
-    };
-    getAllStudentsByClassroomId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Classroom Id */
-                classroom_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetAllStudentsByClassroomIdRes"];
                 };
             };
         };

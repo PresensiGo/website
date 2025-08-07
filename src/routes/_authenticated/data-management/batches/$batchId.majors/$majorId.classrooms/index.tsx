@@ -8,8 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
-import { createFileRoute } from "@tanstack/react-router";
-import { Edit2Icon } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Edit2Icon, EyeIcon } from "lucide-react";
 
 export const Route = createFileRoute(
   "/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/"
@@ -52,6 +52,18 @@ function RouteComponent() {
                 <TableRow key={"classroom-item-" + index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>
+                    <Button size={"icon"} asChild>
+                      <Link
+                        to="/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students"
+                        params={{
+                          batchId,
+                          majorId,
+                          classroomId: String(item.id),
+                        }}
+                      >
+                        <EyeIcon />
+                      </Link>
+                    </Button>
                     <Button size={"icon"}>
                       <Edit2Icon />
                     </Button>
