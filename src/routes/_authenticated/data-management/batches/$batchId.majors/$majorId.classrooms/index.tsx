@@ -87,7 +87,19 @@ function RouteComponent() {
                         <EyeIcon />
                       </Link>
                     </Button>
-                    <Button size={"icon"} variant={"outline"}>
+                    <Button
+                      size={"icon"}
+                      variant={"outline"}
+                      onClick={() =>
+                        setDialogUpsertState({
+                          open: true,
+                          data: {
+                            id: item.id,
+                            name: item.name,
+                          },
+                        })
+                      }
+                    >
                       <Edit2Icon />
                     </Button>
                     <Button size={"icon"} variant={"destructive"}>

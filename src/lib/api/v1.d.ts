@@ -249,6 +249,53 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.UpdateClassroom"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.UpdateClassroom"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/students": {
         parameters: {
             query?: never;
@@ -650,6 +697,9 @@ export interface components {
             /** @default password */
             password: string;
         };
+        "requests.UpdateClassroom": {
+            name: string;
+        };
         "requests.UpdateGeneralAttendance": {
             datetime?: string;
             note?: string;
@@ -715,6 +765,9 @@ export interface components {
         "responses.Register": {
             access_token: string;
             refresh_token: string;
+        };
+        "responses.UpdateClassroom": {
+            classroom: components["schemas"]["domains.Classroom"];
         };
         "responses.UpdateGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
