@@ -213,7 +213,36 @@ export interface paths {
             };
         };
         put?: never;
-        post?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                };
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.CreateClassroom"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.CreateClassroom"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -591,6 +620,9 @@ export interface components {
         };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
+        "requests.CreateClassroom": {
+            name: string;
+        };
         "requests.CreateGeneralAttendance": {
             datetime?: string;
             note?: string;
@@ -628,6 +660,9 @@ export interface components {
         "responses.ClassroomMajor": {
             classroom: components["schemas"]["domains.Classroom"];
             major: components["schemas"]["domains.Major"];
+        };
+        "responses.CreateClassroom": {
+            classroom: components["schemas"]["domains.Classroom"];
         };
         "responses.CreateGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
