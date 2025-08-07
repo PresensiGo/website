@@ -1,3 +1,4 @@
+import { UpsertClassroomDialog } from "@/components/data-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,6 +11,7 @@ import {
 import { $api } from "@/lib/api/api";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute(
   "/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/"
@@ -20,7 +22,15 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { batchId, majorId } = Route.useParams();
 
-  const { isSuccess, data } = $api.useQuery(
+  const [dialogUpsertState, setDialogUpsertState] = useState<{
+    open: boolean;
+    data?: {
+      id: number;
+      name: string;
+    };
+  }>({ open: false });
+
+  const { isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms",
     {
@@ -45,7 +55,7 @@ function RouteComponent() {
         </p>
 
         <div className="flex justify-end mt-4">
-          <Button>
+          <Button onClick={() => setDialogUpsertState({ open: true })}>
             <PlusIcon />
             Tambah Kelas
           </Button>
@@ -89,6 +99,18 @@ function RouteComponent() {
           </TableBody>
         </Table>
       </div>
+
+      {/* dialogs */}
+      <UpsertClassroomDialog
+        open={dialogUpsertState.open}
+        onOpenChange={(open, status) => {
+          setDialogUpsertState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        batchId={Number(batchId)}
+        majorId={Number(majorId)}
+        data={dialogUpsertState.data}
+      />
     </>
   );
 }
