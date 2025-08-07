@@ -126,7 +126,7 @@ export const UpsertBatchDialog = ({
 
           <DialogFooter>
             <DialogClose asChild disabled={isPendingCreate || isPendingUpdate}>
-              <Button>Batal</Button>
+              <Button variant={"outline"}>Batal</Button>
             </DialogClose>
             <Button
               disabled={isPendingCreate || isPendingUpdate}

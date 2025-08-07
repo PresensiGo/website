@@ -1,12 +1,8 @@
-import { Button } from "@/components/ui/button";
+import { AppSidebar, Navbar } from "@/components";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { $api } from "@/lib/api/api";
 import { auth } from "@/lib/auth";
-import {
-  createFileRoute,
-  Link,
-  Outlet,
-  redirect,
-} from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -16,15 +12,6 @@ export const Route = createFileRoute("/_authenticated")({
     if (!token) throw redirect({ to: "/auth/login", replace: true });
   },
 });
-
-const menus: { title: string; href: string }[] = [
-  { title: "Halaman Utama", href: "/" },
-  { title: "Manajemen Data", href: "/data-management/batches" },
-  { title: "Pengaturan", href: "/setting" },
-  { title: "Presensi Kehadiran", href: "/general-attendance" },
-  { title: "Presensi Mata Pelajaran", href: "/subject-attendance" },
-  { title: "Manajemen Mata Pelajaran", href: "/subjects" },
-];
 
 function RouteComponent() {
   const { mutate: mutateRefreshTokenTTL } = $api.useMutation(
@@ -44,15 +31,16 @@ function RouteComponent() {
 
   return (
     <>
-      <div>
-        {menus.map((item, index) => (
-          <Button key={"menu-item-" + index} asChild>
-            <Link to={item.href}>{item.title}</Link>
-          </Button>
-        ))}
-      </div>
+      <SidebarProvider>
+        <AppSidebar />
+        <main className="w-full">
+          <Navbar />
 
-      <Outlet />
+          <div className="container max-w-5xl mx-auto pt-16 px-4">
+            <Outlet />
+          </div>
+        </main>
+      </SidebarProvider>
     </>
   );
 }

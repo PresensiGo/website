@@ -1,4 +1,7 @@
-import { DeleteBatchDialog, UpsertBatchDialog } from "@/components/batch";
+import {
+  DeleteBatchDialog,
+  UpsertBatchDialog,
+} from "@/components/data-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -33,18 +36,26 @@ function Page() {
 
   return (
     <>
-      <div className="container mx-auto">
-        <p>halaman daftar angkatan</p>
+      <div className="container mx-auto py-6">
+        <p className="text-3xl font-semibold">Daftar Angkatan</p>
+        <p className="text-muted-foreground">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestiae
+          labore deleniti obcaecati. Perferendis modi eius laboriosam laudantium
+          nam iure quae quos! Quam sunt corrupti quisquam voluptas voluptate
+          molestiae enim culpa.
+        </p>
 
-        <Button onClick={() => setDialogUpsertBatchState({ open: true })}>
-          <PlusIcon />
-          Angkatan Baru
-        </Button>
+        <div className="flex justify-end mt-4">
+          <Button onClick={() => setDialogUpsertBatchState({ open: true })}>
+            <PlusIcon />
+            Angkatan Baru
+          </Button>
+        </div>
 
-        <Table>
+        <Table className="mt-4">
           <TableHeader>
             <TableRow>
-              <TableHead>Nama</TableHead>
+              <TableHead className="w-full">Nama</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
@@ -54,8 +65,8 @@ function Page() {
               data.batches.map((batch, index) => (
                 <TableRow key={"batch-item-" + index}>
                   <TableCell>{batch.batch.name}</TableCell>
-                  <TableCell>
-                    <Button size={"icon"} asChild>
+                  <TableCell className="space-x-1 ">
+                    <Button size={"icon"} asChild variant={"outline"}>
                       <Link
                         to="/data-management/batches/$batchId/majors"
                         params={{ batchId: String(batch.batch.id) }}
@@ -68,9 +79,13 @@ function Page() {
                       onClick={() =>
                         setDialogUpsertBatchState({
                           open: true,
-                          data: { id: batch.batch.id, name: batch.batch.name },
+                          data: {
+                            id: batch.batch.id,
+                            name: batch.batch.name,
+                          },
                         })
                       }
+                      variant={"outline"}
                     >
                       <Edit2Icon />
                     </Button>
@@ -79,9 +94,13 @@ function Page() {
                       onClick={() =>
                         setDialogDeleteBatchState({
                           open: true,
-                          data: { id: batch.batch.id, name: batch.batch.name },
+                          data: {
+                            id: batch.batch.id,
+                            name: batch.batch.name,
+                          },
                         })
                       }
+                      variant={"destructive"}
                     >
                       <TrashIcon />
                     </Button>
