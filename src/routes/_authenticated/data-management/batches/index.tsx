@@ -36,7 +36,7 @@ function Page() {
 
   return (
     <>
-      <div className="container mx-auto py-6">
+      <div className="py-6">
         <p className="text-3xl font-semibold">Daftar Angkatan</p>
         <p className="text-muted-foreground">
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestiae
