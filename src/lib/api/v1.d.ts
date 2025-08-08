@@ -407,6 +407,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                    /** @description subject attendance id */
+                    subject_attendance_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetSubjectAttendance"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/classrooms": {
         parameters: {
             query?: never;
@@ -846,6 +890,9 @@ export interface components {
         };
         "responses.GetGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
+        };
+        "responses.GetSubjectAttendance": {
+            subject_attendance: components["schemas"]["domains.SubjectAttendance"];
         };
         "responses.Login": {
             access_token: string;
