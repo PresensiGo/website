@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
@@ -71,8 +71,13 @@ function RouteComponent() {
                   </TableCell>
                   <TableCell>{item.code}</TableCell>
                   <TableCell className="space-x-1">
-                    <Button size={"icon"} variant={"outline"}>
-                      <EyeIcon />
+                    <Button size={"icon"} variant={"outline"} asChild>
+                      <Link
+                        to="/attendance/general/$generalAttendanceId"
+                        params={{ generalAttendanceId: String(item.id) }}
+                      >
+                        <EyeIcon />
+                      </Link>
                     </Button>
                     <Button size={"icon"} variant={"outline"}>
                       <Edit2Icon />
