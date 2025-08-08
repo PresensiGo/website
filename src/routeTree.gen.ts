@@ -17,6 +17,7 @@ import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authent
 import { Route as AuthAuthRegisterRouteImport } from './routes/_auth/auth.register'
 import { Route as AuthAuthLoginRouteImport } from './routes/_auth/auth.login'
 import { Route as AuthenticatedDataManagementBatchesIndexRouteImport } from './routes/_authenticated/data-management/batches/index'
+import { Route as AuthenticatedAttendanceGeneralIndexRouteImport } from './routes/_authenticated/attendance/general/index'
 import { Route as AuthenticatedDataManagementBatchesBatchIdMajorsIndexRouteImport } from './routes/_authenticated/data-management/batches/$batchId.majors/index'
 import { Route as AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport } from './routes/_authenticated/data-management/batches/$batchId.majors/$majorId.classrooms/index'
 import { Route as AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRouteImport } from './routes/_authenticated/data-management/batches/$batchId.majors/$majorId.classrooms/$classroomId.students/index'
@@ -62,6 +63,12 @@ const AuthenticatedDataManagementBatchesIndexRoute =
     path: '/data-management/batches/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAttendanceGeneralIndexRoute =
+  AuthenticatedAttendanceGeneralIndexRouteImport.update({
+    id: '/attendance/general/',
+    path: '/attendance/general/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute =
   AuthenticatedDataManagementBatchesBatchIdMajorsIndexRouteImport.update({
     id: '/data-management/batches/$batchId/majors/',
@@ -91,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthAuthRegisterRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
+  '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/data-management/batches/$batchId/majors': typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
   '/data-management/batches/$batchId/majors/$majorId/classrooms': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
@@ -102,6 +110,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthAuthRegisterRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
+  '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/data-management/batches/$batchId/majors': typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
   '/data-management/batches/$batchId/majors/$majorId/classrooms': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
@@ -116,6 +125,7 @@ export interface FileRoutesById {
   '/_auth/auth/register': typeof AuthAuthRegisterRoute
   '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
   '/_authenticated/subject-management/': typeof AuthenticatedSubjectManagementIndexRoute
+  '/_authenticated/attendance/general/': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/_authenticated/data-management/batches/': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/_authenticated/data-management/batches/$batchId/majors/': typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
   '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/setting'
     | '/subject-management'
+    | '/attendance/general'
     | '/data-management/batches'
     | '/data-management/batches/$batchId/majors'
     | '/data-management/batches/$batchId/majors/$majorId/classrooms'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/setting'
     | '/subject-management'
+    | '/attendance/general'
     | '/data-management/batches'
     | '/data-management/batches/$batchId/majors'
     | '/data-management/batches/$batchId/majors/$majorId/classrooms'
@@ -153,6 +165,7 @@ export interface FileRouteTypes {
     | '/_auth/auth/register'
     | '/_authenticated/setting/'
     | '/_authenticated/subject-management/'
+    | '/_authenticated/attendance/general/'
     | '/_authenticated/data-management/batches/'
     | '/_authenticated/data-management/batches/$batchId/majors/'
     | '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/'
@@ -222,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDataManagementBatchesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/attendance/general/': {
+      id: '/_authenticated/attendance/general/'
+      path: '/attendance/general'
+      fullPath: '/attendance/general'
+      preLoaderRoute: typeof AuthenticatedAttendanceGeneralIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/data-management/batches/$batchId/majors/': {
       id: '/_authenticated/data-management/batches/$batchId/majors/'
       path: '/data-management/batches/$batchId/majors'
@@ -262,6 +282,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedSettingIndexRoute: typeof AuthenticatedSettingIndexRoute
   AuthenticatedSubjectManagementIndexRoute: typeof AuthenticatedSubjectManagementIndexRoute
+  AuthenticatedAttendanceGeneralIndexRoute: typeof AuthenticatedAttendanceGeneralIndexRoute
   AuthenticatedDataManagementBatchesIndexRoute: typeof AuthenticatedDataManagementBatchesIndexRoute
   AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
@@ -273,6 +294,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingIndexRoute: AuthenticatedSettingIndexRoute,
   AuthenticatedSubjectManagementIndexRoute:
     AuthenticatedSubjectManagementIndexRoute,
+  AuthenticatedAttendanceGeneralIndexRoute:
+    AuthenticatedAttendanceGeneralIndexRoute,
   AuthenticatedDataManagementBatchesIndexRoute:
     AuthenticatedDataManagementBatchesIndexRoute,
   AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute:
