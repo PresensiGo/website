@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2Icon } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -42,7 +43,11 @@ const formSchema = z.object({
 interface UpsertGeneralAttendanceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
-  data?: {};
+  data?: {
+    id: number;
+    datetime: string;
+    note: string;
+  };
 }
 
 export const UpsertGeneralAttendanceDialog = ({
@@ -53,6 +58,15 @@ export const UpsertGeneralAttendanceDialog = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (data) {
+      const date = new Date(data.datetime);
+      const time = format(data.datetime, "HH:mm:ss");
+
+      form.reset({ date, time, note: data.note });
+    }
+  }, [data]);
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
@@ -67,14 +81,31 @@ export const UpsertGeneralAttendanceDialog = ({
       },
     }
   );
+  const { mutate: mutateUpdate, isPending: isPendingUpdate } = $api.useMutation(
+    "put",
+    "/api/v1/general_attendances/{general_attendance_id}",
+    {
+      onSuccess: () => {
+        toast.success("Berhasil!", {
+          description: "Perubahan presensi kehadiran berhasil disimpan!",
+          position: "top-right",
+        });
+        onOpenChange(false, true);
+      },
+    }
+  );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const date = format(values.date, "yyyy-MM-dd");
     const time = values.time;
     const datetime = `${date} ${time}`;
 
-    if (data) {
-    } else
+    if (data)
+      mutateUpdate({
+        params: { path: { general_attendance_id: data.id } },
+        body: { datetime, note: values.note },
+      });
+    else
       mutateCreate({
         body: { datetime, note: values.note },
       });
@@ -85,7 +116,9 @@ export const UpsertGeneralAttendanceDialog = ({
       <Dialog open={open} onOpenChange={(e) => onOpenChange(e)}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Tambah Presensi Kehadiran</DialogTitle>
+            <DialogTitle>
+              {data ? "Ubah" : "Tambah"} Presensi Kehadiran
+            </DialogTitle>
             <DialogDescription>
               This action cannot be undone. This will permanently delete your
               account and remove your data from our servers.
@@ -179,15 +212,20 @@ export const UpsertGeneralAttendanceDialog = ({
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant={"outline"} disabled={isPendingCreate}>
+              <Button
+                variant={"outline"}
+                disabled={isPendingCreate || isPendingUpdate}
+              >
                 Batal
               </Button>
             </DialogClose>
             <Button
-              disabled={isPendingCreate}
+              disabled={isPendingCreate || isPendingUpdate}
               onClick={form.handleSubmit(onSubmit)}
             >
-              {isPendingCreate && <Loader2Icon className="animate-spin" />}
+              {(isPendingCreate || isPendingUpdate) && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Simpan
             </Button>
           </DialogFooter>

@@ -21,7 +21,11 @@ export const Route = createFileRoute("/_authenticated/attendance/general/")({
 function RouteComponent() {
   const [upsertDialogState, setUpsertDialogState] = useState<{
     open: boolean;
-    data?: {};
+    data?: {
+      id: number;
+      datetime: string;
+      note: string;
+    };
   }>({ open: false });
 
   const { isSuccess, data, refetch } = $api.useQuery(
@@ -79,7 +83,20 @@ function RouteComponent() {
                         <EyeIcon />
                       </Link>
                     </Button>
-                    <Button size={"icon"} variant={"outline"}>
+                    <Button
+                      size={"icon"}
+                      variant={"outline"}
+                      onClick={() =>
+                        setUpsertDialogState({
+                          open: true,
+                          data: {
+                            id: item.id,
+                            datetime: item.datetime,
+                            note: item.note,
+                          },
+                        })
+                      }
+                    >
                       <Edit2Icon />
                     </Button>
                     <Button size={"icon"} variant={"destructive"}>
