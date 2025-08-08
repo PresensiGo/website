@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -95,10 +96,12 @@ export const UpsertSubjectDialog = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogTitle>
+              {data ? "Ubah Mata Pelajaran" : "Tambah Mata Pelajaran"}
+            </DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              Masukkan nama mata pelajaran pada form berikut untuk{" "}
+              {data ? "mengubah" : "menambahkan"} mata pelajaran.
             </DialogDescription>
           </DialogHeader>
 
@@ -111,7 +114,10 @@ export const UpsertSubjectDialog = ({
                   <FormItem>
                     <FormLabel>Nama Mata Pelajaran</FormLabel>
                     <FormControl>
-                      <Input placeholder="Matematika" {...field} />
+                      <Input
+                        placeholder="Masukkan nama mata pelajaran"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -121,7 +127,14 @@ export const UpsertSubjectDialog = ({
           </Form>
 
           <DialogFooter>
-            <Button disabled={isPendingCreate || isPendingUpdate}>Batal</Button>
+            <DialogClose asChild>
+              <Button
+                disabled={isPendingCreate || isPendingUpdate}
+                variant={"outline"}
+              >
+                Batal
+              </Button>
+            </DialogClose>
             <Button
               disabled={isPendingCreate || isPendingUpdate}
               onClick={form.handleSubmit(onSubmit)}

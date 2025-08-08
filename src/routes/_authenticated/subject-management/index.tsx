@@ -1,4 +1,7 @@
-import { DeleteSubjectDialog, UpsertSubjectDialog } from "@/components/subject";
+import {
+  DeleteSubjectDialog,
+  UpsertSubjectDialog,
+} from "@/components/subject-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,7 +16,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
-export const Route = createFileRoute("/_authenticated/subjects/")({
+export const Route = createFileRoute("/_authenticated/subject-management/")({
   component: RouteComponent,
 });
 
@@ -31,18 +34,28 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="container mx-auto p-4">
-        <p>Manajemen Mata Pelajaran</p>
+      <div className="py-6">
+        <div className="space-y-2">
+          <p className="text-3xl font-semibold">Manajemen Mata Pelajaran</p>
+          <p className="text-muted-foreground">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
+            fugit deserunt amet blanditiis, dignissimos cupiditate veniam
+            explicabo molestiae voluptas ducimus nobis porro officiis veritatis
+            et at labore nam neque iure.
+          </p>
+        </div>
 
-        <Button onClick={() => setUpsertDialogState({ open: true })}>
-          <PlusIcon />
-          Tambah Mata Pelajaran
-        </Button>
+        <div className="flex justify-end mt-4">
+          <Button onClick={() => setUpsertDialogState({ open: true })}>
+            <PlusIcon />
+            Tambah Mata Pelajaran
+          </Button>
+        </div>
 
-        <Table>
+        <Table className="mt-4">
           <TableHeader>
             <TableRow>
-              <TableHead>Nama</TableHead>
+              <TableHead className="w-full">Nama</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
@@ -52,8 +65,9 @@ function RouteComponent() {
               data.subjects.map((item, index) => (
                 <TableRow key={"subject-item-" + index}>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>
+                  <TableCell className="space-x-1">
                     <Button
+                      variant={"outline"}
                       size={"icon"}
                       onClick={() =>
                         setUpsertDialogState({
@@ -65,6 +79,7 @@ function RouteComponent() {
                       <Edit2Icon />
                     </Button>
                     <Button
+                      variant={"destructive"}
                       size={"icon"}
                       onClick={() =>
                         setDeleteDialogState({
