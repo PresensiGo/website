@@ -155,7 +155,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["getBatch"];
         put: operations["updateBatch"];
         post?: never;
         delete: operations["deleteBatch"];
@@ -614,11 +614,6 @@ export interface components {
             name: string;
             school_id: number;
         };
-        "domains.BatchInfo": {
-            batch: components["schemas"]["domains.Batch"];
-            classrooms_count: number;
-            majors_count: number;
-        };
         "domains.Classroom": {
             id: number;
             major_id: number;
@@ -664,6 +659,11 @@ export interface components {
             id: number;
             note: string;
             subject_id: number;
+        };
+        "dto.BatchInfo": {
+            batch: components["schemas"]["domains.Batch"];
+            classrooms_count: number;
+            majors_count: number;
         };
         /** @enum {string} */
         "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
@@ -730,7 +730,7 @@ export interface components {
             classrooms: components["schemas"]["domains.Classroom"][];
         };
         "responses.GetAllBatches": {
-            batches: components["schemas"]["domains.BatchInfo"][];
+            batches: components["schemas"]["dto.BatchInfo"][];
         };
         "responses.GetAllClassroomWithMajors": {
             data: components["schemas"]["responses.ClassroomMajor"][];
@@ -749,6 +749,9 @@ export interface components {
         };
         "responses.GetAllSubjects": {
             subjects: components["schemas"]["domains.Subject"][];
+        };
+        "responses.GetBatch": {
+            batch: components["schemas"]["domains.Batch"];
         };
         "responses.GetGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
@@ -1044,6 +1047,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["domains.Batch"];
+                };
+            };
+        };
+    };
+    getBatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetBatch"];
                 };
             };
         };

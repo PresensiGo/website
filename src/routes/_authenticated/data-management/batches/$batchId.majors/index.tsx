@@ -37,19 +37,27 @@ function RouteComponent() {
     data?: { id: number; name: string };
   }>({ open: false });
 
+  const { isSuccess: isSuccessBatch, data: dataBatch } = $api.useQuery(
+    "get",
+    "/api/v1/batches/{batch_id}",
+    {
+      params: { path: { batch_id: Number(batchId) } },
+    }
+  );
   const { isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors",
     {
       params: { path: { batch_id: Number(batchId) } },
-    },
-    { enabled: batchId !== undefined }
+    }
   );
 
   return (
     <>
       <div className="py-6">
-        <p className="text-3xl font-semibold">Daftar Jurusan - Angkatan 2023</p>
+        <p className="text-3xl font-semibold">
+          Daftar Jurusan - {dataBatch && dataBatch.batch.name}
+        </p>
         <p className="text-muted-foreground">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat
           corporis harum in provident alias qui autem labore optio nihil nam,
