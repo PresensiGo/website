@@ -1,4 +1,7 @@
-import { UpsertGeneralAttendanceDialog } from "@/components/attendance/general";
+import {
+  DeleteGeneralAttendanceDialog,
+  UpsertGeneralAttendanceDialog,
+} from "@/components/attendance/general";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -26,6 +29,10 @@ function RouteComponent() {
       datetime: string;
       note: string;
     };
+  }>({ open: false });
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    open: boolean;
+    data?: { id: number };
   }>({ open: false });
 
   const { isSuccess, data, refetch } = $api.useQuery(
@@ -99,7 +106,16 @@ function RouteComponent() {
                     >
                       <Edit2Icon />
                     </Button>
-                    <Button size={"icon"} variant={"destructive"}>
+                    <Button
+                      size={"icon"}
+                      variant={"destructive"}
+                      onClick={() =>
+                        setDeleteDialogState({
+                          open: true,
+                          data: { id: item.id },
+                        })
+                      }
+                    >
                       <TrashIcon />
                     </Button>
                   </TableCell>
@@ -117,6 +133,14 @@ function RouteComponent() {
           if (status) refetch();
         }}
         data={upsertDialogState.data}
+      />
+      <DeleteGeneralAttendanceDialog
+        open={deleteDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteDialogState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        data={deleteDialogState.data}
       />
     </>
   );
