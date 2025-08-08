@@ -37,7 +37,7 @@ function RouteComponent() {
     data?: { id: number; name: string };
   }>({ open: false });
 
-  const { isSuccess: isSuccessBatch, data: dataBatch } = $api.useQuery(
+  const { data: dataBatch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}",
     {
