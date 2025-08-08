@@ -15,7 +15,7 @@ import { useState } from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
 
 export const Route = createFileRoute(
-  "/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/"
+  "/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/"
 )({
   component: RouteComponent,
 });

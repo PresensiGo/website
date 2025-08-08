@@ -61,7 +61,7 @@ function RouteComponent() {
                   <TableCell>
                     <Button asChild size={"icon"} variant={"outline"}>
                       <Link
-                        to="/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId"
+                        to="/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances"
                         params={{
                           batchId: String(batchId),
                           majorId: String(majorId),
