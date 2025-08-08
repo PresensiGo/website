@@ -341,7 +341,33 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetAllSubjectAttendances"];
+                    };
+                };
+            };
+        };
         put?: never;
         post: {
             parameters: {
@@ -557,22 +583,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/subject-attendances": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAllSubjectAttendances"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/subjects": {
         parameters: {
             query?: never;
@@ -729,6 +739,10 @@ export interface components {
             note: string;
             subject_id: number;
         };
+        "domains.SubjectAttendanceSubject": {
+            subject: components["schemas"]["domains.Subject"];
+            subject_attendance: components["schemas"]["domains.SubjectAttendance"];
+        };
         "dto.BatchInfo": {
             batch: components["schemas"]["domains.Batch"];
             classrooms_count: number;
@@ -822,7 +836,7 @@ export interface components {
             majors: components["schemas"]["domains.Major"][];
         };
         "responses.GetAllSubjectAttendances": {
-            subject_attendances: components["schemas"]["domains.SubjectAttendance"][];
+            items: components["schemas"]["domains.SubjectAttendanceSubject"][];
         };
         "responses.GetAllSubjects": {
             subjects: components["schemas"]["domains.Subject"][];
@@ -1642,26 +1656,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetAllStudentsRes"];
-                };
-            };
-        };
-    };
-    getAllSubjectAttendances: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["responses.GetAllSubjectAttendances"];
                 };
             };
         };

@@ -1,8 +1,18 @@
 import { UpsertSubjectAttendanceDialog } from "@/components/attendance/subject";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
+import { FormattedDate, FormattedTime } from "react-intl";
 
 export const Route = createFileRoute(
   "/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/"
@@ -17,6 +27,20 @@ function RouteComponent() {
     open: boolean;
     data?: {};
   }>({ open: false });
+
+  const { isSuccess, data } = $api.useQuery(
+    "get",
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances",
+    {
+      params: {
+        path: {
+          batch_id: Number(batchId),
+          major_id: Number(majorId),
+          classroom_id: Number(classroomId),
+        },
+      },
+    }
+  );
 
   return (
     <>
@@ -39,6 +63,45 @@ function RouteComponent() {
             Tambah Presensi Mata Pelajaran
           </Button>
         </div>
+
+        <Table className="mt-4">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Mata Pelajaran</TableHead>
+              <TableHead>Tanggal</TableHead>
+              <TableHead>Waktu</TableHead>
+              <TableHead>Kode</TableHead>
+              <TableHead>Aksi</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isSuccess &&
+              data &&
+              data.items.map((item, index) => (
+                <TableRow key={"subject-attendance-item-" + index}>
+                  <TableCell>{item.subject.name}</TableCell>
+                  <TableCell>
+                    <FormattedDate value={item.subject_attendance.date_time} />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedTime value={item.subject_attendance.date_time} />
+                  </TableCell>
+                  <TableCell>{item.subject_attendance.code}</TableCell>
+                  <TableCell className="space-x-1">
+                    <Button size={"icon"} variant={"outline"}>
+                      <EyeIcon />
+                    </Button>
+                    <Button size={"icon"} variant={"outline"}>
+                      <Edit2Icon />
+                    </Button>
+                    <Button size={"icon"} variant={"destructive"}>
+                      <TrashIcon />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
       </div>
 
       {/* dialogs */}
