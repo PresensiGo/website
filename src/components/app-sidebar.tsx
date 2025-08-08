@@ -43,7 +43,7 @@ const attendanceItems: ItemProps[] = [
   },
   {
     title: "Presensi Mata Pelajaran",
-    href: "/attendance/subject",
+    href: "/attendance/subject/batches",
     icon: <ClipboardCheckIcon />,
   },
 ];
