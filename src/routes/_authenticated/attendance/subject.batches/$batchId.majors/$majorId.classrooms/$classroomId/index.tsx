@@ -2,6 +2,7 @@ import { UpsertSubjectAttendanceDialog } from "@/components/attendance/subject";
 import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute(
   "/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/"
@@ -10,6 +11,13 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+  const { batchId, majorId, classroomId } = Route.useParams();
+
+  const [upsertDialogState, setUpsertDialogState] = useState<{
+    open: boolean;
+    data?: {};
+  }>({ open: false });
+
   return (
     <>
       <div className="py-6">
@@ -26,7 +34,7 @@ function RouteComponent() {
         </div>
 
         <div className="flex justify-end mt-4">
-          <Button>
+          <Button onClick={() => setUpsertDialogState({ open: true })}>
             <PlusIcon />
             Tambah Presensi Mata Pelajaran
           </Button>
@@ -34,7 +42,20 @@ function RouteComponent() {
       </div>
 
       {/* dialogs */}
-      <UpsertSubjectAttendanceDialog />
+      <UpsertSubjectAttendanceDialog
+        open={upsertDialogState.open}
+        onOpenChange={(open, status) => {
+          setUpsertDialogState({ open, data: undefined });
+          if (status) {
+          }
+        }}
+        data={upsertDialogState.data}
+        params={{
+          batchId: Number(batchId),
+          majorId: Number(majorId),
+          classroomId: Number(classroomId),
+        }}
+      />
     </>
   );
 }

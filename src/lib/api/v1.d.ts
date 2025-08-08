@@ -155,7 +155,29 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getBatch"];
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetBatch"];
+                    };
+                };
+            };
+        };
         put: operations["updateBatch"];
         post?: never;
         delete: operations["deleteBatch"];
@@ -306,6 +328,53 @@ export interface paths {
         get: operations["getAllStudentsByClassroomId"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.CreateSubjectAttendance"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.CreateSubjectAttendance"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -677,6 +746,11 @@ export interface components {
         "requests.CreateSubject": {
             name: string;
         };
+        "requests.CreateSubjectAttendance": {
+            datetime: string;
+            note: string;
+            subject_id: number;
+        };
         "requests.Login": {
             /** @default email@email.com */
             email: string;
@@ -719,6 +793,9 @@ export interface components {
         };
         "responses.CreateSubject": {
             subject: components["schemas"]["domains.Subject"];
+        };
+        "responses.CreateSubjectAttendance": {
+            subject_attendance: components["schemas"]["domains.SubjectAttendance"];
         };
         "responses.DeleteGeneralAttendance": {
             message?: string;
@@ -1047,29 +1124,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["domains.Batch"];
-                };
-            };
-        };
-    };
-    getBatch: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description batch id */
-                batch_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["responses.GetBatch"];
                 };
             };
         };

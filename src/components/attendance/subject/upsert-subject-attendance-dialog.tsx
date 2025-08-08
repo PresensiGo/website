@@ -23,12 +23,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { $api } from "@/lib/api/api";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const formSchema = z.object({
@@ -38,14 +47,71 @@ const formSchema = z.object({
   note: z.string().optional(),
 });
 
-export const UpsertSubjectAttendanceDialog = () => {
+interface UpsertSubjectAttendanceDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean, status?: boolean) => void;
+  params: {
+    batchId: number;
+    majorId: number;
+    classroomId: number;
+  };
+  data?: {};
+}
+
+export const UpsertSubjectAttendanceDialog = ({
+  open,
+  onOpenChange,
+  params,
+  data,
+}: UpsertSubjectAttendanceDialogProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
+  const { isSuccess: isSuccessSubjects, data: dataSubjects } = $api.useQuery(
+    "get",
+    "/api/v1/subjects"
+  );
+  const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
+    "post",
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances",
+    {
+      onSuccess: () => {
+        toast.success("Berhasil!", {
+          description: "Presensi mata pelajaran berhasil ditambahkan!",
+          position: "top-right",
+        });
+        onOpenChange(false, true);
+      },
+    }
+  );
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const date = format(values.date, "yyyy-MM-dd");
+    const time = values.time;
+    const datetime = `${date} ${time}`;
+
+    if (data) {
+    } else
+      mutateCreate({
+        params: {
+          path: {
+            batch_id: params.batchId,
+            major_id: params.majorId,
+            classroom_id: params.classroomId,
+          },
+        },
+        body: {
+          datetime,
+          note: values.note ?? "",
+          subject_id: values.subjectId,
+        },
+      });
+  };
+
   return (
     <>
-      <Dialog open>
+      <Dialog open={open} onOpenChange={(e) => onOpenChange(e)}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -60,11 +126,30 @@ export const UpsertSubjectAttendanceDialog = () => {
               <FormField
                 control={form.control}
                 name="subjectId"
-                render={({ field }) => (
+                render={({ field: { onChange, value } }) => (
                   <FormItem>
                     <FormLabel>Mata Pelajaran</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} />
+                      <Select
+                        value={(value && String(value)) || undefined}
+                        onValueChange={(e) => onChange(Number(e))}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Theme" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {isSuccessSubjects &&
+                            dataSubjects &&
+                            dataSubjects.subjects.map((item, index) => (
+                              <SelectItem
+                                value={String(item.id)}
+                                key={"subject-item-" + index}
+                              >
+                                {item.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -115,13 +200,12 @@ export const UpsertSubjectAttendanceDialog = () => {
                 name="time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Waktu</FormLabel>
                     <FormControl>
                       <Input
                         type="time"
                         id="time-picker"
                         step="1"
-                        defaultValue="10:30:00"
                         className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                         {...field}
                       />
@@ -136,9 +220,12 @@ export const UpsertSubjectAttendanceDialog = () => {
                 name="note"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Catatan Tambahan</FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Textarea
+                        {...field}
+                        placeholder="Masukkan catatan tambahan"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,11 +235,14 @@ export const UpsertSubjectAttendanceDialog = () => {
           </Form>
 
           <DialogFooter>
-            <DialogClose asChild>
+            <DialogClose asChild disabled={isPendingCreate}>
               <Button variant={"outline"}>Batal</Button>
             </DialogClose>
-            <Button>
-              <Loader2Icon className="animate-spin" />
+            <Button
+              disabled={isPendingCreate}
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              {isPendingCreate && <Loader2Icon className="animate-spin" />}
               Simpan
             </Button>
           </DialogFooter>
