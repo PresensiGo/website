@@ -4,11 +4,13 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
-import { UploadIcon } from "lucide-react";
+import { PlusIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/teacher-management/")({
@@ -19,6 +21,8 @@ function RouteComponent() {
   const [importDialogState, setImportDialogState] = useState<{
     open: boolean;
   }>({ open: false });
+
+  const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/accounts");
 
   return (
     <>
@@ -33,22 +37,38 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="flex justify-end mt-4">
-          <Button>
+        <div className="flex justify-end mt-4 space-x-2">
+          <Button variant={"outline"}>
             <UploadIcon />
             Unggah Data Guru
+          </Button>
+          <Button>
+            <PlusIcon />
+            Tambah Guru
           </Button>
         </div>
 
         <Table className="mt-4">
           <TableHeader>
             <TableRow>
-              <TableCell>Nama</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Aksi</TableCell>
+              <TableHead>Nama</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody></TableBody>
+          <TableBody>
+            {isSuccess &&
+              data &&
+              data.users.map((item, index) => (
+                <TableRow key={"account-item-" + index}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.email}</TableCell>
+                  <TableCell>{item.role}</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
         </Table>
       </div>
 
@@ -57,8 +77,7 @@ function RouteComponent() {
         open={importDialogState.open}
         onOpenChange={(open, status) => {
           setImportDialogState({ open });
-          if (status) {
-          }
+          if (status) refetch();
         }}
       />
     </>

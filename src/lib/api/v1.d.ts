@@ -4,6 +4,41 @@
  */
 
 export interface paths {
+    "/api/v1/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetAllUsers"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -859,6 +894,14 @@ export interface components {
             subject: components["schemas"]["domains.Subject"];
             subject_attendance: components["schemas"]["domains.SubjectAttendance"];
         };
+        "domains.User": {
+            email: string;
+            id: number;
+            name: string;
+            password: string;
+            role: string;
+            school_id: number;
+        };
         "dto.BatchInfo": {
             batch: components["schemas"]["domains.Batch"];
             classrooms_count: number;
@@ -966,6 +1009,9 @@ export interface components {
         };
         "responses.GetAllSubjects": {
             subjects: components["schemas"]["domains.Subject"][];
+        };
+        "responses.GetAllUsers": {
+            users: components["schemas"]["domains.User"][];
         };
         "responses.GetBatch": {
             batch: components["schemas"]["domains.Batch"];
