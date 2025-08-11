@@ -4,6 +4,8 @@ import {
   CalendarClockIcon,
   ClipboardCheckIcon,
   DatabaseIcon,
+  SmartphoneIcon,
+  UsersIcon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,9 +31,19 @@ const dataItems: ItemProps[] = [
     icon: <DatabaseIcon />,
   },
   {
+    title: "Manajemen Data Guru",
+    href: "/teacher-management",
+    icon: <UsersIcon />,
+  },
+  {
     title: "Manajemen Mata Pelajaran",
     href: "/subject-management",
     icon: <BookMarkedIcon />,
+  },
+  {
+    title: "Manajemen Akun Siswa",
+    href: "/student-account-management",
+    icon: <SmartphoneIcon />,
   },
 ];
 
@@ -47,15 +59,6 @@ const attendanceItems: ItemProps[] = [
     icon: <ClipboardCheckIcon />,
   },
 ];
-
-// const menus: { title: string; href: string }[] = [
-//   { title: "Halaman Utama", href: "/" },
-//   { title: "Manajemen Data", href: "/data-management/batches" },
-//   { title: "Pengaturan", href: "/setting" },
-//   { title: "Presensi Kehadiran", href: "/general-attendance" },
-//   { title: "Presensi Mata Pelajaran", href: "/subject-attendance" },
-//   { title: "Manajemen Mata Pelajaran", href: "/subjects" },
-// ];
 
 export const AppSidebar = () => {
   return (

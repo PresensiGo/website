@@ -4,54 +4,6 @@
  */
 
 export interface paths {
-    "/api/v1/attendances": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["createAttendance"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/attendances/classrooms/{classroom_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAllAttendances"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/attendances/{attendance_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAttendance"];
-        put?: never;
-        post?: never;
-        delete: operations["deleteAttendance"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/auth/login": {
         parameters: {
             query?: never;
@@ -126,6 +78,76 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["register"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/students/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.StudentLogin"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/students/refresh-token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.StudentRefreshToken"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -407,6 +429,53 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/records/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.CreateSubjectAttendanceRecordStudent"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.CreateSubjectAttendanceRecordStudent"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}": {
         parameters: {
             query?: never;
@@ -499,6 +568,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/general-attendances/records/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.CreateGeneralAttendanceRecordStudent"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.CreateGeneralAttendanceRecordStudent"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/general_attendances": {
         parameters: {
             query?: never;
@@ -526,38 +635,6 @@ export interface paths {
         put: operations["updateGeneralAttendance"];
         post?: never;
         delete: operations["deleteGeneralAttendance"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/latenesses": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getAllLatenesses"];
-        put?: never;
-        post: operations["createLateness"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/latenesses/{lateness_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getLateness"];
-        put?: never;
-        post: operations["createLatenessDetail"];
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -659,49 +736,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teachers/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "multipart/form-data": {
+                        /**
+                         * Format: binary
+                         * @description file
+                         */
+                        file: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.ImportTeacher"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        CreateAttendanceItemReq: {
-            note?: string;
-            status?: components["schemas"]["models.AttendanceStatus"];
-            student_id?: number;
-        };
-        CreateAttendanceReq: {
-            attendance_students?: components["schemas"]["CreateAttendanceItemReq"][];
-            classroom_id?: number;
-            date?: string;
-        };
-        CreateLatenessDetailReq: {
-            student_ids: number[];
-        };
-        CreateLatenessReq: {
-            date: string;
-        };
-        GetAllAttendancesRes: {
-            attendances: components["schemas"]["domains.Attendance"][];
-        };
-        GetAllLatenessesRes: {
-            latenesses: components["schemas"]["domains.Lateness"][];
-        };
         GetAllStudentsByClassroomIdRes: {
             students: components["schemas"]["domains.Student"][];
         };
         GetAllStudentsRes: {
             students: components["schemas"]["domains.StudentMajorClassroom"][];
-        };
-        GetAttendanceItemRes: {
-            attendanceStudent: components["schemas"]["domains.AttendanceDetail"];
-            student: components["schemas"]["domains.Student"];
-        };
-        GetAttendanceRes: {
-            attendance: components["schemas"]["domains.Attendance"];
-            items: components["schemas"]["GetAttendanceItemRes"][];
-        };
-        GetLatenessRes: {
-            items: components["schemas"]["domains.StudentMajorClassroom"][];
-            lateness: components["schemas"]["domains.Lateness"];
         };
         RefreshTokenTTLReq: {
             refresh_token?: string;
@@ -720,18 +808,6 @@ export interface components {
             batch_id: number;
             name: string;
         };
-        "domains.Attendance": {
-            classroom_id: number;
-            date: string;
-            id: number;
-        };
-        "domains.AttendanceDetail": {
-            attendance_id: number;
-            id: number;
-            note: string;
-            status: components["schemas"]["models.AttendanceStatus"];
-            student_id: number;
-        };
         "domains.Batch": {
             id: number;
             name: string;
@@ -749,11 +825,6 @@ export interface components {
             note: string;
             school_id: number;
         };
-        "domains.Lateness": {
-            date: string;
-            id: number;
-            school_id: number;
-        };
         "domains.Major": {
             batch_id: number;
             id: number;
@@ -764,6 +835,7 @@ export interface components {
             id: number;
             name: string;
             nis: string;
+            school_id: number;
         };
         "domains.StudentMajorClassroom": {
             classroom: components["schemas"]["domains.Classroom"];
@@ -792,14 +864,15 @@ export interface components {
             classrooms_count: number;
             majors_count: number;
         };
-        /** @enum {string} */
-        "models.AttendanceStatus": "hadir" | "izin" | "sakit" | "alpha";
         "requests.CreateClassroom": {
             name: string;
         };
         "requests.CreateGeneralAttendance": {
             datetime?: string;
             note?: string;
+        };
+        "requests.CreateGeneralAttendanceRecordStudent": {
+            code: string;
         };
         "requests.CreateSubject": {
             name: string;
@@ -808,6 +881,9 @@ export interface components {
             datetime: string;
             note: string;
             subject_id: number;
+        };
+        "requests.CreateSubjectAttendanceRecordStudent": {
+            code: string;
         };
         "requests.Login": {
             /** @default email@email.com */
@@ -849,11 +925,17 @@ export interface components {
         "responses.CreateGeneralAttendance": {
             general_attendance: components["schemas"]["domains.GeneralAttendance"];
         };
+        "responses.CreateGeneralAttendanceRecordStudent": {
+            message: string;
+        };
         "responses.CreateSubject": {
             subject: components["schemas"]["domains.Subject"];
         };
         "responses.CreateSubjectAttendance": {
             subject_attendance: components["schemas"]["domains.SubjectAttendance"];
+        };
+        "responses.CreateSubjectAttendanceRecordStudent": {
+            message: string;
         };
         "responses.DeleteGeneralAttendance": {
             message?: string;
@@ -894,6 +976,9 @@ export interface components {
         "responses.GetSubjectAttendance": {
             subject_attendance: components["schemas"]["domains.SubjectAttendance"];
         };
+        "responses.ImportTeacher": {
+            message: string;
+        };
         "responses.Login": {
             access_token: string;
             refresh_token: string;
@@ -904,6 +989,14 @@ export interface components {
             refresh_token: string;
         };
         "responses.Register": {
+            access_token: string;
+            refresh_token: string;
+        };
+        "responses.StudentLogin": {
+            access_token: string;
+            refresh_token: string;
+        };
+        "responses.StudentRefreshToken": {
             access_token: string;
             refresh_token: string;
         };
@@ -925,100 +1018,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    createAttendance: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Body */
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateAttendanceReq"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
-                };
-            };
-        };
-    };
-    getAllAttendances: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Classroom Id */
-                classroom_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetAllAttendancesRes"];
-                };
-            };
-        };
-    };
-    getAttendance: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Attendance Id */
-                attendance_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetAttendanceRes"];
-                };
-            };
-        };
-    };
-    deleteAttendance: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Attendance Id */
-                attendance_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
-                };
-            };
-        };
-    };
     login: {
         parameters: {
             query?: never;
@@ -1468,102 +1467,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.DeleteGeneralAttendance"];
-                };
-            };
-        };
-    };
-    getAllLatenesses: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetAllLatenessesRes"];
-                };
-            };
-        };
-    };
-    createLateness: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Payload */
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateLatenessReq"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
-                };
-            };
-        };
-    };
-    getLateness: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Lateness ID */
-                lateness_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetLatenessRes"];
-                };
-            };
-        };
-    };
-    createLatenessDetail: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Payload */
-                lateness_id: number;
-            };
-            cookie?: never;
-        };
-        /** @description Payload */
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateLatenessDetailReq"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
                 };
             };
         };

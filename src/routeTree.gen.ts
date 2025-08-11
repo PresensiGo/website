@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTeacherManagementIndexRouteImport } from './routes/_authenticated/teacher-management/index'
 import { Route as AuthenticatedSubjectManagementIndexRouteImport } from './routes/_authenticated/subject-management/index'
 import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authenticated/setting/index'
 import { Route as AuthAuthRegisterRouteImport } from './routes/_auth/auth.register'
@@ -41,6 +42,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedTeacherManagementIndexRoute =
+  AuthenticatedTeacherManagementIndexRouteImport.update({
+    id: '/teacher-management/',
+    path: '/teacher-management/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSubjectManagementIndexRoute =
   AuthenticatedSubjectManagementIndexRouteImport.update({
     id: '/subject-management/',
@@ -146,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/auth/register': typeof AuthAuthRegisterRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
+  '/teacher-management': typeof AuthenticatedTeacherManagementIndexRoute
   '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/attendance/general/$generalAttendanceId': typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
@@ -164,6 +172,7 @@ export interface FileRoutesByTo {
   '/auth/register': typeof AuthAuthRegisterRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
+  '/teacher-management': typeof AuthenticatedTeacherManagementIndexRoute
   '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/attendance/general/$generalAttendanceId': typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
@@ -185,6 +194,7 @@ export interface FileRoutesById {
   '/_auth/auth/register': typeof AuthAuthRegisterRoute
   '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
   '/_authenticated/subject-management/': typeof AuthenticatedSubjectManagementIndexRoute
+  '/_authenticated/teacher-management/': typeof AuthenticatedTeacherManagementIndexRoute
   '/_authenticated/attendance/general/': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/_authenticated/data-management/batches/': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/_authenticated/attendance/general/$generalAttendanceId/': typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/setting'
     | '/subject-management'
+    | '/teacher-management'
     | '/attendance/general'
     | '/data-management/batches'
     | '/attendance/general/$generalAttendanceId'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/auth/register'
     | '/setting'
     | '/subject-management'
+    | '/teacher-management'
     | '/attendance/general'
     | '/data-management/batches'
     | '/attendance/general/$generalAttendanceId'
@@ -243,6 +255,7 @@ export interface FileRouteTypes {
     | '/_auth/auth/register'
     | '/_authenticated/setting/'
     | '/_authenticated/subject-management/'
+    | '/_authenticated/teacher-management/'
     | '/_authenticated/attendance/general/'
     | '/_authenticated/data-management/batches/'
     | '/_authenticated/attendance/general/$generalAttendanceId/'
@@ -282,6 +295,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/teacher-management/': {
+      id: '/_authenticated/teacher-management/'
+      path: '/teacher-management'
+      fullPath: '/teacher-management'
+      preLoaderRoute: typeof AuthenticatedTeacherManagementIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/subject-management/': {
@@ -408,6 +428,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedSettingIndexRoute: typeof AuthenticatedSettingIndexRoute
   AuthenticatedSubjectManagementIndexRoute: typeof AuthenticatedSubjectManagementIndexRoute
+  AuthenticatedTeacherManagementIndexRoute: typeof AuthenticatedTeacherManagementIndexRoute
   AuthenticatedAttendanceGeneralIndexRoute: typeof AuthenticatedAttendanceGeneralIndexRoute
   AuthenticatedDataManagementBatchesIndexRoute: typeof AuthenticatedDataManagementBatchesIndexRoute
   AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute: typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
@@ -426,6 +447,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingIndexRoute: AuthenticatedSettingIndexRoute,
   AuthenticatedSubjectManagementIndexRoute:
     AuthenticatedSubjectManagementIndexRoute,
+  AuthenticatedTeacherManagementIndexRoute:
+    AuthenticatedTeacherManagementIndexRoute,
   AuthenticatedAttendanceGeneralIndexRoute:
     AuthenticatedAttendanceGeneralIndexRoute,
   AuthenticatedDataManagementBatchesIndexRoute:
