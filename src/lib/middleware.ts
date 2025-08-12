@@ -15,7 +15,7 @@ export const middleware: Middleware = {
         // token expired
         // mendapatkan token baru
         try {
-          const response2 = await fetch(
+          const refreshTokenResponse = await fetch(
             `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
             {
               method: "POST",
@@ -25,12 +25,14 @@ export const middleware: Middleware = {
             }
           );
 
-          const body = await response2.json();
+          const body = await refreshTokenResponse.json();
           auth.set({
             accessToken: body.access_token,
             refreshToken: body.refresh_token,
           });
         } catch (e) {
+          // refresh token sudah direvoke atau refresh token sudah kadaluarsa
+          // clear auth untuk memaksa user login kembali
           auth.clear();
         }
       }
