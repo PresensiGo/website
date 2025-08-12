@@ -534,6 +534,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}/records": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                    /** @description subject attendance id */
+                    subject_attendance_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetAllSubjectAttendanceRecords"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/classrooms": {
         parameters: {
             query?: never;
@@ -953,6 +997,12 @@ export interface components {
             note: string;
             subject_id: number;
         };
+        "domains.SubjectAttendanceRecord": {
+            created_at: string;
+            id: number;
+            student_id: number;
+            subject_attendance_id: number;
+        };
         "domains.SubjectAttendanceSubject": {
             subject: components["schemas"]["domains.Subject"];
             subject_attendance: components["schemas"]["domains.SubjectAttendance"];
@@ -977,6 +1027,10 @@ export interface components {
         "dto.StudentAccount": {
             student: components["schemas"]["domains.Student"];
             student_token: components["schemas"]["domains.StudentToken"];
+        };
+        "dto.SubjectAttendanceRecordItem": {
+            record: components["schemas"]["domains.SubjectAttendanceRecord"];
+            student: components["schemas"]["domains.Student"];
         };
         "requests.CreateClassroom": {
             name: string;
@@ -1057,6 +1111,9 @@ export interface components {
         };
         "responses.GetAllStudentAccountsByClassroomId": {
             items: components["schemas"]["dto.StudentAccount"][];
+        };
+        "responses.GetAllSubjectAttendanceRecords": {
+            items: components["schemas"]["dto.SubjectAttendanceRecordItem"][];
         };
         "responses.GetAllSubjectAttendances": {
             items: components["schemas"]["domains.SubjectAttendanceSubject"][];

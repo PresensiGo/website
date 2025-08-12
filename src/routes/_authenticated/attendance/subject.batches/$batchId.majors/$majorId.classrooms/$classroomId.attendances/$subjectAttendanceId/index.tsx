@@ -1,8 +1,17 @@
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { RefreshCwIcon } from "lucide-react";
+import { FormattedDate, FormattedTime } from "react-intl";
 import ReactQRCode from "react-qr-code";
 
 export const Route = createFileRoute(
@@ -18,6 +27,20 @@ function RouteComponent() {
   const { isSuccess, data } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}",
+    {
+      params: {
+        path: {
+          batch_id: Number(batchId),
+          major_id: Number(majorId),
+          classroom_id: Number(classroomId),
+          subject_attendance_id: Number(subjectAttendanceId),
+        },
+      },
+    }
+  );
+  const { isSuccess: isSuccessRecords, data: dataRecords } = $api.useQuery(
+    "get",
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}/records",
     {
       params: {
         path: {
@@ -45,15 +68,18 @@ function RouteComponent() {
           </p>
         </div>
 
-        <Tabs defaultValue="qr-code" className="mt-4">
+        <Tabs defaultValue="records" className="mt-4">
           <TabsList>
             <TabsTrigger value="qr-code">QR Code</TabsTrigger>
-            <TabsTrigger value="students">Daftar Siswa</TabsTrigger>
+            <TabsTrigger value="records">Daftar Siswa</TabsTrigger>
           </TabsList>
           <TabsContent value="qr-code">
             {isSuccess && data && (
               <ReactQRCode
-                value={data.subject_attendance.code}
+                value={JSON.stringify({
+                  type: "subject",
+                  code: data.subject_attendance.code,
+                })}
                 className="w-full h-84"
               />
             )}
@@ -62,7 +88,44 @@ function RouteComponent() {
               Refresh QR Code
             </Button>
           </TabsContent>
-          <TabsContent value="students">Change your password here.</TabsContent>
+          <TabsContent value="records">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>NIS</TableHead>
+                  <TableHead>Nama</TableHead>
+                  <TableHead>Tanggal</TableHead>
+                  <TableHead>Waktu</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isSuccessRecords &&
+                  dataRecords &&
+                  dataRecords.items.map((item, index) => (
+                    <TableRow key={"record-item-" + index}>
+                      <TableCell>{item.student.nis}</TableCell>
+                      <TableCell>{item.student.name}</TableCell>
+                      <TableCell>
+                        {item.record.id === 0 ? (
+                          "-"
+                        ) : (
+                          <FormattedDate value={item.record.created_at} />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {item.record.id === 0 ? (
+                          "-"
+                        ) : (
+                          <FormattedTime value={item.record.created_at} />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TabsContent>
         </Tabs>
       </div>
     </>
