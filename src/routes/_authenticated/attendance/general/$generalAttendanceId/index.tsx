@@ -1,6 +1,17 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
+import { isBefore } from "date-fns";
+import { useCallback } from "react";
+import { FormattedDate, FormattedTime } from "react-intl";
 import ReactQRCode from "react-qr-code";
 
 export const Route = createFileRoute(
@@ -14,10 +25,29 @@ function RouteComponent() {
 
   const { isSuccess, data } = $api.useQuery(
     "get",
-    "/api/v1/general_attendances/{general_attendance_id}",
+    "/api/v1/general-attendances/{general_attendance_id}",
     {
       params: { path: { general_attendance_id: Number(generalAttendanceId) } },
     }
+  );
+  const { isSuccess: isSuccessStudent, data: dataStudents } = $api.useQuery(
+    "get",
+    "/api/v1/general-attendances/{general_attendance_id}/students",
+    {
+      params: {
+        path: {
+          general_attendance_id: Number(generalAttendanceId),
+        },
+      },
+    }
+  );
+
+  const isEarly = useCallback(
+    (date: string) => {
+      if (data) return isBefore(date, data.general_attendance.datetime);
+      return false;
+    },
+    [data]
   );
 
   return (
@@ -33,7 +63,7 @@ function RouteComponent() {
           </p>
         </div>
 
-        <Tabs defaultValue="qr-code" className="mt-4">
+        <Tabs defaultValue="students" className="mt-4">
           <TabsList>
             <TabsTrigger value="qr-code">QR Code</TabsTrigger>
             <TabsTrigger value="students">Daftar Siswa</TabsTrigger>
@@ -50,7 +80,41 @@ function RouteComponent() {
               />
             )}
           </TabsContent>
-          <TabsContent value="students">Change your password here.</TabsContent>
+          <TabsContent value="students">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>NIS</TableHead>
+                  <TableHead>Nama</TableHead>
+                  <TableHead>Tanggal</TableHead>
+                  <TableHead>Waktu</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isSuccessStudent &&
+                  dataStudents &&
+                  dataStudents.items.map((item, index) => (
+                    <TableRow key={"student-item-" + index}>
+                      <TableCell>{item.student.nis}</TableCell>
+                      <TableCell>{item.student.name}</TableCell>
+                      <TableCell>
+                        <FormattedDate value={item.record.created_at} />
+                      </TableCell>
+                      <TableCell>
+                        <FormattedTime value={item.record.created_at} />
+                      </TableCell>
+                      <TableCell>
+                        {isEarly(item.record.created_at)
+                          ? "Tepat waktu"
+                          : "Terlambat"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TabsContent>
         </Tabs>
       </div>
     </>

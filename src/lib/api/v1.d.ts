@@ -490,53 +490,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/records/student": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description batch id */
-                    batch_id: number;
-                    /** @description major id */
-                    major_id: number;
-                    /** @description classroom id */
-                    classroom_id: number;
-                };
-                cookie?: never;
-            };
-            /** @description body */
-            requestBody: {
-                content: {
-                    "*/*": components["schemas"]["requests.CreateSubjectAttendanceRecordStudent"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.CreateSubjectAttendanceRecordStudent"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}": {
         parameters: {
             query?: never;
@@ -613,47 +566,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/general-attendances/records/student": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            /** @description body */
-            requestBody: {
-                content: {
-                    "*/*": components["schemas"]["requests.CreateGeneralAttendanceRecordStudent"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.CreateGeneralAttendanceRecordStudent"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/general_attendances": {
+    "/api/v1/general-attendances": {
         parameters: {
             query?: never;
             header?: never;
@@ -669,7 +582,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/general_attendances/{general_attendance_id}": {
+    "/api/v1/general-attendances/records/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createGeneralAttendanceRecordStudent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/general-attendances/{general_attendance_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -677,6 +606,60 @@ export interface paths {
             cookie?: never;
         };
         get: operations["getGeneralAttendance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/general-attendances/{general_attendance_id}/students": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description general attendance id */
+                    general_attendance_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetAllGeneralAttendanceStudents"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/general_attendances/{general_attendance_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
         put: operations["updateGeneralAttendance"];
         post?: never;
         delete: operations["deleteGeneralAttendance"];
@@ -743,6 +726,22 @@ export interface paths {
         get: operations["getAllStudents"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/subject-attendances/records/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createSubjectAttendanceRecordStudent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -830,6 +829,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreateGeneralAttendanceRecordStudentReq: {
+            code: string;
+        };
+        CreateSubjectAttendanceRecordStudentReq: {
+            code: string;
+        };
         GetAllStudentsByClassroomIdRes: {
             students: components["schemas"]["domains.Student"][];
         };
@@ -905,6 +910,12 @@ export interface components {
             note: string;
             school_id: number;
         };
+        "domains.GeneralAttendanceRecord": {
+            created_at: string;
+            general_attendance_id: number;
+            id: number;
+            student_id: number;
+        };
         "domains.Major": {
             batch_id: number;
             id: number;
@@ -959,6 +970,10 @@ export interface components {
             classrooms_count: number;
             majors_count: number;
         };
+        "dto.GeneralAttendanceStudentItem": {
+            record: components["schemas"]["domains.GeneralAttendanceRecord"];
+            student: components["schemas"]["domains.Student"];
+        };
         "dto.StudentAccount": {
             student: components["schemas"]["domains.Student"];
             student_token: components["schemas"]["domains.StudentToken"];
@@ -970,9 +985,6 @@ export interface components {
             datetime?: string;
             note?: string;
         };
-        "requests.CreateGeneralAttendanceRecordStudent": {
-            code: string;
-        };
         "requests.CreateSubject": {
             name: string;
         };
@@ -980,9 +992,6 @@ export interface components {
             datetime: string;
             note: string;
             subject_id: number;
-        };
-        "requests.CreateSubjectAttendanceRecordStudent": {
-            code: string;
         };
         "requests.UpdateClassroom": {
             name: string;
@@ -1036,6 +1045,9 @@ export interface components {
         };
         "responses.GetAllClassroomsByMajorId": {
             classrooms: components["schemas"]["domains.Classroom"][];
+        };
+        "responses.GetAllGeneralAttendanceStudents": {
+            items: components["schemas"]["dto.GeneralAttendanceStudentItem"][];
         };
         "responses.GetAllGeneralAttendances": {
             general_attendances: components["schemas"]["domains.GeneralAttendance"][];
@@ -1470,6 +1482,31 @@ export interface operations {
             };
         };
     };
+    createGeneralAttendanceRecordStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateGeneralAttendanceRecordStudentReq"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.CreateGeneralAttendanceRecordStudent"];
+                };
+            };
+        };
+    };
     getGeneralAttendance: {
         parameters: {
             query?: never;
@@ -1679,6 +1716,31 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetAllStudentsRes"];
+                };
+            };
+        };
+    };
+    createSubjectAttendanceRecordStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateSubjectAttendanceRecordStudentReq"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.CreateSubjectAttendanceRecordStudent"];
                 };
             };
         };

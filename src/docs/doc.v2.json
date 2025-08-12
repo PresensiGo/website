@@ -653,53 +653,6 @@
                 }
             }
         },
-        "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/records/student": {
-            "post": {
-                "tags": [
-                    "attendance"
-                ],
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "batch id",
-                        "name": "batch_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "major id",
-                        "name": "major_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "classroom id",
-                        "name": "classroom_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.CreateSubjectAttendanceRecordStudent"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.CreateSubjectAttendanceRecordStudent"
-                        }
-                    }
-                }
-            }
-        },
         "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}": {
             "get": {
                 "tags": [
@@ -786,33 +739,7 @@
                 }
             }
         },
-        "/api/v1/general-attendances/records/student": {
-            "post": {
-                "tags": [
-                    "attendance"
-                ],
-                "parameters": [
-                    {
-                        "description": "body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.CreateGeneralAttendanceRecordStudent"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.CreateGeneralAttendanceRecordStudent"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/general_attendances": {
+        "/api/v1/general-attendances": {
             "get": {
                 "tags": [
                     "attendance"
@@ -853,7 +780,34 @@
                 }
             }
         },
-        "/api/v1/general_attendances/{general_attendance_id}": {
+        "/api/v1/general-attendances/records/student": {
+            "post": {
+                "tags": [
+                    "attendance"
+                ],
+                "operationId": "createGeneralAttendanceRecordStudent",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateGeneralAttendanceRecordStudentReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CreateGeneralAttendanceRecordStudent"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/general-attendances/{general_attendance_id}": {
             "get": {
                 "tags": [
                     "attendance"
@@ -876,7 +830,33 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/v1/general-attendances/{general_attendance_id}/students": {
+            "get": {
+                "tags": [
+                    "attendance"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "general attendance id",
+                        "name": "general_attendance_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.GetAllGeneralAttendanceStudents"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/general_attendances/{general_attendance_id}": {
             "put": {
                 "tags": [
                     "attendance"
@@ -1075,6 +1055,33 @@
                 }
             }
         },
+        "/api/v1/subject-attendances/records/student": {
+            "post": {
+                "tags": [
+                    "attendance"
+                ],
+                "operationId": "createSubjectAttendanceRecordStudent",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateSubjectAttendanceRecordStudentReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.CreateSubjectAttendanceRecordStudent"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/subjects": {
             "get": {
                 "tags": [
@@ -1199,6 +1206,28 @@
         }
     },
     "definitions": {
+        "CreateGeneralAttendanceRecordStudentReq": {
+            "type": "object",
+            "required": [
+                "code"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
+        "CreateSubjectAttendanceRecordStudentReq": {
+            "type": "object",
+            "required": [
+                "code"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
         "GetAllStudentsByClassroomIdRes": {
             "type": "object",
             "required": [
@@ -1467,6 +1496,29 @@
                 }
             }
         },
+        "domains.GeneralAttendanceRecord": {
+            "type": "object",
+            "required": [
+                "created_at",
+                "general_attendance_id",
+                "id",
+                "student_id"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "general_attendance_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "student_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "domains.Major": {
             "type": "object",
             "required": [
@@ -1674,6 +1726,21 @@
                 }
             }
         },
+        "dto.GeneralAttendanceStudentItem": {
+            "type": "object",
+            "required": [
+                "record",
+                "student"
+            ],
+            "properties": {
+                "record": {
+                    "$ref": "#/definitions/domains.GeneralAttendanceRecord"
+                },
+                "student": {
+                    "$ref": "#/definitions/domains.Student"
+                }
+            }
+        },
         "dto.StudentAccount": {
             "type": "object",
             "required": [
@@ -1711,17 +1778,6 @@
                 }
             }
         },
-        "requests.CreateGeneralAttendanceRecordStudent": {
-            "type": "object",
-            "required": [
-                "code"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
-                }
-            }
-        },
         "requests.CreateSubject": {
             "type": "object",
             "required": [
@@ -1749,17 +1805,6 @@
                 },
                 "subject_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "requests.CreateSubjectAttendanceRecordStudent": {
-            "type": "object",
-            "required": [
-                "code"
-            ],
-            "properties": {
-                "code": {
-                    "type": "string"
                 }
             }
         },
@@ -1959,6 +2004,20 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/domains.Classroom"
+                    }
+                }
+            }
+        },
+        "responses.GetAllGeneralAttendanceStudents": {
+            "type": "object",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.GeneralAttendanceStudentItem"
                     }
                 }
             }

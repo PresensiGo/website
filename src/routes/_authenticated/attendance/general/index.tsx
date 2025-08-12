@@ -37,7 +37,7 @@ function RouteComponent() {
 
   const { isSuccess, data, refetch } = $api.useQuery(
     "get",
-    "/api/v1/general_attendances"
+    "/api/v1/general-attendances"
   );
 
   return (
