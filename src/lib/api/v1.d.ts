@@ -103,22 +103,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/register": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["register"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/auth/students/login": {
         parameters: {
             query?: never;
@@ -128,26 +112,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.StudentLogin"];
-                    };
-                };
-            };
-        };
+        post: operations["loginStudent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -163,26 +128,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.StudentRefreshToken"];
-                    };
-                };
-            };
-        };
+        post: operations["refreshTokenStudent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -368,6 +314,48 @@ export interface paths {
                 };
             };
         };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/student-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.GetAllStudentAccountsByClassroomId"];
+                    };
+                };
+            };
+        };
+        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -581,22 +569,6 @@ export interface paths {
         get: operations["getAllClassroomWithMajors"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/excel/import": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["importData"];
         delete?: never;
         options?: never;
         head?: never;
@@ -826,6 +798,41 @@ export interface components {
         GetAllStudentsRes: {
             students: components["schemas"]["domains.StudentMajorClassroom"][];
         };
+        LoginReq: {
+            /** @default email@email.com */
+            email: string;
+            password?: string;
+        };
+        LoginRes: {
+            access_token: string;
+            refresh_token: string;
+        };
+        LoginStudentReq: {
+            device_id: string;
+            nis: string;
+            school_code: string;
+        };
+        LoginStudentRes: {
+            access_token: string;
+            refresh_token: string;
+        };
+        LogoutReq: {
+            refresh_token: string;
+        };
+        RefreshTokenReq: {
+            refresh_token?: string;
+        };
+        RefreshTokenRes: {
+            access_token: string;
+            refresh_token: string;
+        };
+        RefreshTokenStudentReq: {
+            refresh_token: string;
+        };
+        RefreshTokenStudentRes: {
+            access_token: string;
+            refresh_token: string;
+        };
         RefreshTokenTTLReq: {
             refresh_token?: string;
         };
@@ -877,6 +884,13 @@ export interface components {
             major: components["schemas"]["domains.Major"];
             student: components["schemas"]["domains.Student"];
         };
+        "domains.StudentToken": {
+            device_id: string;
+            id: number;
+            refresh_token: string;
+            student_id: number;
+            ttl: string;
+        };
         "domains.Subject": {
             id: number;
             name: string;
@@ -907,6 +921,10 @@ export interface components {
             classrooms_count: number;
             majors_count: number;
         };
+        "dto.StudentAccount": {
+            student: components["schemas"]["domains.Student"];
+            student_token: components["schemas"]["domains.StudentToken"];
+        };
         "requests.CreateClassroom": {
             name: string;
         };
@@ -927,26 +945,6 @@ export interface components {
         };
         "requests.CreateSubjectAttendanceRecordStudent": {
             code: string;
-        };
-        "requests.Login": {
-            /** @default email@email.com */
-            email: string;
-            password?: string;
-        };
-        "requests.Logout": {
-            refresh_token: string;
-        };
-        "requests.RefreshToken": {
-            refresh_token?: string;
-        };
-        "requests.Register": {
-            code?: string;
-            /** @default email@email.com */
-            email: string;
-            /** @default John Doe */
-            name: string;
-            /** @default password */
-            password: string;
         };
         "requests.UpdateClassroom": {
             name: string;
@@ -1004,6 +1002,9 @@ export interface components {
         "responses.GetAllMajorsByBatchId": {
             majors: components["schemas"]["domains.Major"][];
         };
+        "responses.GetAllStudentAccountsByClassroomId": {
+            items: components["schemas"]["dto.StudentAccount"][];
+        };
         "responses.GetAllSubjectAttendances": {
             items: components["schemas"]["domains.SubjectAttendanceSubject"][];
         };
@@ -1025,27 +1026,7 @@ export interface components {
         "responses.ImportTeacher": {
             message: string;
         };
-        "responses.Login": {
-            access_token: string;
-            refresh_token: string;
-        };
         "responses.Logout": Record<string, never>;
-        "responses.RefreshToken": {
-            access_token: string;
-            refresh_token: string;
-        };
-        "responses.Register": {
-            access_token: string;
-            refresh_token: string;
-        };
-        "responses.StudentLogin": {
-            access_token: string;
-            refresh_token: string;
-        };
-        "responses.StudentRefreshToken": {
-            access_token: string;
-            refresh_token: string;
-        };
         "responses.UpdateClassroom": {
             classroom: components["schemas"]["domains.Classroom"];
         };
@@ -1071,10 +1052,10 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        /** @description Login request */
+        /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.Login"];
+                "*/*": components["schemas"]["LoginReq"];
             };
         };
         responses: {
@@ -1084,7 +1065,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["responses.Login"];
+                    "*/*": components["schemas"]["LoginRes"];
                 };
             };
         };
@@ -1099,7 +1080,7 @@ export interface operations {
         /** @description Logout Request */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.Logout"];
+                "*/*": components["schemas"]["LogoutReq"];
             };
         };
         responses: {
@@ -1124,7 +1105,7 @@ export interface operations {
         /** @description Refresh token req */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.RefreshToken"];
+                "*/*": components["schemas"]["RefreshTokenReq"];
             };
         };
         responses: {
@@ -1134,7 +1115,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["responses.RefreshToken"];
+                    "*/*": components["schemas"]["RefreshTokenRes"];
                 };
             };
         };
@@ -1164,17 +1145,17 @@ export interface operations {
             };
         };
     };
-    register: {
+    loginStudent: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Login request */
+        /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.Register"];
+                "*/*": components["schemas"]["LoginStudentReq"];
             };
         };
         responses: {
@@ -1184,7 +1165,32 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["responses.Register"];
+                    "*/*": components["schemas"]["LoginStudentRes"];
+                };
+            };
+        };
+    };
+    refreshTokenStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["RefreshTokenStudentReq"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RefreshTokenStudentRes"];
                 };
             };
         };
@@ -1374,26 +1380,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.GetAllClassroomWithMajors"];
-                };
-            };
-        };
-    };
-    importData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
                 };
             };
         };
