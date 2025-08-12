@@ -103,6 +103,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/students/accounts/{student_token_id}/eject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description student token id */
+                    student_token_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.EjectStudentToken"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/students/login": {
         parameters: {
             query?: never;
@@ -982,6 +1020,9 @@ export interface components {
             message?: string;
         };
         "responses.DeleteSubject": {
+            message: string;
+        };
+        "responses.EjectStudentToken": {
             message: string;
         };
         "responses.GetAll": {

@@ -1,3 +1,4 @@
+import { EjectStudentAccountDialog } from "@/components/student-account-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,6 +11,7 @@ import {
 import { $api } from "@/lib/api/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { XIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute(
   "/_authenticated/student-account-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/"
@@ -20,7 +22,14 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { batchId, majorId, classroomId } = Route.useParams();
 
-  const { isSuccess, data } = $api.useQuery(
+  const [ejectDialogState, setEjectDialogState] = useState<{
+    open: boolean;
+    data?: {
+      id: number;
+    };
+  }>({ open: false });
+
+  const { isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/student-accounts",
     {
@@ -64,12 +73,22 @@ function RouteComponent() {
                   <TableCell>{item.student.nis}</TableCell>
                   <TableCell>{item.student.name}</TableCell>
                   <TableCell>
-                    {item.student_token.id === 0
+                    {item.student_token.device_id.length === 0
                       ? "Belum masuk akun"
                       : item.student_token.device_id}
                   </TableCell>
                   <TableCell>
-                    <Button variant={"outline"} size={"icon"}>
+                    <Button
+                      variant={"outline"}
+                      size={"icon"}
+                      onClick={() => {
+                        if (item.student_token.id > 0)
+                          setEjectDialogState({
+                            open: true,
+                            data: { id: item.student_token.id },
+                          });
+                      }}
+                    >
                       <XIcon />
                     </Button>
                   </TableCell>
@@ -78,6 +97,16 @@ function RouteComponent() {
           </TableBody>
         </Table>
       </div>
+
+      {/* dialogs */}
+      <EjectStudentAccountDialog
+        open={ejectDialogState.open}
+        onOpenChange={(open, status) => {
+          setEjectDialogState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        data={ejectDialogState.data}
+      />
     </>
   );
 }
