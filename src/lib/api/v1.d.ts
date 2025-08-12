@@ -87,22 +87,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/auth/refresh-token-ttl": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["refreshTokenTTL"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/auth/students/accounts/{student_token_id}/eject": {
         parameters: {
             query?: never;
@@ -920,9 +904,6 @@ export interface components {
             access_token: string;
             refresh_token: string;
         };
-        RefreshTokenTTLReq: {
-            refresh_token?: string;
-        };
         "api_internal_features_batch_dto_requests.Create": {
             name?: string;
         };
@@ -1212,7 +1193,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        /** @description Refresh token req */
+        /** @description body */
         requestBody: {
             content: {
                 "*/*": components["schemas"]["RefreshTokenReq"];
@@ -1226,31 +1207,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["RefreshTokenRes"];
-                };
-            };
-        };
-    };
-    refreshTokenTTL: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Refresh token req */
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["RefreshTokenTTLReq"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
                 };
             };
         };
