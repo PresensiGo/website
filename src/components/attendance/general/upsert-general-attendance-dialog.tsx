@@ -70,7 +70,7 @@ export const UpsertGeneralAttendanceDialog = ({
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
-    "/api/v1/general_attendances",
+    "/api/v1/general-attendances",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {

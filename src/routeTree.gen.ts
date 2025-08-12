@@ -15,11 +15,10 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedTeacherManagementIndexRouteImport } from './routes/_authenticated/teacher-management/index'
 import { Route as AuthenticatedSubjectManagementIndexRouteImport } from './routes/_authenticated/subject-management/index'
 import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authenticated/setting/index'
-import { Route as AuthAuthRegisterRouteImport } from './routes/_auth/auth.register'
-import { Route as AuthAuthLoginRouteImport } from './routes/_auth/auth.login'
 import { Route as AuthenticatedStudentAccountManagementBatchesIndexRouteImport } from './routes/_authenticated/student-account-management/batches/index'
 import { Route as AuthenticatedDataManagementBatchesIndexRouteImport } from './routes/_authenticated/data-management/batches/index'
 import { Route as AuthenticatedAttendanceGeneralIndexRouteImport } from './routes/_authenticated/attendance/general/index'
+import { Route as AuthAuthLoginIndexRouteImport } from './routes/_auth/auth.login/index'
 import { Route as AuthenticatedAttendanceSubjectBatchesIndexRouteImport } from './routes/_authenticated/attendance/subject.batches/index'
 import { Route as AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRouteImport } from './routes/_authenticated/attendance/general/$generalAttendanceId/index'
 import { Route as AuthenticatedStudentAccountManagementBatchesBatchIdMajorsIndexRouteImport } from './routes/_authenticated/student-account-management/batches/$batchId.majors/index'
@@ -64,16 +63,6 @@ const AuthenticatedSettingIndexRoute =
     path: '/setting/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthAuthRegisterRoute = AuthAuthRegisterRouteImport.update({
-  id: '/auth/register',
-  path: '/auth/register',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthAuthLoginRoute = AuthAuthLoginRouteImport.update({
-  id: '/auth/login',
-  path: '/auth/login',
-  getParentRoute: () => AuthRoute,
-} as any)
 const AuthenticatedStudentAccountManagementBatchesIndexRoute =
   AuthenticatedStudentAccountManagementBatchesIndexRouteImport.update({
     id: '/student-account-management/batches/',
@@ -92,6 +81,11 @@ const AuthenticatedAttendanceGeneralIndexRoute =
     path: '/attendance/general/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthAuthLoginIndexRoute = AuthAuthLoginIndexRouteImport.update({
+  id: '/auth/login/',
+  path: '/auth/login/',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthenticatedAttendanceSubjectBatchesIndexRoute =
   AuthenticatedAttendanceSubjectBatchesIndexRouteImport.update({
     id: '/attendance/subject/batches/',
@@ -183,11 +177,10 @@ const AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassro
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
-  '/auth/login': typeof AuthAuthLoginRoute
-  '/auth/register': typeof AuthAuthRegisterRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
   '/teacher-management': typeof AuthenticatedTeacherManagementIndexRoute
+  '/auth/login': typeof AuthAuthLoginIndexRoute
   '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/student-account-management/batches': typeof AuthenticatedStudentAccountManagementBatchesIndexRoute
@@ -206,11 +199,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
-  '/auth/login': typeof AuthAuthLoginRoute
-  '/auth/register': typeof AuthAuthRegisterRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
   '/teacher-management': typeof AuthenticatedTeacherManagementIndexRoute
+  '/auth/login': typeof AuthAuthLoginIndexRoute
   '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/student-account-management/batches': typeof AuthenticatedStudentAccountManagementBatchesIndexRoute
@@ -232,11 +224,10 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_auth/auth/login': typeof AuthAuthLoginRoute
-  '/_auth/auth/register': typeof AuthAuthRegisterRoute
   '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
   '/_authenticated/subject-management/': typeof AuthenticatedSubjectManagementIndexRoute
   '/_authenticated/teacher-management/': typeof AuthenticatedTeacherManagementIndexRoute
+  '/_auth/auth/login/': typeof AuthAuthLoginIndexRoute
   '/_authenticated/attendance/general/': typeof AuthenticatedAttendanceGeneralIndexRoute
   '/_authenticated/data-management/batches/': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/_authenticated/student-account-management/batches/': typeof AuthenticatedStudentAccountManagementBatchesIndexRoute
@@ -257,11 +248,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth/login'
-    | '/auth/register'
     | '/setting'
     | '/subject-management'
     | '/teacher-management'
+    | '/auth/login'
     | '/attendance/general'
     | '/data-management/batches'
     | '/student-account-management/batches'
@@ -280,11 +270,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/auth/login'
-    | '/auth/register'
     | '/setting'
     | '/subject-management'
     | '/teacher-management'
+    | '/auth/login'
     | '/attendance/general'
     | '/data-management/batches'
     | '/student-account-management/batches'
@@ -305,11 +294,10 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_authenticated'
     | '/_authenticated/'
-    | '/_auth/auth/login'
-    | '/_auth/auth/register'
     | '/_authenticated/setting/'
     | '/_authenticated/subject-management/'
     | '/_authenticated/teacher-management/'
+    | '/_auth/auth/login/'
     | '/_authenticated/attendance/general/'
     | '/_authenticated/data-management/batches/'
     | '/_authenticated/student-account-management/batches/'
@@ -376,20 +364,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_auth/auth/register': {
-      id: '/_auth/auth/register'
-      path: '/auth/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthAuthRegisterRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/auth/login': {
-      id: '/_auth/auth/login'
-      path: '/auth/login'
-      fullPath: '/auth/login'
-      preLoaderRoute: typeof AuthAuthLoginRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/_authenticated/student-account-management/batches/': {
       id: '/_authenticated/student-account-management/batches/'
       path: '/student-account-management/batches'
@@ -410,6 +384,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/attendance/general'
       preLoaderRoute: typeof AuthenticatedAttendanceGeneralIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_auth/auth/login/': {
+      id: '/_auth/auth/login/'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthAuthLoginIndexRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_authenticated/attendance/subject/batches/': {
       id: '/_authenticated/attendance/subject/batches/'
@@ -499,13 +480,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteChildren {
-  AuthAuthLoginRoute: typeof AuthAuthLoginRoute
-  AuthAuthRegisterRoute: typeof AuthAuthRegisterRoute
+  AuthAuthLoginIndexRoute: typeof AuthAuthLoginIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthAuthLoginRoute: AuthAuthLoginRoute,
-  AuthAuthRegisterRoute: AuthAuthRegisterRoute,
+  AuthAuthLoginIndexRoute: AuthAuthLoginIndexRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

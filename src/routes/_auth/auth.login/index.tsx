@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { $api } from "@/lib/api/api";
+import { $api, handleError } from "@/lib/api/api";
 import { auth } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -16,8 +16,8 @@ import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const Route = createFileRoute("/_auth/auth/login")({
-  component: Page,
+export const Route = createFileRoute("/_auth/auth/login/")({
+  component: RouteComponent,
 });
 
 const formSchema = z.object({
@@ -25,14 +25,14 @@ const formSchema = z.object({
   password: z.string("Kata sandi tidak boleh kosong!"),
 });
 
-function Page() {
+function RouteComponent() {
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "rizal@email.com",
-      password: "password",
+      email: "admin@gmail.com",
+      password: "admin123",
     },
   });
 
@@ -44,6 +44,7 @@ function Page() {
       });
       navigate({ to: "/", replace: true });
     },
+    onError: handleError,
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -56,11 +57,19 @@ function Page() {
 
   return (
     <>
-      <div className="container mx-auto">
-        <p>login page</p>
+      <div className="container max-w-lg mx-auto py-6 px-4">
+        <div className="space-y-2">
+          <p className="text-3xl font-semibold">Masuk</p>
+          <p className="text-muted-foreground">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Id dolorem
+            deserunt sapiente aperiam magni animi tempore aspernatur accusamus.
+            Sapiente sunt soluta voluptate corrupti, beatae accusantium natus
+            repellat incidunt quibusdam velit.
+          </p>
+        </div>
 
         <Form {...form}>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4 mt-4">
             <FormField
               control={form.control}
               name="email"
@@ -68,7 +77,7 @@ function Page() {
                 <FormItem>
                   <FormLabel>Alamat Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Masukkan alamat email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,20 +91,22 @@ function Page() {
                 <FormItem>
                   <FormLabel>Kata Sandi</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Masukkan kata sandi" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button
-              disabled={isPending}
-              onClick={() => form.handleSubmit(onSubmit)()}
-            >
-              {isPending && <Loader2Icon className="animate-spin" />}
-              Masuk
-            </Button>
+            <div className="flex justify-end">
+              <Button
+                disabled={isPending}
+                onClick={() => form.handleSubmit(onSubmit)()}
+              >
+                {isPending && <Loader2Icon className="animate-spin" />}
+                Masuk
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
