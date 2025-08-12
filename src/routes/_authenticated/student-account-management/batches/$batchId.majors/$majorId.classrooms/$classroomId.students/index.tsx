@@ -79,15 +79,15 @@ function RouteComponent() {
                   </TableCell>
                   <TableCell>
                     <Button
+                      disabled={item.student_token.device_id.length === 0}
                       variant={"outline"}
                       size={"icon"}
-                      onClick={() => {
-                        if (item.student_token.id > 0)
-                          setEjectDialogState({
-                            open: true,
-                            data: { id: item.student_token.id },
-                          });
-                      }}
+                      onClick={() =>
+                        setEjectDialogState({
+                          open: true,
+                          data: { id: item.student_token.id },
+                        })
+                      }
                     >
                       <XIcon />
                     </Button>

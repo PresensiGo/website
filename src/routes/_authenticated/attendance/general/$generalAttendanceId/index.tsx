@@ -42,7 +42,10 @@ function RouteComponent() {
           <TabsContent value="qr-code">
             {isSuccess && data && (
               <ReactQRCode
-                value={data.general_attendance.code}
+                value={JSON.stringify({
+                  type: "general",
+                  code: data.general_attendance.code,
+                })}
                 className="w-full h-84"
               />
             )}
