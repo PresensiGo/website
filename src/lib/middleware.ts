@@ -25,11 +25,16 @@ export const middleware: Middleware = {
             }
           );
 
-          const body = await refreshTokenResponse.json();
-          auth.set({
-            accessToken: body.access_token,
-            refreshToken: body.refresh_token,
-          });
+          const status = refreshTokenResponse.status;
+          if (status === 200) {
+            const body = await refreshTokenResponse.json();
+            auth.set({
+              accessToken: body.access_token,
+              refreshToken: body.refresh_token,
+            });
+          } else {
+            auth.clear();
+          }
         } catch (e) {
           // refresh token sudah direvoke atau refresh token sudah kadaluarsa
           // clear auth untuk memaksa user login kembali
