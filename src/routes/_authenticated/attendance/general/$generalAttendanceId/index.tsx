@@ -32,7 +32,7 @@ function RouteComponent() {
   );
   const { isSuccess: isSuccessStudent, data: dataStudents } = $api.useQuery(
     "get",
-    "/api/v1/general-attendances/{general_attendance_id}/students",
+    "/api/v1/general-attendances/{general_attendance_id}/records",
     {
       params: {
         path: {

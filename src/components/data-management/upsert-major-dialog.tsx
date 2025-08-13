@@ -57,7 +57,7 @@ export const UpsertMajorDialog = ({
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
-    "/api/v1/majors",
+    "/api/v1/batches/{batch_id}/majors",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {
@@ -70,7 +70,7 @@ export const UpsertMajorDialog = ({
   );
   const { mutate: mutateUpdate, isPending: isPendingUpdate } = $api.useMutation(
     "put",
-    "/api/v1/majors/{major_id}",
+    "/api/v1/batches/{batch_id}/majors/{major_id}",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {
@@ -85,10 +85,14 @@ export const UpsertMajorDialog = ({
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (data)
       mutateUpdate({
-        params: { path: { major_id: data.id } },
-        body: { batch_id: batchId, name: values.name },
+        params: { path: { batch_id: batchId, major_id: data.id } },
+        body: { name: values.name },
       });
-    else mutateCreate({ body: { batch_id: batchId, name: values.name } });
+    else
+      mutateCreate({
+        params: { path: { batch_id: batchId } },
+        body: { name: values.name },
+      });
   };
 
   return (

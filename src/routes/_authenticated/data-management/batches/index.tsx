@@ -62,14 +62,14 @@ function Page() {
           <TableBody>
             {isSuccess &&
               data &&
-              data.batches.map((batch, index) => (
+              data.batches.map((item, index) => (
                 <TableRow key={"batch-item-" + index}>
-                  <TableCell>{batch.batch.name}</TableCell>
+                  <TableCell>{item.name}</TableCell>
                   <TableCell className="space-x-1 ">
                     <Button size={"icon"} asChild variant={"outline"}>
                       <Link
                         to="/data-management/batches/$batchId/majors"
-                        params={{ batchId: String(batch.batch.id) }}
+                        params={{ batchId: String(item.id) }}
                       >
                         <EyeIcon />
                       </Link>
@@ -80,8 +80,8 @@ function Page() {
                         setDialogUpsertBatchState({
                           open: true,
                           data: {
-                            id: batch.batch.id,
-                            name: batch.batch.name,
+                            id: item.id,
+                            name: item.name,
                           },
                         })
                       }
@@ -95,8 +95,8 @@ function Page() {
                         setDialogDeleteBatchState({
                           open: true,
                           data: {
-                            id: batch.batch.id,
-                            name: batch.batch.name,
+                            id: item.id,
+                            name: item.name,
                           },
                         })
                       }

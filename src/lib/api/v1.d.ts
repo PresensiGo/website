@@ -220,8 +220,24 @@ export interface paths {
         };
         get: operations["getAllMajorsByBatchId"];
         put?: never;
-        post?: never;
+        post: operations["createMajor"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/batches/{batch_id}/majors/{major_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateMajor"];
+        post?: never;
+        delete: operations["deleteMajor"];
         options?: never;
         head?: never;
         patch?: never;
@@ -234,31 +250,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description batch id */
-                    batch_id: number;
-                    /** @description major id */
-                    major_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.GetAllClassroomsByMajorId"];
-                    };
-                };
-            };
-        };
+        get: operations["getAllClassroomsByMajorId"];
         put?: never;
         post: {
             parameters: {
@@ -408,66 +400,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description batch id */
-                    batch_id: number;
-                    /** @description major id */
-                    major_id: number;
-                    /** @description classroom id */
-                    classroom_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.GetAllSubjectAttendances"];
-                    };
-                };
-            };
-        };
+        get: operations["GetAllSubjectAttendances"];
         put?: never;
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description batch id */
-                    batch_id: number;
-                    /** @description major id */
-                    major_id: number;
-                    /** @description classroom id */
-                    classroom_id: number;
-                };
-                cookie?: never;
-            };
-            /** @description body */
-            requestBody: {
-                content: {
-                    "*/*": components["schemas"]["requests.CreateSubjectAttendance"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.CreateSubjectAttendance"];
-                    };
-                };
-            };
-        };
+        post: operations["CreateSubjectAttendance"];
         delete?: never;
         options?: never;
         head?: never;
@@ -481,35 +416,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description batch id */
-                    batch_id: number;
-                    /** @description major id */
-                    major_id: number;
-                    /** @description classroom id */
-                    classroom_id: number;
-                    /** @description subject attendance id */
-                    subject_attendance_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.GetSubjectAttendance"];
-                    };
-                };
-            };
-        };
+        get: operations["GetSubjectAttendance"];
         put?: never;
         post?: never;
         delete?: never;
@@ -525,35 +432,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description batch id */
-                    batch_id: number;
-                    /** @description major id */
-                    major_id: number;
-                    /** @description classroom id */
-                    classroom_id: number;
-                    /** @description subject attendance id */
-                    subject_attendance_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.GetAllSubjectAttendanceRecords"];
-                    };
-                };
-            };
-        };
+        get: operations["GetAllSubjectAttendanceRecords"];
         put?: never;
         post?: never;
         delete?: never;
@@ -601,9 +480,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getAllGeneralAttendances"];
+        get: operations["GetAllGeneralAttendances"];
         put?: never;
-        post: operations["createGeneralAttendance"];
+        post: operations["CreateGeneralAttendance"];
         delete?: never;
         options?: never;
         head?: never;
@@ -633,7 +512,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getGeneralAttendance"];
+        get: operations["GetGeneralAttendance"];
         put?: never;
         post?: never;
         delete?: never;
@@ -642,36 +521,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/general-attendances/{general_attendance_id}/students": {
+    "/api/v1/general-attendances/{general_attendance_id}/records": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description general attendance id */
-                    general_attendance_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "*/*": components["schemas"]["responses.GetAllGeneralAttendanceStudents"];
-                    };
-                };
-            };
-        };
+        get: operations["GetAllGeneralAttendanceRecords"];
         put?: never;
         post?: never;
         delete?: never;
@@ -705,24 +562,8 @@ export interface paths {
         };
         get: operations["getAllMajors"];
         put?: never;
-        post: operations["createMajor"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/majors/{major_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["updateMajor"];
         post?: never;
-        delete: operations["deleteMajor"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -860,14 +701,42 @@ export interface components {
         CreateGeneralAttendanceRecordStudentReq: {
             code: string;
         };
+        CreateGeneralAttendanceReq: {
+            datetime?: string;
+            note?: string;
+        };
         CreateSubjectAttendanceRecordStudentReq: {
             code: string;
+        };
+        CreateSubjectAttendanceReq: {
+            datetime: string;
+            note: string;
+            subject_id: number;
+        };
+        GeneralAttendance: {
+            code: string;
+            datetime: string;
+            id: number;
+            note: string;
+            school_id: number;
+        };
+        GetAllGeneralAttendanceRecordsItem: {
+            record: components["schemas"]["domains.GeneralAttendanceRecord"];
+            student: components["schemas"]["domains.Student"];
         };
         GetAllStudentsByClassroomIdRes: {
             students: components["schemas"]["domains.Student"][];
         };
         GetAllStudentsRes: {
             students: components["schemas"]["domains.StudentMajorClassroom"][];
+        };
+        GetAllSubjectAttendanceRecordsItem: {
+            record: components["schemas"]["domains.SubjectAttendanceRecord"];
+            student: components["schemas"]["domains.Student"];
+        };
+        GetAllSubjectAttendancesItem: {
+            subject: components["schemas"]["Subject"];
+            subject_attendance: components["schemas"]["SubjectAttendance"];
         };
         LoginReq: {
             /** @default email@email.com */
@@ -904,47 +773,34 @@ export interface components {
             access_token: string;
             refresh_token: string;
         };
-        "api_internal_features_batch_dto_requests.Create": {
-            name?: string;
-        };
-        "api_internal_features_batch_dto_requests.Update": {
-            name?: string;
-        };
-        "api_internal_features_major_dto_requests.Create": {
-            batch_id: number;
-            name: string;
-        };
-        "api_internal_features_major_dto_requests.Update": {
-            batch_id: number;
-            name: string;
-        };
-        "domains.Batch": {
+        Subject: {
             id: number;
             name: string;
             school_id: number;
         };
-        "domains.Classroom": {
+        SubjectAttendance: {
+            classroom_id: number;
+            code: string;
+            date_time: string;
+            id: number;
+            note: string;
+            subject_id: number;
+        };
+        batch: {
+            id: number;
+            name: string;
+            school_id: number;
+        };
+        classroom: {
             id: number;
             major_id: number;
             name: string;
-        };
-        "domains.GeneralAttendance": {
-            code: string;
-            datetime: string;
-            id: number;
-            note: string;
-            school_id: number;
         };
         "domains.GeneralAttendanceRecord": {
             created_at: string;
             general_attendance_id: number;
             id: number;
             student_id: number;
-        };
-        "domains.Major": {
-            batch_id: number;
-            id: number;
-            name: string;
         };
         "domains.Student": {
             classroom_id: number;
@@ -954,8 +810,8 @@ export interface components {
             school_id: number;
         };
         "domains.StudentMajorClassroom": {
-            classroom: components["schemas"]["domains.Classroom"];
-            major: components["schemas"]["domains.Major"];
+            classroom: components["schemas"]["classroom"];
+            major: components["schemas"]["major"];
             student: components["schemas"]["domains.Student"];
         };
         "domains.StudentToken": {
@@ -965,28 +821,11 @@ export interface components {
             student_id: number;
             ttl: string;
         };
-        "domains.Subject": {
-            id: number;
-            name: string;
-            school_id: number;
-        };
-        "domains.SubjectAttendance": {
-            classroom_id: number;
-            code: string;
-            date_time: string;
-            id: number;
-            note: string;
-            subject_id: number;
-        };
         "domains.SubjectAttendanceRecord": {
             created_at: string;
             id: number;
             student_id: number;
             subject_attendance_id: number;
-        };
-        "domains.SubjectAttendanceSubject": {
-            subject: components["schemas"]["domains.Subject"];
-            subject_attendance: components["schemas"]["domains.SubjectAttendance"];
         };
         "domains.User": {
             email: string;
@@ -996,37 +835,29 @@ export interface components {
             role: string;
             school_id: number;
         };
-        "dto.BatchInfo": {
-            batch: components["schemas"]["domains.Batch"];
-            classrooms_count: number;
-            majors_count: number;
-        };
-        "dto.GeneralAttendanceStudentItem": {
-            record: components["schemas"]["domains.GeneralAttendanceRecord"];
-            student: components["schemas"]["domains.Student"];
-        };
         "dto.StudentAccount": {
             student: components["schemas"]["domains.Student"];
             student_token: components["schemas"]["domains.StudentToken"];
         };
-        "dto.SubjectAttendanceRecordItem": {
-            record: components["schemas"]["domains.SubjectAttendanceRecord"];
-            student: components["schemas"]["domains.Student"];
+        major: {
+            batch_id: number;
+            id: number;
+            name: string;
+        };
+        "requests.CreateBatch": {
+            name?: string;
         };
         "requests.CreateClassroom": {
             name: string;
         };
-        "requests.CreateGeneralAttendance": {
-            datetime?: string;
-            note?: string;
+        "requests.CreateMajor": {
+            name: string;
         };
         "requests.CreateSubject": {
             name: string;
         };
-        "requests.CreateSubjectAttendance": {
-            datetime: string;
-            note: string;
-            subject_id: number;
+        "requests.UpdateBatch": {
+            name?: string;
         };
         "requests.UpdateClassroom": {
             name: string;
@@ -1035,27 +866,30 @@ export interface components {
             datetime?: string;
             note?: string;
         };
+        "requests.UpdateMajor": {
+            name: string;
+        };
         "requests.UpdateSubject": {
             name: string;
         };
         "responses.ClassroomMajor": {
-            classroom: components["schemas"]["domains.Classroom"];
-            major: components["schemas"]["domains.Major"];
+            classroom: components["schemas"]["classroom"];
+            major: components["schemas"]["major"];
         };
         "responses.CreateClassroom": {
-            classroom: components["schemas"]["domains.Classroom"];
+            classroom: components["schemas"]["classroom"];
         };
         "responses.CreateGeneralAttendance": {
-            general_attendance: components["schemas"]["domains.GeneralAttendance"];
+            general_attendance: components["schemas"]["GeneralAttendance"];
         };
         "responses.CreateGeneralAttendanceRecordStudent": {
             message: string;
         };
         "responses.CreateSubject": {
-            subject: components["schemas"]["domains.Subject"];
+            subject: components["schemas"]["Subject"];
         };
         "responses.CreateSubjectAttendance": {
-            subject_attendance: components["schemas"]["domains.SubjectAttendance"];
+            subject_attendance: components["schemas"]["SubjectAttendance"];
         };
         "responses.CreateSubjectAttendanceRecordStudent": {
             message: string;
@@ -1070,62 +904,64 @@ export interface components {
             message: string;
         };
         "responses.GetAll": {
-            classrooms: components["schemas"]["domains.Classroom"][];
+            classrooms: components["schemas"]["classroom"][];
         };
         "responses.GetAllBatches": {
-            batches: components["schemas"]["dto.BatchInfo"][];
+            batches: components["schemas"]["batch"][];
         };
         "responses.GetAllClassroomWithMajors": {
             data: components["schemas"]["responses.ClassroomMajor"][];
         };
         "responses.GetAllClassroomsByMajorId": {
-            classrooms: components["schemas"]["domains.Classroom"][];
+            classrooms: components["schemas"]["classroom"][];
         };
-        "responses.GetAllGeneralAttendanceStudents": {
-            items: components["schemas"]["dto.GeneralAttendanceStudentItem"][];
+        "responses.GetAllGeneralAttendanceRecords": {
+            items: components["schemas"]["GetAllGeneralAttendanceRecordsItem"][];
         };
         "responses.GetAllGeneralAttendances": {
-            general_attendances: components["schemas"]["domains.GeneralAttendance"][];
+            general_attendances: components["schemas"]["GeneralAttendance"][];
         };
         "responses.GetAllMajorsByBatchId": {
-            majors: components["schemas"]["domains.Major"][];
+            majors: components["schemas"]["major"][];
         };
         "responses.GetAllStudentAccountsByClassroomId": {
             items: components["schemas"]["dto.StudentAccount"][];
         };
         "responses.GetAllSubjectAttendanceRecords": {
-            items: components["schemas"]["dto.SubjectAttendanceRecordItem"][];
+            items: components["schemas"]["GetAllSubjectAttendanceRecordsItem"][];
         };
         "responses.GetAllSubjectAttendances": {
-            items: components["schemas"]["domains.SubjectAttendanceSubject"][];
+            items: components["schemas"]["GetAllSubjectAttendancesItem"][];
         };
         "responses.GetAllSubjects": {
-            subjects: components["schemas"]["domains.Subject"][];
+            subjects: components["schemas"]["Subject"][];
         };
         "responses.GetAllUsers": {
             users: components["schemas"]["domains.User"][];
         };
         "responses.GetBatch": {
-            batch: components["schemas"]["domains.Batch"];
+            batch: components["schemas"]["batch"];
         };
         "responses.GetGeneralAttendance": {
-            general_attendance: components["schemas"]["domains.GeneralAttendance"];
+            general_attendance: components["schemas"]["GeneralAttendance"];
         };
         "responses.GetSubjectAttendance": {
-            subject_attendance: components["schemas"]["domains.SubjectAttendance"];
+            subject_attendance: components["schemas"]["SubjectAttendance"];
         };
         "responses.ImportTeacher": {
             message: string;
         };
-        "responses.Logout": Record<string, never>;
+        "responses.Logout": {
+            message: string;
+        };
         "responses.UpdateClassroom": {
-            classroom: components["schemas"]["domains.Classroom"];
+            classroom: components["schemas"]["classroom"];
         };
         "responses.UpdateGeneralAttendance": {
-            general_attendance: components["schemas"]["domains.GeneralAttendance"];
+            general_attendance: components["schemas"]["GeneralAttendance"];
         };
         "responses.UpdateSubject": {
-            subject: components["schemas"]["domains.Subject"];
+            subject: components["schemas"]["Subject"];
         };
     };
     responses: never;
@@ -1291,7 +1127,7 @@ export interface operations {
         /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["api_internal_features_batch_dto_requests.Create"];
+                "*/*": components["schemas"]["requests.CreateBatch"];
             };
         };
         responses: {
@@ -1301,7 +1137,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["domains.Batch"];
+                    "*/*": components["schemas"]["batch"];
                 };
             };
         };
@@ -1319,7 +1155,7 @@ export interface operations {
         /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["api_internal_features_batch_dto_requests.Update"];
+                "*/*": components["schemas"]["requests.UpdateBatch"];
             };
         };
         responses: {
@@ -1329,7 +1165,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["domains.Batch"];
+                    "*/*": components["schemas"]["batch"];
                 };
             };
         };
@@ -1380,6 +1216,114 @@ export interface operations {
             };
         };
     };
+    createMajor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.CreateMajor"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["major"];
+                };
+            };
+        };
+    };
+    updateMajor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["requests.UpdateMajor"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["major"];
+                };
+            };
+        };
+    };
+    deleteMajor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": string;
+                };
+            };
+        };
+    };
+    getAllClassroomsByMajorId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllClassroomsByMajorId"];
+                };
+            };
+        };
+    };
     getAllStudentsByClassroomId: {
         parameters: {
             query?: never;
@@ -1403,6 +1347,123 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetAllStudentsByClassroomIdRes"];
+                };
+            };
+        };
+    };
+    GetAllSubjectAttendances: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+                /** @description classroom id */
+                classroom_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllSubjectAttendances"];
+                };
+            };
+        };
+    };
+    CreateSubjectAttendance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+                /** @description classroom id */
+                classroom_id: number;
+            };
+            cookie?: never;
+        };
+        /** @description body */
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateSubjectAttendanceReq"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.CreateSubjectAttendance"];
+                };
+            };
+        };
+    };
+    GetSubjectAttendance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+                /** @description classroom id */
+                classroom_id: number;
+                /** @description subject attendance id */
+                subject_attendance_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetSubjectAttendance"];
+                };
+            };
+        };
+    };
+    GetAllSubjectAttendanceRecords: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description batch id */
+                batch_id: number;
+                /** @description major id */
+                major_id: number;
+                /** @description classroom id */
+                classroom_id: number;
+                /** @description subject attendance id */
+                subject_attendance_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllSubjectAttendanceRecords"];
                 };
             };
         };
@@ -1450,7 +1511,7 @@ export interface operations {
             };
         };
     };
-    getAllGeneralAttendances: {
+    GetAllGeneralAttendances: {
         parameters: {
             query?: never;
             header?: never;
@@ -1470,7 +1531,7 @@ export interface operations {
             };
         };
     };
-    createGeneralAttendance: {
+    CreateGeneralAttendance: {
         parameters: {
             query?: never;
             header?: never;
@@ -1480,7 +1541,7 @@ export interface operations {
         /** @description body */
         requestBody: {
             content: {
-                "*/*": components["schemas"]["requests.CreateGeneralAttendance"];
+                "*/*": components["schemas"]["CreateGeneralAttendanceReq"];
             };
         };
         responses: {
@@ -1520,7 +1581,7 @@ export interface operations {
             };
         };
     };
-    getGeneralAttendance: {
+    GetGeneralAttendance: {
         parameters: {
             query?: never;
             header?: never;
@@ -1539,6 +1600,29 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.GetGeneralAttendance"];
+                };
+            };
+        };
+    };
+    GetAllGeneralAttendanceRecords: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description general attendance id */
+                general_attendance_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["responses.GetAllGeneralAttendanceRecords"];
                 };
             };
         };
@@ -1609,83 +1693,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["domains.Major"][];
-                };
-            };
-        };
-    };
-    createMajor: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description body */
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["api_internal_features_major_dto_requests.Create"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["domains.Major"];
-                };
-            };
-        };
-    };
-    updateMajor: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description major id */
-                major_id: number;
-            };
-            cookie?: never;
-        };
-        /** @description body */
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["api_internal_features_major_dto_requests.Update"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["domains.Major"];
-                };
-            };
-        };
-    };
-    deleteMajor: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description major id */
-                major_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": string;
+                    "*/*": components["schemas"]["major"][];
                 };
             };
         };

@@ -48,12 +48,12 @@ function RouteComponent() {
               dataBatches &&
               dataBatches.batches.map((item, index) => (
                 <TableRow key={"batch-item-" + index}>
-                  <TableCell>{item.batch.name}</TableCell>
+                  <TableCell>{item.name}</TableCell>
                   <TableCell>
                     <Button size={"icon"} variant={"outline"} asChild>
                       <Link
                         to="/attendance/subject/batches/$batchId/majors"
-                        params={{ batchId: String(item.batch.id) }}
+                        params={{ batchId: String(item.id) }}
                       >
                         <EyeIcon />
                       </Link>

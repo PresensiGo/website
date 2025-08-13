@@ -15,17 +15,19 @@ import { toast } from "sonner";
 interface DeleteMajorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
+  batchId: number;
   data?: { id: number; name: string };
 }
 
 export const DeleteMajorDialog = ({
   open,
   onOpenChange,
+  batchId,
   data,
 }: DeleteMajorDialogProps) => {
   const { mutate, isPending } = $api.useMutation(
     "delete",
-    "/api/v1/majors/{major_id}",
+    "/api/v1/batches/{batch_id}/majors/{major_id}",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {
@@ -55,7 +57,10 @@ export const DeleteMajorDialog = ({
             <AlertDialogAction
               disabled={isPending}
               onClick={() => {
-                if (data) mutate({ params: { path: { major_id: data.id } } });
+                if (data)
+                  mutate({
+                    params: { path: { batch_id: batchId, major_id: data.id } },
+                  });
               }}
             >
               {isPending && <Loader2Icon className="animate-spin" />}

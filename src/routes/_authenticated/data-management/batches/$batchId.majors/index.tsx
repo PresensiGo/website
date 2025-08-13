@@ -146,6 +146,7 @@ function RouteComponent() {
           setDeleteDialogState({ open, data: undefined });
           if (status) refetch();
         }}
+        batchId={Number(batchId)}
         data={deleteDialogState.data}
       />
     </>
