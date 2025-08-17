@@ -1,6 +1,53 @@
+import { redirect } from "@tanstack/react-router";
 import { jwtDecode } from "jwt-decode";
 import type { Middleware } from "openapi-fetch";
 import { auth } from "./auth";
+
+let isRefreshing = false;
+let refreshPromise: Promise<void> | null = null;
+
+const refreshToken = async (token: { refreshToken: string }) => {
+  if (isRefreshing) {
+    await refreshPromise;
+    return;
+  }
+
+  isRefreshing = true;
+  refreshPromise = new Promise(async (resolve, reject) => {
+    try {
+      const refreshTokenResponse = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            refresh_token: token.refreshToken,
+          }),
+        }
+      );
+      const status = refreshTokenResponse.status;
+
+      if (status === 200) {
+        const body = await refreshTokenResponse.json();
+        auth.set({
+          accessToken: body.access_token,
+          refreshToken: body.refresh_token,
+        });
+        resolve();
+      } else if (status === 401) {
+        auth.clear();
+        reject(new Error("Refresh token expired or invalid"));
+      }
+    } catch (e) {
+      auth.clear();
+      reject(e);
+    } finally {
+      isRefreshing = false;
+      refreshPromise = null;
+    }
+  });
+
+  await refreshPromise;
+};
 
 export const middleware: Middleware = {
   onRequest: async ({ request }) => {
@@ -12,34 +59,20 @@ export const middleware: Middleware = {
       const currentTime = Date.now() / 1000;
 
       if (decoded.exp && decoded.exp < currentTime) {
-        // console.log("access token expired");
-        // masa berlaku token sudah habis
-        const refreshTokenResponse = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              refresh_token: token.refreshToken,
-            }),
+        try {
+          await refreshToken(token);
+          const newToken = auth.get();
+          if (newToken) {
+            accessToken = newToken.accessToken;
+          } else {
+            throw redirect({ to: "/auth/login" });
           }
-        );
-        const status = refreshTokenResponse.status;
-
-        if (status === 200) {
-          const body = await refreshTokenResponse.json();
-          auth.set({
-            accessToken: body.access_token,
-            refreshToken: body.refresh_token,
-          });
-
-          accessToken = body.access_token;
-        } else if (status === 401) {
-          auth.clear();
+        } catch (e) {
+          throw redirect({ to: "/auth/login" });
         }
       }
 
       request.headers.set("Authorization", `Bearer ${accessToken}`);
-      return request;
     }
   },
   // onResponse: async ({ response }) => {
