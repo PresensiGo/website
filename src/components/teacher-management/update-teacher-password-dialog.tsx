@@ -24,28 +24,34 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 const formSchema = z.object({
-  file: z.file("Berkas excel tidak boleh kosong!"),
+  password: z
+    .string("Kata sandi tidak boleh kosong!")
+    .min(1, "Kata sandi tidak boleh kosong!"),
 });
 
-interface ImportTeacherDialogProps {
+interface UpdateTeacherPasswordDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
+  data?: {
+    id: number;
+  };
 }
-export const ImportTeacherDialog = ({
+export const UpdateTeacherPasswordDialog = ({
   open,
   onOpenChange,
-}: ImportTeacherDialogProps) => {
+  data,
+}: UpdateTeacherPasswordDialogProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   const { mutate, isPending } = $api.useMutation(
-    "post",
-    "/api/v1/accounts/import",
+    "put",
+    "/api/v1/accounts/{account_id}/password",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {
-          description: "Data guru berhasil diimpor.",
+          description: "Kata sandi guru berhasil diperbarui.",
           position: "top-right",
         });
         onOpenChange(false, true);
@@ -53,15 +59,12 @@ export const ImportTeacherDialog = ({
     }
   );
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    mutate({
-      body: { file: data.file as any },
-      bodySerializer: (body) => {
-        const formData = new FormData();
-        formData.set("file", body.file);
-        return formData;
-      },
-    });
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (data)
+      mutate({
+        params: { path: { account_id: data.id } },
+        body: { password: values.password },
+      });
   };
 
   return (
@@ -69,10 +72,10 @@ export const ImportTeacherDialog = ({
       <Dialog open={open} onOpenChange={(e) => onOpenChange(e)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Import Data Guru</DialogTitle>
+            <DialogTitle>Ubah Kata Sandi Guru</DialogTitle>
             <DialogDescription>
-              Pilih file excel yang berisi data guru sesuai dengan template
-              untuk diimpor ke sistem.
+              Masukkan kata sandi baru untuk mengganti kata sandi guru ketika
+              terjadi lupa kata sandi.
             </DialogDescription>
           </DialogHeader>
 
@@ -80,19 +83,15 @@ export const ImportTeacherDialog = ({
             <form onSubmit={(e) => e.preventDefault()}>
               <FormField
                 control={form.control}
-                name="file"
-                render={({ field: { onChange } }) => (
+                name="password"
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel>File</FormLabel>
+                    <FormLabel>Kata Sandi Baru</FormLabel>
                     <FormControl>
                       <Input
-                        type="file"
-                        onChange={(e) => {
-                          const files = e.target.files;
-                          if (files && files.length > 0) {
-                            onChange(files[0]);
-                          }
-                        }}
+                        type="text"
+                        placeholder="Masukkan kata sandi baru"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />

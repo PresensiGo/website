@@ -140,7 +140,12 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.UpdateAccountPassword"];
+                };
+            };
             responses: {
                 /** @description OK */
                 200: {
@@ -178,7 +183,12 @@ export interface paths {
                 };
                 cookie?: never;
             };
-            requestBody?: never;
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.UpdateAccountRole"];
+                };
+            };
             responses: {
                 /** @description OK */
                 200: {
@@ -969,6 +979,12 @@ export interface components {
         };
         "requests.CreateSubject": {
             name: string;
+        };
+        "requests.UpdateAccountPassword": {
+            password: string;
+        };
+        "requests.UpdateAccountRole": {
+            role: string;
         };
         "requests.UpdateBatch": {
             name?: string;

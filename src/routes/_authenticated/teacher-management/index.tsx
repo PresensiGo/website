@@ -2,6 +2,7 @@ import { WithSkeleton } from "@/components";
 import {
   DeleteTeacherDialog,
   ImportTeacherDialog,
+  UpdateTeacherPasswordDialog,
 } from "@/components/teacher-management";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,10 @@ export const Route = createFileRoute("/_authenticated/teacher-management/")({
 function RouteComponent() {
   const [importDialogState, setImportDialogState] = useState<{
     open: boolean;
+  }>({ open: false });
+  const [updatePasswordDialogState, setUpdatePasswordDialogState] = useState<{
+    open: boolean;
+    data?: { id: number };
   }>({ open: false });
   const [deleteDialogState, setDeleteDialogState] = useState<{
     open: boolean;
@@ -82,6 +87,12 @@ function RouteComponent() {
                 <AccountItem
                   key={"account-item-" + index}
                   data={item}
+                  onClickUpdatePassword={() =>
+                    setUpdatePasswordDialogState({
+                      open: true,
+                      data: { id: item.id },
+                    })
+                  }
                   onClickDelete={() =>
                     setDeleteDialogState({
                       open: true,
@@ -102,6 +113,14 @@ function RouteComponent() {
           if (status) refetch();
         }}
       />
+      <UpdateTeacherPasswordDialog
+        open={updatePasswordDialogState.open}
+        onOpenChange={(open, status) => {
+          setUpdatePasswordDialogState({ open });
+          if (status) refetch();
+        }}
+        data={updatePasswordDialogState.data}
+      />
       <DeleteTeacherDialog
         open={deleteDialogState.open}
         onOpenChange={(open, status) => {
@@ -117,11 +136,13 @@ function RouteComponent() {
 interface AccountItemProps {
   isLoading?: boolean;
   data?: components["schemas"]["domains.User"];
+  onClickUpdatePassword?: () => void;
   onClickDelete?: () => void;
 }
 const AccountItem = ({
   isLoading = false,
   data,
+  onClickUpdatePassword,
   onClickDelete,
 }: AccountItemProps) => {
   return (
@@ -149,7 +170,11 @@ const AccountItem = ({
             </Button>
           </WithSkeleton>
           <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"outline"} size={"icon"}>
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              onClick={onClickUpdatePassword}
+            >
               <LockIcon />
             </Button>
           </WithSkeleton>
