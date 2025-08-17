@@ -1,3 +1,4 @@
+import { WithSkeleton } from "@/components";
 import {
   DeleteGeneralAttendanceDialog,
   UpsertGeneralAttendanceDialog,
@@ -12,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
@@ -35,91 +37,70 @@ function RouteComponent() {
     data?: { id: number };
   }>({ open: false });
 
-  const { isSuccess, data, refetch } = $api.useQuery(
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/general-attendances"
   );
 
   return (
     <>
-      <div className="py-6">
+      <div className="py-6 space-y-4">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Presensi Kehadiran</p>
           <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid vel
-            exercitationem aperiam, corrupti nostrum deleniti quas, voluptas
-            beatae eos quis enim laborum aut consectetur sed soluta voluptates?
-            Laudantium, ipsum consectetur.
+            Kelola data kehadiran umum siswa di sekolah. Informasi yang tercatat
+            di sini mencakup presensi harian dan tidak terkait dengan data
+            presensi untuk setiap mata pelajaran.
           </p>
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end">
           <Button onClick={() => setUpsertDialogState({ open: true })}>
             <PlusIcon />
             Tambah Presensi Kehadiran
           </Button>
         </div>
 
-        <Table className="mt-4">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Tanggal</TableHead>
-              <TableHead>Waktu</TableHead>
-              <TableHead className="w-full">Kode Akses</TableHead>
+              <TableHead>Tenggat Waktu</TableHead>
+              <TableHead>Kode Akses</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {/* loading state */}
+            {isLoading &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <AttendanceItem
+                  key={"loading-attendance-item-" + index}
+                  isLoading
+                />
+              ))}
+
+            {/* success state */}
             {isSuccess &&
               data &&
               data.general_attendances.map((item, index) => (
-                <TableRow key={"general-attendance-item-" + index}>
-                  <TableCell>
-                    <FormattedDate value={item.datetime} />
-                  </TableCell>
-                  <TableCell>
-                    <FormattedTime value={item.datetime} />
-                  </TableCell>
-                  <TableCell>{item.code}</TableCell>
-                  <TableCell className="space-x-1">
-                    <Button size={"icon"} variant={"outline"} asChild>
-                      <Link
-                        to="/attendance/general/$generalAttendanceId"
-                        params={{ generalAttendanceId: String(item.id) }}
-                      >
-                        <EyeIcon />
-                      </Link>
-                    </Button>
-                    <Button
-                      size={"icon"}
-                      variant={"outline"}
-                      onClick={() =>
-                        setUpsertDialogState({
-                          open: true,
-                          data: {
-                            id: item.id,
-                            datetime: item.datetime,
-                            note: item.note,
-                          },
-                        })
-                      }
-                    >
-                      <Edit2Icon />
-                    </Button>
-                    <Button
-                      size={"icon"}
-                      variant={"destructive"}
-                      onClick={() =>
-                        setDeleteDialogState({
-                          open: true,
-                          data: { id: item.id },
-                        })
-                      }
-                    >
-                      <TrashIcon />
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                <AttendanceItem
+                  key={"attendance-item-" + index}
+                  data={item}
+                  onClickUpdate={() =>
+                    setUpsertDialogState({
+                      open: true,
+                      data: {
+                        id: item.id,
+                        datetime: item.datetime,
+                        note: item.note,
+                      },
+                    })
+                  }
+                  onClickDelete={() =>
+                    setDeleteDialogState({ open: true, data: { id: item.id } })
+                  }
+                />
               ))}
           </TableBody>
         </Table>
@@ -145,3 +126,66 @@ function RouteComponent() {
     </>
   );
 }
+
+interface AttendanceItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["GeneralAttendance"];
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
+}
+const AttendanceItem = ({
+  isLoading = false,
+  data,
+  onClickUpdate,
+  onClickDelete,
+}: AttendanceItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <WithSkeleton isLoading={isLoading}>
+            <FormattedDate
+              value={data?.datetime}
+              weekday="long"
+              day="numeric"
+              month="long"
+              year="numeric"
+            />
+          </WithSkeleton>
+        </TableCell>
+        <TableCell>
+          <WithSkeleton isLoading={isLoading}>
+            <FormattedTime value={data?.datetime} />
+          </WithSkeleton>
+        </TableCell>
+        <TableCell>{data?.code}</TableCell>
+        <TableCell className="flex gap-1">
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} variant={"outline"} asChild>
+              <Link
+                to="/attendance/general/$generalAttendanceId"
+                params={{ generalAttendanceId: String(data?.id) }}
+              >
+                <EyeIcon />
+              </Link>
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} variant={"outline"} onClick={onClickUpdate}>
+              <Edit2Icon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button
+              size={"icon"}
+              variant={"destructive"}
+              onClick={onClickDelete}
+            >
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};

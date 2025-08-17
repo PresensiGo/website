@@ -35,8 +35,8 @@ import { toast } from "sonner";
 import z from "zod";
 
 const formSchema = z.object({
-  date: z.date(),
-  time: z.string(),
+  date: z.date("Tanggal tidak valid!"),
+  time: z.string("Tenggat waktu tidak valid!"),
   note: z.string().optional(),
 });
 
@@ -120,8 +120,9 @@ export const UpsertGeneralAttendanceDialog = ({
               {data ? "Ubah" : "Tambah"} Presensi Kehadiran
             </DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              {data
+                ? "Sesuaikan beberapa informasi berikut untuk mengubah presensi kehadiran."
+                : "Masukkan beberapa informasi berikut untuk menambahkan presensi kehadiran baru."}
             </DialogDescription>
           </DialogHeader>
 
@@ -147,7 +148,7 @@ export const UpsertGeneralAttendanceDialog = ({
                               {field.value ? (
                                 format(field.value, "PPP")
                               ) : (
-                                <span>Pick a date</span>
+                                <span>Pilih tanggal</span>
                               )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
@@ -173,13 +174,12 @@ export const UpsertGeneralAttendanceDialog = ({
                 name="time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Waktu</FormLabel>
+                    <FormLabel>Tenggat Waktu</FormLabel>
                     <FormControl>
                       <Input
                         type="time"
                         id="time-picker"
                         step="1"
-                        defaultValue="10:30:00"
                         className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                         {...field}
                       />
