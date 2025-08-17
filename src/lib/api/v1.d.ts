@@ -98,7 +98,10 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description account id */
+                    account_id: number;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -131,7 +134,10 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description account id */
+                    account_id: number;
+                };
                 cookie?: never;
             };
             requestBody?: never;
@@ -166,7 +172,10 @@ export interface paths {
             parameters: {
                 query?: never;
                 header?: never;
-                path?: never;
+                path: {
+                    /** @description account id */
+                    account_id: number;
+                };
                 cookie?: never;
             };
             requestBody?: never;

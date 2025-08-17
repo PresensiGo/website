@@ -1,5 +1,8 @@
 import { WithSkeleton } from "@/components";
-import { ImportTeacherDialog } from "@/components/teacher-management";
+import {
+  DeleteTeacherDialog,
+  ImportTeacherDialog,
+} from "@/components/teacher-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -22,6 +25,13 @@ export const Route = createFileRoute("/_authenticated/teacher-management/")({
 function RouteComponent() {
   const [importDialogState, setImportDialogState] = useState<{
     open: boolean;
+  }>({ open: false });
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    open: boolean;
+    data?: {
+      id: number;
+      name: string;
+    };
   }>({ open: false });
 
   const { isLoading, isSuccess, data, refetch } = $api.useQuery(
@@ -69,7 +79,16 @@ function RouteComponent() {
             {isSuccess &&
               data &&
               data.users.map((item, index) => (
-                <AccountItem key={"account-item-" + index} data={item} />
+                <AccountItem
+                  key={"account-item-" + index}
+                  data={item}
+                  onClickDelete={() =>
+                    setDeleteDialogState({
+                      open: true,
+                      data: { id: item.id, name: item.name },
+                    })
+                  }
+                />
               ))}
           </TableBody>
         </Table>
@@ -83,6 +102,14 @@ function RouteComponent() {
           if (status) refetch();
         }}
       />
+      <DeleteTeacherDialog
+        open={deleteDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteDialogState({ open });
+          if (status) refetch();
+        }}
+        data={deleteDialogState.data}
+      />
     </>
   );
 }
@@ -90,8 +117,13 @@ function RouteComponent() {
 interface AccountItemProps {
   isLoading?: boolean;
   data?: components["schemas"]["domains.User"];
+  onClickDelete?: () => void;
 }
-const AccountItem = ({ isLoading = false, data }: AccountItemProps) => {
+const AccountItem = ({
+  isLoading = false,
+  data,
+  onClickDelete,
+}: AccountItemProps) => {
   return (
     <>
       <TableRow>
@@ -122,7 +154,11 @@ const AccountItem = ({ isLoading = false, data }: AccountItemProps) => {
             </Button>
           </WithSkeleton>
           <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"destructive"} size={"icon"}>
+            <Button
+              variant={"destructive"}
+              size={"icon"}
+              onClick={onClickDelete}
+            >
               <TrashIcon />
             </Button>
           </WithSkeleton>
