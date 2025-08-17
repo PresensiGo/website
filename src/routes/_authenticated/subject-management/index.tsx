@@ -1,3 +1,4 @@
+import { WithSkeleton } from "@/components";
 import {
   DeleteSubjectDialog,
   UpsertSubjectDialog,
@@ -12,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute } from "@tanstack/react-router";
 import { Edit2Icon, PlusIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
@@ -30,68 +32,64 @@ function RouteComponent() {
     data?: { id: number; name: string };
   }>({ open: false });
 
-  const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/subjects");
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
+    "get",
+    "/api/v1/subjects"
+  );
 
   return (
     <>
-      <div className="py-6">
+      <div className="py-6 space-y-4">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Manajemen Mata Pelajaran</p>
           <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-            fugit deserunt amet blanditiis, dignissimos cupiditate veniam
-            explicabo molestiae voluptas ducimus nobis porro officiis veritatis
-            et at labore nam neque iure.
+            Kelola seluruh data mata pelajaran yang terintegrasi pada sistem
+            ini. Pastikan setiap mata pelajaran telah terdaftar dengan benar
+            agar dapat digunakan untuk membuat presensi mata pelajaran.
           </p>
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end">
           <Button onClick={() => setUpsertDialogState({ open: true })}>
             <PlusIcon />
             Tambah Mata Pelajaran
           </Button>
         </div>
 
-        <Table className="mt-4">
+        <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-full">Nama</TableHead>
+              <TableHead>Nama Mata Pelajaran</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {/* loading state */}
+            {isLoading &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <SubjectItem key={"loading-subject-item-" + index} isLoading />
+              ))}
+
+            {/* success state */}
             {isSuccess &&
               data &&
               data.subjects.map((item, index) => (
-                <TableRow key={"subject-item-" + index}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell className="space-x-1">
-                    <Button
-                      variant={"outline"}
-                      size={"icon"}
-                      onClick={() =>
-                        setUpsertDialogState({
-                          open: true,
-                          data: { id: item.id, name: item.name },
-                        })
-                      }
-                    >
-                      <Edit2Icon />
-                    </Button>
-                    <Button
-                      variant={"destructive"}
-                      size={"icon"}
-                      onClick={() =>
-                        setDeleteDialogState({
-                          open: true,
-                          data: { id: item.id, name: item.name },
-                        })
-                      }
-                    >
-                      <TrashIcon />
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                <SubjectItem
+                  key={"subject-item-" + index}
+                  data={item}
+                  onClickUpdate={() =>
+                    setUpsertDialogState({
+                      open: true,
+                      data: { id: item.id, name: item.name },
+                    })
+                  }
+                  onClickDelete={() =>
+                    setDeleteDialogState({
+                      open: true,
+                      data: { id: item.id, name: item.name },
+                    })
+                  }
+                />
               ))}
           </TableBody>
         </Table>
@@ -123,3 +121,44 @@ function RouteComponent() {
     </>
   );
 }
+
+interface SubjectItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["Subject"];
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
+}
+const SubjectItem = ({
+  isLoading = false,
+  data,
+  onClickUpdate,
+  onClickDelete,
+}: SubjectItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <WithSkeleton isLoading={isLoading}>
+            {data?.name ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="flex gap-1">
+          <WithSkeleton isLoading={isLoading}>
+            <Button variant={"outline"} size={"icon"} onClick={onClickUpdate}>
+              <Edit2Icon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button
+              variant={"destructive"}
+              size={"icon"}
+              onClick={onClickDelete}
+            >
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
