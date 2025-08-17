@@ -3,6 +3,7 @@ import {
   DeleteTeacherDialog,
   ImportTeacherDialog,
   UpdateTeacherPasswordDialog,
+  UpdateTeacherRoleDialog,
 } from "@/components/teacher-management";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,14 @@ function RouteComponent() {
   const [updatePasswordDialogState, setUpdatePasswordDialogState] = useState<{
     open: boolean;
     data?: { id: number };
+  }>({ open: false });
+  const [updateRoleDialogState, setUpdateRoleDialogState] = useState<{
+    open: boolean;
+    data?: {
+      id: number;
+      name: string;
+      role: string;
+    };
   }>({ open: false });
   const [deleteDialogState, setDeleteDialogState] = useState<{
     open: boolean;
@@ -93,6 +102,12 @@ function RouteComponent() {
                       data: { id: item.id },
                     })
                   }
+                  onClickUpdateRole={() =>
+                    setUpdateRoleDialogState({
+                      open: true,
+                      data: { id: item.id, name: item.name, role: item.role },
+                    })
+                  }
                   onClickDelete={() =>
                     setDeleteDialogState({
                       open: true,
@@ -121,6 +136,14 @@ function RouteComponent() {
         }}
         data={updatePasswordDialogState.data}
       />
+      <UpdateTeacherRoleDialog
+        open={updateRoleDialogState.open}
+        onOpenChange={(open, status) => {
+          setUpdateRoleDialogState({ open });
+          if (status) refetch();
+        }}
+        data={updateRoleDialogState.data}
+      />
       <DeleteTeacherDialog
         open={deleteDialogState.open}
         onOpenChange={(open, status) => {
@@ -137,12 +160,14 @@ interface AccountItemProps {
   isLoading?: boolean;
   data?: components["schemas"]["domains.User"];
   onClickUpdatePassword?: () => void;
+  onClickUpdateRole?: () => void;
   onClickDelete?: () => void;
 }
 const AccountItem = ({
   isLoading = false,
   data,
   onClickUpdatePassword,
+  onClickUpdateRole,
   onClickDelete,
 }: AccountItemProps) => {
   return (
@@ -165,7 +190,11 @@ const AccountItem = ({
         </TableCell>
         <TableCell className="flex gap-1">
           <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"outline"} size={"icon"}>
+            <Button
+              variant={"outline"}
+              size={"icon"}
+              onClick={onClickUpdateRole}
+            >
               <UserCogIcon />
             </Button>
           </WithSkeleton>
