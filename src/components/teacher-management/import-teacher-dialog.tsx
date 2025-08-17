@@ -41,7 +41,7 @@ export const ImportTeacherDialog = ({
 
   const { mutate, isPending } = $api.useMutation(
     "post",
-    "/api/v1/teachers/import",
+    "/api/v1/accounts/import",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {

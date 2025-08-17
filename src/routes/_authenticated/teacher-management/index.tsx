@@ -1,3 +1,4 @@
+import { WithSkeleton } from "@/components";
 import { ImportTeacherDialog } from "@/components/teacher-management";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,8 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute } from "@tanstack/react-router";
-import { PlusIcon, UploadIcon } from "lucide-react";
+import { LockIcon, TrashIcon, UploadIcon, UserCogIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/teacher-management/")({
@@ -22,51 +24,52 @@ function RouteComponent() {
     open: boolean;
   }>({ open: false });
 
-  const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/accounts");
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
+    "get",
+    "/api/v1/accounts"
+  );
 
   return (
     <>
-      <div className="py-6">
+      <div className="py-6 space-y-4">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Manajemen Data Guru</p>
           <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim
-            perferendis, eligendi debitis fugit a, quis voluptate praesentium
-            nesciunt natus ut deserunt incidunt sint dolores hic aspernatur
-            molestiae magnam doloremque! Voluptatem.
+            Kelola seluruh data guru yang berwenang membuat presensi siswa.
+            Gunakan tombol Unggah Data Guru untuk mengunggah data guru dalam
+            format file Excel. Anda juga dapat mengubah role dan password setiap
+            guru secara manual.
           </p>
         </div>
 
-        <div className="flex justify-end mt-4 space-x-2">
-          <Button variant={"outline"}>
+        <div className="flex justify-end space-x-2">
+          <Button onClick={() => setImportDialogState({ open: true })}>
             <UploadIcon />
             Unggah Data Guru
           </Button>
-          <Button>
-            <PlusIcon />
-            Tambah Guru
-          </Button>
         </div>
 
-        <Table className="mt-4">
+        <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nama</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>Nama Guru</TableHead>
+              <TableHead>Alamat Email</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {/* loading state */}
+            {isLoading &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <AccountItem key={"loading-account-item-" + index} isLoading />
+              ))}
+
+            {/* success state */}
             {isSuccess &&
               data &&
               data.users.map((item, index) => (
-                <TableRow key={"account-item-" + index}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.email}</TableCell>
-                  <TableCell>{item.role}</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
+                <AccountItem key={"account-item-" + index} data={item} />
               ))}
           </TableBody>
         </Table>
@@ -83,3 +86,48 @@ function RouteComponent() {
     </>
   );
 }
+
+interface AccountItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["domains.User"];
+}
+const AccountItem = ({ isLoading = false, data }: AccountItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <WithSkeleton isLoading={isLoading}>
+            {data?.name ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell>
+          <WithSkeleton isLoading={isLoading}>
+            {data?.email ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell>
+          <WithSkeleton isLoading={isLoading}>
+            {data?.role ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="flex gap-1">
+          <WithSkeleton isLoading={isLoading} className="w-fit">
+            <Button variant={"outline"} size={"icon"}>
+              <UserCogIcon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading} className="w-fit">
+            <Button variant={"outline"} size={"icon"}>
+              <LockIcon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading} className="w-fit">
+            <Button variant={"destructive"} size={"icon"}>
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};

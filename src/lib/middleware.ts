@@ -32,7 +32,7 @@ export const middleware: Middleware = {
               accessToken: body.access_token,
               refreshToken: body.refresh_token,
             });
-          } else {
+          } else if (status === 401) {
             auth.clear();
           }
         } catch (e) {
