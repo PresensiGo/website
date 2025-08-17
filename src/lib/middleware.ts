@@ -33,10 +33,13 @@ export const middleware: Middleware = {
           });
 
           accessToken = body.access_token;
+        } else if (status === 401) {
+          auth.clear();
         }
       }
 
       request.headers.set("Authorization", `Bearer ${accessToken}`);
+      return request;
     }
   },
   // onResponse: async ({ response }) => {
