@@ -44,7 +44,7 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="py-6 space-y-4">
+      <div className="py-6 space-y-6">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Presensi Kehadiran</p>
           <p className="text-muted-foreground">
@@ -54,59 +54,63 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="flex justify-end">
-          <Button onClick={() => setUpsertDialogState({ open: true })}>
-            <PlusIcon />
-            Tambah Presensi Kehadiran
-          </Button>
+        <div className="space-y-2">
+          <div className="flex justify-end">
+            <Button onClick={() => setUpsertDialogState({ open: true })}>
+              <PlusIcon />
+              Tambah Presensi Kehadiran
+            </Button>
+          </div>
+
+          <div className="border rounded-md overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted">
+                  <TableHead className="px-4">Tanggal</TableHead>
+                  <TableHead className="px-4">Tenggat Waktu</TableHead>
+                  <TableHead className="px-4">Kode Akses</TableHead>
+                  <TableHead className="px-4 w-1">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {/* loading state */}
+                {isLoading &&
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <AttendanceItem
+                      key={"loading-attendance-item-" + index}
+                      isLoading
+                    />
+                  ))}
+
+                {/* success state */}
+                {isSuccess &&
+                  data &&
+                  data.items.map((item, index) => (
+                    <AttendanceItem
+                      key={"attendance-item-" + index}
+                      data={item}
+                      onClickUpdate={() =>
+                        setUpsertDialogState({
+                          open: true,
+                          data: {
+                            id: item.general_attendance.id,
+                            datetime: item.general_attendance.datetime,
+                            note: item.general_attendance.note,
+                          },
+                        })
+                      }
+                      onClickDelete={() =>
+                        setDeleteDialogState({
+                          open: true,
+                          data: { id: item.general_attendance.id },
+                        })
+                      }
+                    />
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Tanggal</TableHead>
-              <TableHead>Tenggat Waktu</TableHead>
-              <TableHead>Kode Akses</TableHead>
-              <TableHead>Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* loading state */}
-            {isLoading &&
-              Array.from({ length: 3 }).map((_, index) => (
-                <AttendanceItem
-                  key={"loading-attendance-item-" + index}
-                  isLoading
-                />
-              ))}
-
-            {/* success state */}
-            {isSuccess &&
-              data &&
-              data.items.map((item, index) => (
-                <AttendanceItem
-                  key={"attendance-item-" + index}
-                  data={item}
-                  onClickUpdate={() =>
-                    setUpsertDialogState({
-                      open: true,
-                      data: {
-                        id: item.general_attendance.id,
-                        datetime: item.general_attendance.datetime,
-                        note: item.general_attendance.note,
-                      },
-                    })
-                  }
-                  onClickDelete={() =>
-                    setDeleteDialogState({
-                      open: true,
-                      data: { id: item.general_attendance.id },
-                    })
-                  }
-                />
-              ))}
-          </TableBody>
-        </Table>
       </div>
 
       {/* dialogs */}
@@ -145,7 +149,7 @@ const AttendanceItem = ({
   return (
     <>
       <TableRow>
-        <TableCell>
+        <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             <FormattedDate
               value={data?.general_attendance.datetime}
@@ -156,13 +160,13 @@ const AttendanceItem = ({
             />
           </WithSkeleton>
         </TableCell>
-        <TableCell>
+        <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             <FormattedTime value={data?.general_attendance.datetime} />
           </WithSkeleton>
         </TableCell>
-        <TableCell>{data?.general_attendance.code}</TableCell>
-        <TableCell className="flex gap-1">
+        <TableCell className="px-4">{data?.general_attendance.code}</TableCell>
+        <TableCell className="flex gap-1 px-4">
           <WithSkeleton isLoading={isLoading}>
             <Button size={"icon"} variant={"outline"} asChild>
               <Link

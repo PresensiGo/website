@@ -23,7 +23,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
 import { $api } from "@/lib/api/api";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +36,7 @@ import z from "zod";
 const formSchema = z.object({
   date: z.date("Tanggal tidak valid!"),
   time: z.string("Tenggat waktu tidak valid!"),
-  note: z.string().optional(),
+  // note: z.string().optional(),
 });
 
 interface UpsertGeneralAttendanceDialogProps {
@@ -46,7 +45,7 @@ interface UpsertGeneralAttendanceDialogProps {
   data?: {
     id: number;
     datetime: string;
-    note: string;
+    // note: string;
   };
 }
 
@@ -64,7 +63,7 @@ export const UpsertGeneralAttendanceDialog = ({
       const date = new Date(data.datetime);
       const time = format(data.datetime, "HH:mm:ss");
 
-      form.reset({ date, time, note: data.note });
+      form.reset({ date, time });
     }
   }, [data]);
 
@@ -103,11 +102,11 @@ export const UpsertGeneralAttendanceDialog = ({
     if (data)
       mutateUpdate({
         params: { path: { general_attendance_id: data.id } },
-        body: { datetime, note: values.note },
+        body: { datetime, note: "" },
       });
     else
       mutateCreate({
-        body: { datetime, note: values.note },
+        body: { datetime, note: "" },
       });
   };
 
@@ -184,25 +183,6 @@ export const UpsertGeneralAttendanceDialog = ({
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="note"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Catatan Tambahan</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        className="min-h-32"
-                        placeholder="Masukkan catatan tambahan"
-                        {...field}
-                      />
-                    </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
