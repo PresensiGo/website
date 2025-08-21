@@ -13,9 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
 import { createFileRoute } from "@tanstack/react-router";
-import { isBefore } from "date-fns";
 import { Edit2Icon, FilterIcon, TrashIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
 import ReactQRCode from "react-qr-code";
 
@@ -63,13 +62,13 @@ function RouteComponent() {
     }
   );
 
-  const isEarly = useCallback(
-    (date: string) => {
-      if (data) return isBefore(date, data.general_attendance.datetime);
-      return false;
-    },
-    [data]
-  );
+  // const isEarly = useCallback(
+  //   (date: string) => {
+  //     if (data) return isBefore(date, data.general_attendance.datetime);
+  //     return false;
+  //   },
+  //   [data]
+  // );
 
   return (
     <>

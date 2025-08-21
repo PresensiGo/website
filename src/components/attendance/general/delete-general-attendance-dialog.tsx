@@ -25,7 +25,7 @@ export const DeleteGeneralAttendanceDialog = ({
 }: DeleteGeneralAttendanceDialogProps) => {
   const { mutate, isPending } = $api.useMutation(
     "delete",
-    "/api/v1/general_attendances/{general_attendance_id}",
+    "/api/v1/general-attendances/{general_attendance_id}",
     {
       onSuccess: () => {
         toast.success("Berhasil!", {
@@ -35,7 +35,7 @@ export const DeleteGeneralAttendanceDialog = ({
         });
         onOpenChange(false, true);
       },
-    },
+    }
   );
 
   return (
