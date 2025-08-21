@@ -1,8 +1,5 @@
-import { WithSkeleton } from "@/components";
-import {
-  EjectStudentAccountDialog,
-  FilterDialog,
-} from "@/components/student-account-management";
+import { FilterDialog, WithSkeleton } from "@/components";
+import { EjectStudentAccountDialog } from "@/components/student-account-management";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

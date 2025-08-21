@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/select";
 import { $api } from "@/lib/api/api";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
 
 interface FilterDialogProps {
   open: boolean;
