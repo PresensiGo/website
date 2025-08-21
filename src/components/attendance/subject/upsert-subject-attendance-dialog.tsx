@@ -30,7 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { $api } from "@/lib/api/api";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,7 +43,6 @@ const formSchema = z.object({
   subjectId: z.number(),
   date: z.date(),
   time: z.string(),
-  note: z.string().optional(),
 });
 
 interface UpsertSubjectAttendanceDialogProps {
@@ -103,7 +101,7 @@ export const UpsertSubjectAttendanceDialog = ({
         },
         body: {
           datetime,
-          note: values.note ?? "",
+          note: "",
           subject_id: values.subjectId,
         },
       });
@@ -114,10 +112,10 @@ export const UpsertSubjectAttendanceDialog = ({
       <Dialog open={open} onOpenChange={(e) => onOpenChange(e)}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogTitle>Tambah Presensi Mata Pelajaran</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              Masukkan beberapa informasi berikut untuk menambahkan presensi
+              mata pelajaran baru.
             </DialogDescription>
           </DialogHeader>
 
@@ -134,8 +132,8 @@ export const UpsertSubjectAttendanceDialog = ({
                         value={(value && String(value)) || undefined}
                         onValueChange={(e) => onChange(Number(e))}
                       >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Theme" />
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Pilih mata pelajaran" />
                         </SelectTrigger>
                         <SelectContent>
                           {isSuccessSubjects &&
@@ -168,14 +166,14 @@ export const UpsertSubjectAttendanceDialog = ({
                           <Button
                             variant={"outline"}
                             className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
+                              "w-full pl-3 text-left font-normal",
                               !field.value && "text-muted-foreground"
                             )}
                           >
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a date</span>
+                              <span>Pilih tanggal</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -208,23 +206,6 @@ export const UpsertSubjectAttendanceDialog = ({
                         step="1"
                         className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                         {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="note"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Catatan Tambahan</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Masukkan catatan tambahan"
                       />
                     </FormControl>
                     <FormMessage />

@@ -25,44 +25,46 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="py-6">
+      <div className="py-6 space-y-6">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Presensi Mata Pelajaran</p>
           <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus
-            vero neque doloribus provident possimus sapiente veritatis
-            laboriosam molestiae voluptate fugiat iste architecto esse
-            cupiditate maxime, aliquam natus dolorem repudiandae dolorum!
+            Halaman ini digunakan untuk mencatat presensi mata pelajaran.
+            Silakan pilih angkatan dari daftar di bawah untuk melanjutkan ke
+            halaman jurusan dan kelas, lalu pilih mata pelajaran untuk memulai
+            presensi.
           </p>
         </div>
 
-        <Table className="mt-4">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-full">Nama</TableHead>
-              <TableHead>Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isSuccessBatches &&
-              dataBatches &&
-              dataBatches.batches.map((item, index) => (
-                <TableRow key={"batch-item-" + index}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>
-                    <Button size={"icon"} variant={"outline"} asChild>
-                      <Link
-                        to="/attendance/subject/batches/$batchId/majors"
-                        params={{ batchId: String(item.id) }}
-                      >
-                        <EyeIcon />
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <div className="border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted">
+                <TableHead className="px-4">Nama Angkatan</TableHead>
+                <TableHead className="px-4 w-1">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isSuccessBatches &&
+                dataBatches &&
+                dataBatches.items.map(({ batch: item }, index) => (
+                  <TableRow key={"batch-item-" + index}>
+                    <TableCell className="px-4">{item.name}</TableCell>
+                    <TableCell className="px-4">
+                      <Button size={"icon"} variant={"outline"} asChild>
+                        <Link
+                          to="/attendance/subject/batches/$batchId/majors"
+                          params={{ batchId: String(item.id) }}
+                        >
+                          <EyeIcon />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </>
   );

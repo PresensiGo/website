@@ -19,6 +19,14 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { batchId } = Route.useParams();
+
+  const { data: dataBatch } = $api.useQuery(
+    "get",
+    "/api/v1/batches/{batch_id}",
+    {
+      params: { path: { batch_id: Number(batchId) } },
+    }
+  );
   const { isSuccess, data } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors",
@@ -29,49 +37,48 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="py-6">
+      <div className="py-6 space-y-6">
         <div className="space-y-2">
-          <p className="text-3xl font-semibold">
-            Daftar Jurusan - Angkatan ABCD
-          </p>
+          <p className="text-3xl font-semibold">Daftar Jurusan</p>
           <p className="text-muted-foreground">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-            corporis maiores adipisci neque tenetur eligendi labore! Eaque,
-            reiciendis laboriosam quaerat facilis obcaecati labore corrupti
-            quisquam porro ab, sequi nemo? Vel.
+            Halaman ini menampilkan daftar jurusan yang terdaftar di angkatan{" "}
+            {dataBatch && dataBatch.batch.name}. Silakan pilih jurusan untuk
+            melihat daftar kelas dan melanjutkan proses presensi mata pelajaran.
           </p>
         </div>
 
-        <Table className="mt-4">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-full">Nama</TableHead>
-              <TableHead>Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isSuccess &&
-              data &&
-              data.majors.map((item, index) => (
-                <TableRow key={"major-item-" + index}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>
-                    <Button variant={"outline"} size={"icon"} asChild>
-                      <Link
-                        to="/attendance/subject/batches/$batchId/majors/$majorId/classrooms"
-                        params={{
-                          batchId: String(batchId),
-                          majorId: String(item.id),
-                        }}
-                      >
-                        <EyeIcon />
-                      </Link>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+        <div className="border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted">
+                <TableHead className="px-4">Nama Jurusan</TableHead>
+                <TableHead className="px-4 w-1">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isSuccess &&
+                data &&
+                data.items.map(({ major: item }, index) => (
+                  <TableRow key={"major-item-" + index}>
+                    <TableCell className="px-4">{item.name}</TableCell>
+                    <TableCell className="px-4">
+                      <Button variant={"outline"} size={"icon"} asChild>
+                        <Link
+                          to="/attendance/subject/batches/$batchId/majors/$majorId/classrooms"
+                          params={{
+                            batchId: String(batchId),
+                            majorId: String(item.id),
+                          }}
+                        >
+                          <EyeIcon />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </>
   );
