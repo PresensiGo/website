@@ -83,7 +83,7 @@ function RouteComponent() {
             {/* success state */}
             {isSuccess &&
               data &&
-              data.general_attendances.map((item, index) => (
+              data.items.map((item, index) => (
                 <AttendanceItem
                   key={"attendance-item-" + index}
                   data={item}
@@ -91,14 +91,17 @@ function RouteComponent() {
                     setUpsertDialogState({
                       open: true,
                       data: {
-                        id: item.id,
-                        datetime: item.datetime,
-                        note: item.note,
+                        id: item.general_attendance.id,
+                        datetime: item.general_attendance.datetime,
+                        note: item.general_attendance.note,
                       },
                     })
                   }
                   onClickDelete={() =>
-                    setDeleteDialogState({ open: true, data: { id: item.id } })
+                    setDeleteDialogState({
+                      open: true,
+                      data: { id: item.general_attendance.id },
+                    })
                   }
                 />
               ))}
@@ -129,7 +132,7 @@ function RouteComponent() {
 
 interface AttendanceItemProps {
   isLoading?: boolean;
-  data?: components["schemas"]["GeneralAttendance"];
+  data?: components["schemas"]["GetAllGeneralAttendancesItem"];
   onClickUpdate?: () => void;
   onClickDelete?: () => void;
 }
@@ -145,7 +148,7 @@ const AttendanceItem = ({
         <TableCell>
           <WithSkeleton isLoading={isLoading}>
             <FormattedDate
-              value={data?.datetime}
+              value={data?.general_attendance.datetime}
               weekday="long"
               day="numeric"
               month="long"
@@ -155,16 +158,18 @@ const AttendanceItem = ({
         </TableCell>
         <TableCell>
           <WithSkeleton isLoading={isLoading}>
-            <FormattedTime value={data?.datetime} />
+            <FormattedTime value={data?.general_attendance.datetime} />
           </WithSkeleton>
         </TableCell>
-        <TableCell>{data?.code}</TableCell>
+        <TableCell>{data?.general_attendance.code}</TableCell>
         <TableCell className="flex gap-1">
           <WithSkeleton isLoading={isLoading}>
             <Button size={"icon"} variant={"outline"} asChild>
               <Link
                 to="/attendance/general/$generalAttendanceId"
-                params={{ generalAttendanceId: String(data?.id) }}
+                params={{
+                  generalAttendanceId: String(data?.general_attendance.id),
+                }}
               >
                 <EyeIcon />
               </Link>

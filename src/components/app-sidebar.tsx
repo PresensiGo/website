@@ -42,7 +42,7 @@ const dataItems: ItemProps[] = [
   },
   {
     title: "Manajemen Akun Siswa",
-    href: "/student-account-management/batches",
+    href: "/student-account-management",
     icon: <SmartphoneIcon />,
   },
 ];

@@ -35,7 +35,7 @@ export const DeleteGeneralAttendanceDialog = ({
         });
         onOpenChange(false, true);
       },
-    }
+    },
   );
 
   return (

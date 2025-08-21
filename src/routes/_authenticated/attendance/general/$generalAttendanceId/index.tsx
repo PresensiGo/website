@@ -53,21 +53,12 @@ function RouteComponent() {
   return (
     <>
       <div className="py-6">
-        <div className="space-y-2">
-          <p className="text-3xl font-semibold">Presensi Kehadiran</p>
-          <p className="text-muted-foreground">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloremque
-            sapiente architecto enim repellat dolor molestias provident neque
-            dolorum similique maxime. Magni suscipit placeat distinctio in,
-            dolor laboriosam itaque animi ab.
-          </p>
-        </div>
+        <p className="text-3xl font-semibold">Presensi Kehadiran</p>
 
         <Tabs defaultValue="students" className="mt-4">
           <TabsList>
             <TabsTrigger value="qr-code">QR Code</TabsTrigger>
             <TabsTrigger value="students">Daftar Siswa</TabsTrigger>
-            <TabsTrigger value="settings">Pengaturan</TabsTrigger>
           </TabsList>
           <TabsContent value="qr-code">
             {isSuccess && data && (

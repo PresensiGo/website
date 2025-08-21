@@ -5,6 +5,7 @@ import {
   UpdateTeacherPasswordDialog,
   UpdateTeacherRoleDialog,
 } from "@/components/teacher-management";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -55,7 +56,7 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="py-6 space-y-4">
+      <div className="py-6 space-y-6">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Manajemen Data Guru</p>
           <p className="text-muted-foreground">
@@ -66,58 +67,69 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="flex justify-end space-x-2">
-          <Button onClick={() => setImportDialogState({ open: true })}>
-            <UploadIcon />
-            Unggah Data Guru
-          </Button>
+        <div className="space-y-2">
+          <div className="flex justify-end">
+            <Button onClick={() => setImportDialogState({ open: true })}>
+              <UploadIcon />
+              Unggah Data Guru
+            </Button>
+          </div>
+
+          <div className="border rounded-md overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted">
+                  <TableHead className="px-4">Nama Guru</TableHead>
+                  <TableHead className="px-4">Alamat Email</TableHead>
+                  <TableHead className="px-4">Role</TableHead>
+                  <TableHead className="px-4 w-1">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {/* loading state */}
+                {isLoading &&
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <AccountItem
+                      key={"loading-account-item-" + index}
+                      isLoading
+                    />
+                  ))}
+
+                {/* success state */}
+                {isSuccess &&
+                  data &&
+                  data.users.map((item, index) => (
+                    <AccountItem
+                      key={"account-item-" + index}
+                      data={item}
+                      onClickUpdatePassword={() =>
+                        setUpdatePasswordDialogState({
+                          open: true,
+                          data: { id: item.id },
+                        })
+                      }
+                      onClickUpdateRole={() =>
+                        setUpdateRoleDialogState({
+                          open: true,
+                          data: {
+                            id: item.id,
+                            name: item.name,
+                            role: item.role,
+                          },
+                        })
+                      }
+                      onClickDelete={() =>
+                        setDeleteDialogState({
+                          open: true,
+                          data: { id: item.id, name: item.name },
+                        })
+                      }
+                    />
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nama Guru</TableHead>
-              <TableHead>Alamat Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* loading state */}
-            {isLoading &&
-              Array.from({ length: 3 }).map((_, index) => (
-                <AccountItem key={"loading-account-item-" + index} isLoading />
-              ))}
-
-            {/* success state */}
-            {isSuccess &&
-              data &&
-              data.users.map((item, index) => (
-                <AccountItem
-                  key={"account-item-" + index}
-                  data={item}
-                  onClickUpdatePassword={() =>
-                    setUpdatePasswordDialogState({
-                      open: true,
-                      data: { id: item.id },
-                    })
-                  }
-                  onClickUpdateRole={() =>
-                    setUpdateRoleDialogState({
-                      open: true,
-                      data: { id: item.id, name: item.name, role: item.role },
-                    })
-                  }
-                  onClickDelete={() =>
-                    setDeleteDialogState({
-                      open: true,
-                      data: { id: item.id, name: item.name },
-                    })
-                  }
-                />
-              ))}
-          </TableBody>
-        </Table>
       </div>
 
       {/* dialogs */}
@@ -158,7 +170,7 @@ function RouteComponent() {
 
 interface AccountItemProps {
   isLoading?: boolean;
-  data?: components["schemas"]["domains.User"];
+  data?: components["schemas"]["User"];
   onClickUpdatePassword?: () => void;
   onClickUpdateRole?: () => void;
   onClickDelete?: () => void;
@@ -173,22 +185,22 @@ const AccountItem = ({
   return (
     <>
       <TableRow>
-        <TableCell>
+        <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             {data?.name ?? "loading"}
           </WithSkeleton>
         </TableCell>
-        <TableCell>
+        <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             {data?.email ?? "loading"}
           </WithSkeleton>
         </TableCell>
-        <TableCell>
+        <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
-            {data?.role ?? "loading"}
+            <Badge variant={"outline"}>{data?.role ?? "loading"}</Badge>
           </WithSkeleton>
         </TableCell>
-        <TableCell className="flex gap-1">
+        <TableCell className="flex gap-1 px-4">
           <WithSkeleton isLoading={isLoading} className="w-fit">
             <Button
               variant={"outline"}

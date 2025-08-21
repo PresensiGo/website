@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { Edit2Icon, EyeIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute(
@@ -54,80 +54,76 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="py-6">
-        <p className="text-3xl font-semibold">
-          Daftar Jurusan - {dataBatch && dataBatch.batch.name}
-        </p>
-        <p className="text-muted-foreground">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellat
-          corporis harum in provident alias qui autem labore optio nihil nam,
-          ullam dolores sunt mollitia blanditiis odit, vel magni nesciunt iusto.
-        </p>
-
-        <div className="flex justify-end mt-4">
-          <Button onClick={() => setUpsertDialogState({ open: true })}>
-            <PlusIcon />
-            Tambah Jurusan
-          </Button>
+      <div className="py-6 space-y-6">
+        <div className="space-y-2">
+          <p className="text-3xl font-semibold">Daftar Jurusan</p>
+          <p className="text-muted-foreground">
+            Halaman ini menampilkan daftar lengkap jurusan yang terdaftar di
+            angkatan {dataBatch && dataBatch.batch.name}. Anda dapat menambahkan
+            jurusan baru, serta mengelola (mengubah atau menghapus) data jurusan
+            yang sudah ada.
+          </p>
         </div>
 
-        <Table className="mt-4">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-full">Nama</TableHead>
-              <TableHead>Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isSuccess &&
-              data &&
-              data.majors.map((item, index) => (
-                <TableRow key={"major-item-" + index}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell className="space-x-1">
-                    <Button size={"icon"} asChild variant={"outline"}>
-                      <Link
-                        to="/data-management/batches/$batchId/majors/$majorId/classrooms"
-                        params={{ batchId, majorId: String(item.id) }}
+        <div className="border rounded-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted">
+                <TableHead className="px-4">Nama</TableHead>
+                <TableHead className="w-1 px-4">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isSuccess &&
+                data &&
+                data.items.map(({ major }, index) => (
+                  <TableRow key={"major-item-" + index}>
+                    <TableCell className="px-4">{major.name}</TableCell>
+                    <TableCell className="space-x-1 px-4">
+                      <Button size={"icon"} asChild variant={"outline"}>
+                        <Link
+                          to="/data-management/batches/$batchId/majors/$majorId/classrooms"
+                          params={{ batchId, majorId: String(major.id) }}
+                        >
+                          <EyeIcon />
+                        </Link>
+                      </Button>
+                      <Button
+                        size={"icon"}
+                        variant={"outline"}
+                        onClick={() =>
+                          setUpsertDialogState({
+                            open: true,
+                            data: {
+                              id: major.id,
+                              name: major.name,
+                            },
+                          })
+                        }
                       >
-                        <EyeIcon />
-                      </Link>
-                    </Button>
-                    <Button
-                      size={"icon"}
-                      variant={"outline"}
-                      onClick={() =>
-                        setUpsertDialogState({
-                          open: true,
-                          data: {
-                            id: item.id,
-                            name: item.name,
-                          },
-                        })
-                      }
-                    >
-                      <Edit2Icon />
-                    </Button>
-                    <Button
-                      size={"icon"}
-                      variant={"destructive"}
-                      onClick={() =>
-                        setDeleteDialogState({
-                          open: true,
-                          data: {
-                            id: item.id,
-                            name: item.name,
-                          },
-                        })
-                      }
-                    >
-                      <TrashIcon />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
+                        <Edit2Icon />
+                      </Button>
+                      <Button
+                        size={"icon"}
+                        variant={"destructive"}
+                        onClick={() =>
+                          setDeleteDialogState({
+                            open: true,
+                            data: {
+                              id: major.id,
+                              name: major.name,
+                            },
+                          })
+                        }
+                      >
+                        <TrashIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* dialogs */}

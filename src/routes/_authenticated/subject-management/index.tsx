@@ -39,7 +39,7 @@ function RouteComponent() {
 
   return (
     <>
-      <div className="py-6 space-y-4">
+      <div className="py-6 space-y-6">
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Manajemen Mata Pelajaran</p>
           <p className="text-muted-foreground">
@@ -49,50 +49,57 @@ function RouteComponent() {
           </p>
         </div>
 
-        <div className="flex justify-end">
-          <Button onClick={() => setUpsertDialogState({ open: true })}>
-            <PlusIcon />
-            Tambah Mata Pelajaran
-          </Button>
+        <div className="space-y-2">
+          <div className="flex justify-end">
+            <Button onClick={() => setUpsertDialogState({ open: true })}>
+              <PlusIcon />
+              Tambah Mata Pelajaran
+            </Button>
+          </div>
+
+          <div className="border rounded-md overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted">
+                  <TableHead className="px-4">Nama Mata Pelajaran</TableHead>
+                  <TableHead className="w-1 px-4">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {/* loading state */}
+                {isLoading &&
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <SubjectItem
+                      key={"loading-subject-item-" + index}
+                      isLoading
+                    />
+                  ))}
+
+                {/* success state */}
+                {isSuccess &&
+                  data &&
+                  data.subjects.map((item, index) => (
+                    <SubjectItem
+                      key={"subject-item-" + index}
+                      data={item}
+                      onClickUpdate={() =>
+                        setUpsertDialogState({
+                          open: true,
+                          data: { id: item.id, name: item.name },
+                        })
+                      }
+                      onClickDelete={() =>
+                        setDeleteDialogState({
+                          open: true,
+                          data: { id: item.id, name: item.name },
+                        })
+                      }
+                    />
+                  ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nama Mata Pelajaran</TableHead>
-              <TableHead>Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {/* loading state */}
-            {isLoading &&
-              Array.from({ length: 3 }).map((_, index) => (
-                <SubjectItem key={"loading-subject-item-" + index} isLoading />
-              ))}
-
-            {/* success state */}
-            {isSuccess &&
-              data &&
-              data.subjects.map((item, index) => (
-                <SubjectItem
-                  key={"subject-item-" + index}
-                  data={item}
-                  onClickUpdate={() =>
-                    setUpsertDialogState({
-                      open: true,
-                      data: { id: item.id, name: item.name },
-                    })
-                  }
-                  onClickDelete={() =>
-                    setDeleteDialogState({
-                      open: true,
-                      data: { id: item.id, name: item.name },
-                    })
-                  }
-                />
-              ))}
-          </TableBody>
-        </Table>
       </div>
 
       {/* dialogs */}
@@ -137,12 +144,12 @@ const SubjectItem = ({
   return (
     <>
       <TableRow>
-        <TableCell>
+        <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             {data?.name ?? "loading"}
           </WithSkeleton>
         </TableCell>
-        <TableCell className="flex gap-1">
+        <TableCell className="flex gap-1 px-4">
           <WithSkeleton isLoading={isLoading}>
             <Button variant={"outline"} size={"icon"} onClick={onClickUpdate}>
               <Edit2Icon />
