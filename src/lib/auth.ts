@@ -13,7 +13,13 @@ const get = (): Token | undefined => {
     return undefined;
   }
 
-  return JSON.parse(tokenStr);
+  const token = JSON.parse(tokenStr) as Token;
+  const { accessToken, refreshToken } = token;
+  if (!accessToken || !refreshToken) {
+    return undefined;
+  }
+
+  return token;
 };
 
 const clear = () => {
