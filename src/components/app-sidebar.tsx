@@ -1,15 +1,19 @@
+import { auth } from "@/lib/auth";
 import { Link } from "@tanstack/react-router";
 import {
   BookMarkedIcon,
   CalendarClockIcon,
   ClipboardCheckIcon,
   DatabaseIcon,
+  LogOutIcon,
+  SchoolIcon,
   SmartphoneIcon,
   UsersIcon,
 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -45,6 +49,11 @@ const dataItems: ItemProps[] = [
     href: "/student-account-management",
     icon: <SmartphoneIcon />,
   },
+  {
+    title: "Manajemen Sekolah",
+    href: "/school-management",
+    icon: <SchoolIcon />,
+  },
 ];
 
 const attendanceItems: ItemProps[] = [
@@ -66,23 +75,25 @@ export const AppSidebar = () => {
       <Sidebar>
         <SidebarContent>
           {/* data */}
-          <SidebarGroup>
-            <SidebarGroupLabel>Data</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {dataItems.map((item, index) => (
-                  <SidebarMenuItem key={"data-item-" + index}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.href}>
-                        {item.icon}
-                        {item.title}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          {auth.isAdmin() && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Data</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {dataItems.map((item, index) => (
+                    <SidebarMenuItem key={"data-item-" + index}>
+                      <SidebarMenuButton asChild>
+                        <Link to={item.href}>
+                          {item.icon}
+                          {item.title}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
 
           {/* attendance */}
           <SidebarGroup>
@@ -103,6 +114,16 @@ export const AppSidebar = () => {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                <LogOutIcon />
+                Keluar
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
       </Sidebar>
     </>
   );
