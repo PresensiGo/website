@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   BookMarkedIcon,
   CalendarClockIcon,
@@ -10,6 +10,8 @@ import {
   SmartphoneIcon,
   UsersIcon,
 } from "lucide-react";
+import { useState } from "react";
+import { LogoutDialog } from "./logout-dialog";
 import {
   Sidebar,
   SidebarContent,
@@ -70,6 +72,10 @@ const attendanceItems: ItemProps[] = [
 ];
 
 export const AppSidebar = () => {
+  const navigate = useNavigate();
+
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
   return (
     <>
       <Sidebar>
@@ -117,7 +123,7 @@ export const AppSidebar = () => {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton>
+              <SidebarMenuButton onClick={() => setIsLogoutOpen(true)}>
                 <LogOutIcon />
                 Keluar
               </SidebarMenuButton>
@@ -125,6 +131,20 @@ export const AppSidebar = () => {
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
+
+      {/* dialogs */}
+      <LogoutDialog
+        open={isLogoutOpen}
+        onOpenChange={(open, status) => {
+          setIsLogoutOpen(open);
+          if (status) {
+            navigate({
+              to: "/auth/login",
+              replace: true,
+            });
+          }
+        }}
+      />
     </>
   );
 };
