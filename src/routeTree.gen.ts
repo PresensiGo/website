@@ -16,6 +16,7 @@ import { Route as AuthenticatedTeacherManagementIndexRouteImport } from './route
 import { Route as AuthenticatedSubjectManagementIndexRouteImport } from './routes/_authenticated/subject-management/index'
 import { Route as AuthenticatedStudentAccountManagementIndexRouteImport } from './routes/_authenticated/student-account-management/index'
 import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authenticated/setting/index'
+import { Route as AuthenticatedSchoolManagementIndexRouteImport } from './routes/_authenticated/school-management/index'
 import { Route as AuthenticatedDataManagementBatchesIndexRouteImport } from './routes/_authenticated/data-management/batches/index'
 import { Route as AuthenticatedAttendanceGeneralIndexRouteImport } from './routes/_authenticated/attendance/general/index'
 import { Route as AuthAuthLoginIndexRouteImport } from './routes/_auth/auth.login/index'
@@ -64,6 +65,12 @@ const AuthenticatedSettingIndexRoute =
   AuthenticatedSettingIndexRouteImport.update({
     id: '/setting/',
     path: '/setting/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSchoolManagementIndexRoute =
+  AuthenticatedSchoolManagementIndexRouteImport.update({
+    id: '/school-management/',
+    path: '/school-management/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedDataManagementBatchesIndexRoute =
@@ -150,6 +157,7 @@ const AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassro
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
+  '/school-management': typeof AuthenticatedSchoolManagementIndexRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/student-account-management': typeof AuthenticatedStudentAccountManagementIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
@@ -169,6 +177,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
+  '/school-management': typeof AuthenticatedSchoolManagementIndexRoute
   '/setting': typeof AuthenticatedSettingIndexRoute
   '/student-account-management': typeof AuthenticatedStudentAccountManagementIndexRoute
   '/subject-management': typeof AuthenticatedSubjectManagementIndexRoute
@@ -191,6 +200,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/school-management/': typeof AuthenticatedSchoolManagementIndexRoute
   '/_authenticated/setting/': typeof AuthenticatedSettingIndexRoute
   '/_authenticated/student-account-management/': typeof AuthenticatedStudentAccountManagementIndexRoute
   '/_authenticated/subject-management/': typeof AuthenticatedSubjectManagementIndexRoute
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/school-management'
     | '/setting'
     | '/student-account-management'
     | '/subject-management'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/school-management'
     | '/setting'
     | '/student-account-management'
     | '/subject-management'
@@ -252,6 +264,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_authenticated'
     | '/_authenticated/'
+    | '/_authenticated/school-management/'
     | '/_authenticated/setting/'
     | '/_authenticated/student-account-management/'
     | '/_authenticated/subject-management/'
@@ -324,6 +337,13 @@ declare module '@tanstack/react-router' {
       path: '/setting'
       fullPath: '/setting'
       preLoaderRoute: typeof AuthenticatedSettingIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/school-management/': {
+      id: '/_authenticated/school-management/'
+      path: '/school-management'
+      fullPath: '/school-management'
+      preLoaderRoute: typeof AuthenticatedSchoolManagementIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/data-management/batches/': {
@@ -425,6 +445,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface AuthenticatedRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedSchoolManagementIndexRoute: typeof AuthenticatedSchoolManagementIndexRoute
   AuthenticatedSettingIndexRoute: typeof AuthenticatedSettingIndexRoute
   AuthenticatedStudentAccountManagementIndexRoute: typeof AuthenticatedStudentAccountManagementIndexRoute
   AuthenticatedSubjectManagementIndexRoute: typeof AuthenticatedSubjectManagementIndexRoute
@@ -444,6 +465,8 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedSchoolManagementIndexRoute:
+    AuthenticatedSchoolManagementIndexRoute,
   AuthenticatedSettingIndexRoute: AuthenticatedSettingIndexRoute,
   AuthenticatedStudentAccountManagementIndexRoute:
     AuthenticatedStudentAccountManagementIndexRoute,

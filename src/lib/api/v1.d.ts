@@ -335,7 +335,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["refreshTokenStudent"];
+        post: operations["RefreshTokenStudent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -677,7 +677,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["createGeneralAttendanceRecordStudent"];
+        post: operations["CreateGeneralAttendanceRecordStudent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -820,7 +820,31 @@ export interface paths {
             cookie?: never;
         };
         get: operations["GetSchool"];
-        put?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.UpdateSchool"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.UpdateSchool"];
+                    };
+                };
+            };
+        };
         post?: never;
         delete?: never;
         options?: never;
@@ -828,14 +852,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/students": {
+    "/api/v1/students/profile": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["getAllStudents"];
+        get: operations["GetProfileStudent"];
         put?: never;
         post?: never;
         delete?: never;
@@ -853,7 +877,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["createSubjectAttendanceRecordStudent"];
+        post: operations["CreateSubjectAttendanceRecordStudent"];
         delete?: never;
         options?: never;
         head?: never;
@@ -997,9 +1021,6 @@ export interface components {
         GetAllStudentsByClassroomIdRes: {
             students: components["schemas"]["Student"][];
         };
-        GetAllStudentsRes: {
-            students: components["schemas"]["domains.StudentMajorClassroom"][];
-        };
         GetAllSubjectAttendanceRecordsItem: {
             record: components["schemas"]["domains.SubjectAttendanceRecord"];
             student: components["schemas"]["Student"];
@@ -1033,6 +1054,13 @@ export interface components {
         };
         GetMajorRes: {
             major: components["schemas"]["major"];
+        };
+        GetProfileStudentRes: {
+            batch: components["schemas"]["batch"];
+            classroom: components["schemas"]["classroom"];
+            major: components["schemas"]["major"];
+            school: components["schemas"]["School"];
+            student: components["schemas"]["Student"];
         };
         GetSchoolRes: {
             school: components["schemas"]["School"];
@@ -1132,11 +1160,6 @@ export interface components {
             status: components["schemas"]["constants.AttendanceStatus"];
             student_id: number;
         };
-        "domains.StudentMajorClassroom": {
-            classroom: components["schemas"]["classroom"];
-            major: components["schemas"]["major"];
-            student: components["schemas"]["Student"];
-        };
         "domains.StudentToken": {
             device_id: string;
             id: number;
@@ -1189,6 +1212,10 @@ export interface components {
             note?: string;
         };
         "requests.UpdateMajor": {
+            name: string;
+        };
+        "requests.UpdateSchool": {
+            code: string;
             name: string;
         };
         "requests.UpdateSubject": {
@@ -1281,6 +1308,9 @@ export interface components {
         };
         "responses.UpdateGeneralAttendance": {
             general_attendance: components["schemas"]["GeneralAttendance"];
+        };
+        "responses.UpdateSchool": {
+            school: components["schemas"]["School"];
         };
         "responses.UpdateSubject": {
             subject: components["schemas"]["Subject"];
@@ -1414,7 +1444,7 @@ export interface operations {
             };
         };
     };
-    refreshTokenStudent: {
+    RefreshTokenStudent: {
         parameters: {
             query?: never;
             header?: never;
@@ -2067,7 +2097,7 @@ export interface operations {
             };
         };
     };
-    createGeneralAttendanceRecordStudent: {
+    CreateGeneralAttendanceRecordStudent: {
         parameters: {
             query?: never;
             header?: never;
@@ -2347,12 +2377,9 @@ export interface operations {
             };
         };
     };
-    getAllStudents: {
+    GetProfileStudent: {
         parameters: {
-            query: {
-                /** @description Keyword */
-                keyword: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -2365,12 +2392,12 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["GetAllStudentsRes"];
+                    "*/*": components["schemas"]["GetProfileStudentRes"];
                 };
             };
         };
     };
-    createSubjectAttendanceRecordStudent: {
+    CreateSubjectAttendanceRecordStudent: {
         parameters: {
             query?: never;
             header?: never;

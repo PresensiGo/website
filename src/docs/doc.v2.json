@@ -292,7 +292,7 @@
                 "tags": [
                     "student"
                 ],
-                "operationId": "refreshTokenStudent",
+                "operationId": "RefreshTokenStudent",
                 "parameters": [
                     {
                         "description": "body",
@@ -1252,7 +1252,7 @@
                 "tags": [
                     "attendance"
                 ],
-                "operationId": "createGeneralAttendanceRecordStudent",
+                "operationId": "CreateGeneralAttendanceRecordStudent",
                 "parameters": [
                     {
                         "description": "body",
@@ -1542,28 +1542,43 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/v1/students": {
-            "get": {
+            },
+            "put": {
                 "tags": [
-                    "student"
+                    "school"
                 ],
-                "operationId": "getAllStudents",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Keyword",
-                        "name": "keyword",
-                        "in": "query",
-                        "required": true
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.UpdateSchool"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/GetAllStudentsRes"
+                            "$ref": "#/definitions/responses.UpdateSchool"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/students/profile": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "operationId": "GetProfileStudent",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetProfileStudentRes"
                         }
                     }
                 }
@@ -1574,7 +1589,7 @@
                 "tags": [
                     "attendance"
                 ],
-                "operationId": "createSubjectAttendanceRecordStudent",
+                "operationId": "CreateSubjectAttendanceRecordStudent",
                 "parameters": [
                     {
                         "description": "body",
@@ -2070,20 +2085,6 @@
                 }
             }
         },
-        "GetAllStudentsRes": {
-            "type": "object",
-            "required": [
-                "students"
-            ],
-            "properties": {
-                "students": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/domains.StudentMajorClassroom"
-                    }
-                }
-            }
-        },
         "GetAllSubjectAttendanceRecordsItem": {
             "type": "object",
             "required": [
@@ -2214,6 +2215,33 @@
             "properties": {
                 "major": {
                     "$ref": "#/definitions/major"
+                }
+            }
+        },
+        "GetProfileStudentRes": {
+            "type": "object",
+            "required": [
+                "batch",
+                "classroom",
+                "major",
+                "school",
+                "student"
+            ],
+            "properties": {
+                "batch": {
+                    "$ref": "#/definitions/batch"
+                },
+                "classroom": {
+                    "$ref": "#/definitions/classroom"
+                },
+                "major": {
+                    "$ref": "#/definitions/major"
+                },
+                "school": {
+                    "$ref": "#/definitions/School"
+                },
+                "student": {
+                    "$ref": "#/definitions/Student"
                 }
             }
         },
@@ -2586,25 +2614,6 @@
                 }
             }
         },
-        "domains.StudentMajorClassroom": {
-            "type": "object",
-            "required": [
-                "classroom",
-                "major",
-                "student"
-            ],
-            "properties": {
-                "classroom": {
-                    "$ref": "#/definitions/classroom"
-                },
-                "major": {
-                    "$ref": "#/definitions/major"
-                },
-                "student": {
-                    "$ref": "#/definitions/Student"
-                }
-            }
-        },
         "domains.StudentToken": {
             "type": "object",
             "required": [
@@ -2792,6 +2801,21 @@
                 "name"
             ],
             "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.UpdateSchool": {
+            "type": "object",
+            "required": [
+                "code",
+                "name"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 }
@@ -3143,6 +3167,17 @@
             "properties": {
                 "general_attendance": {
                     "$ref": "#/definitions/GeneralAttendance"
+                }
+            }
+        },
+        "responses.UpdateSchool": {
+            "type": "object",
+            "required": [
+                "school"
+            ],
+            "properties": {
+                "school": {
+                    "$ref": "#/definitions/School"
                 }
             }
         },
