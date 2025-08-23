@@ -80,7 +80,9 @@ function RouteComponent() {
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Manajemen Sekolah</p>
           <p className="text-muted-foreground">
-            lorem ipsum dolor sit amet, consectetur
+            Halaman ini digunakan untuk mengelola data profil sekolah. Silakan
+            perbarui nama dan kode sekolah Anda untuk memastikan semua informasi
+            yang terdaftar sudah benar dan sesuai.
           </p>
         </div>
 
