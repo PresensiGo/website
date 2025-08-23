@@ -61,10 +61,8 @@ function RouteComponent() {
         <div className="space-y-2">
           <p className="text-3xl font-semibold">Masuk</p>
           <p className="text-muted-foreground">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Id dolorem
-            deserunt sapiente aperiam magni animi tempore aspernatur accusamus.
-            Sapiente sunt soluta voluptate corrupti, beatae accusantium natus
-            repellat incidunt quibusdam velit.
+            Silahkan masuk untuk dapat mengakses semua fitur, mengelola semua
+            data penting, dan mengelola presensi.
           </p>
         </div>
 
