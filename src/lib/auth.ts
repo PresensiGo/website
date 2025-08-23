@@ -8,18 +8,22 @@ const set = (token: Token) => {
 };
 
 const get = (): Token | undefined => {
-  const tokenStr = localStorage.getItem("token");
-  if (!tokenStr) {
+  try {
+    const tokenStr = localStorage.getItem("token");
+    if (!tokenStr) {
+      return undefined;
+    }
+
+    const token = JSON.parse(tokenStr) as Token;
+    const { accessToken, refreshToken } = token;
+    if (!accessToken || !refreshToken) {
+      return undefined;
+    }
+
+    return token;
+  } catch (e) {
     return undefined;
   }
-
-  const token = JSON.parse(tokenStr) as Token;
-  const { accessToken, refreshToken } = token;
-  if (!accessToken || !refreshToken) {
-    return undefined;
-  }
-
-  return token;
 };
 
 const clear = () => {
