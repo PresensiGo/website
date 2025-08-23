@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode";
+
 interface Token {
   accessToken: string;
   refreshToken: string;
@@ -30,8 +32,21 @@ const clear = () => {
   localStorage.removeItem("token");
 };
 
+const isAdmin = (): boolean => {
+  try {
+    const token = get();
+    if (!token) return false;
+
+    const decoded = jwtDecode<{ role: string }>(token.accessToken);
+    return decoded.role === "admin";
+  } catch (e) {
+    return false;
+  }
+};
+
 export const auth = {
   set,
   get,
   clear,
+  isAdmin,
 };
