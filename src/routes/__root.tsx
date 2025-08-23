@@ -22,7 +22,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         <Outlet />
       </IntlProvider>
 
-      <TanStackRouterDevtools />
+      <TanStackRouterDevtools position="bottom-right" />
       <TanStackQueryLayout />
 
       <Toaster richColors theme="light" />

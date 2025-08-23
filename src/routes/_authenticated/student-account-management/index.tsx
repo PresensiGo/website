@@ -12,23 +12,35 @@ import {
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { FilterIcon, XIcon } from "lucide-react";
 import { useState } from "react";
+import z from "zod";
+
+const studentFilterSchema = z.object({
+  batch: z.number().optional(),
+  major: z.number().optional(),
+  classroom: z.number().optional(),
+});
 
 export const Route = createFileRoute(
-  "/_authenticated/student-account-management/"
+  "/_authenticated/student-account-management/",
 )({
   component: RouteComponent,
+  validateSearch: studentFilterSchema,
 });
 
 function RouteComponent() {
+  const { batch, major, classroom } = Route.useSearch();
+
+  const navigate = useNavigate({ from: Route.fullPath });
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filter, setFilter] = useState<{
-    batchId: number;
-    majorId: number;
-    classroomId: number;
-  }>();
+  // const [filter, setFilter] = useState<{
+  //   batchId: number;
+  //   majorId: number;
+  //   classroomId: number;
+  // }>();
   const [ejectDialogState, setEjectDialogState] = useState<{
     open: boolean;
     data?: {
@@ -47,13 +59,13 @@ function RouteComponent() {
     {
       params: {
         path: {
-          batch_id: filter?.batchId ?? 0,
-          major_id: filter?.majorId ?? 0,
-          classroom_id: filter?.classroomId ?? 0,
+          batch_id: batch ?? 0,
+          major_id: major ?? 0,
+          classroom_id: classroom ?? 0,
         },
       },
     },
-    { enabled: !!filter }
+    { enabled: !!batch && !!major && !!classroom },
   );
 
   return (
@@ -87,8 +99,21 @@ function RouteComponent() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {/* initial state */}
+                {(!batch || !major || !classroom) && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-muted-foreground py-4 px-4 text-center"
+                    >
+                      Silakan pilih angkatan, jurusan, dan kelas terlebih dahulu
+                      dengan menekan tombol di pojok kanan atas.
+                    </TableCell>
+                  </TableRow>
+                )}
+
                 {/* loading state */}
-                {(isLoadingAccounts || !filter) &&
+                {isLoadingAccounts &&
                   Array.from({ length: 3 }).map((_, index) => (
                     <Item key={"account-loading-" + index} isLoading />
                   ))}
@@ -120,10 +145,20 @@ function RouteComponent() {
         onOpenChange={(open, data) => {
           setIsFilterOpen(open);
           if (data) {
-            setFilter(data);
+            navigate({
+              search: {
+                batch: data.batchId,
+                major: data.majorId,
+                classroom: data.classroomId,
+              },
+            });
           }
         }}
-        data={filter}
+        data={{
+          batchId: batch,
+          majorId: major,
+          classroomId: classroom,
+        }}
       />
       <EjectStudentAccountDialog
         open={ejectDialogState.open}

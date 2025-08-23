@@ -23,12 +23,12 @@ interface FilterDialogProps {
   open: boolean;
   onOpenChange: (
     open: boolean,
-    data?: { batchId: number; majorId: number; classroomId: number }
+    data?: { batchId: number; majorId: number; classroomId: number },
   ) => void;
-  data?: {
-    batchId: number;
-    majorId: number;
-    classroomId: number;
+  data: {
+    batchId?: number;
+    majorId?: number;
+    classroomId?: number;
   };
 }
 export const FilterDialog = ({
@@ -67,7 +67,7 @@ export const FilterDialog = ({
         },
       },
     },
-    { enabled: !!selectedBatch }
+    { enabled: !!selectedBatch },
   );
   const {
     isLoading: isLoadingClassrooms,
@@ -84,7 +84,7 @@ export const FilterDialog = ({
         },
       },
     },
-    { enabled: !!selectedBatch && !!selectedMajor }
+    { enabled: !!selectedBatch && !!selectedMajor },
   );
 
   return (
