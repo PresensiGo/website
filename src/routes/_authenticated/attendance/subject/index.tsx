@@ -207,20 +207,24 @@ const Item = ({
       <TableRow>
         <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
-            <FormattedDate
-              value={data?.subject_attendance.date_time ?? "loading"}
-              weekday="long"
-              day="numeric"
-              month="long"
-              year="numeric"
-            />
+            {(data?.subject_attendance.date_time && (
+              <FormattedDate
+                value={data?.subject_attendance.date_time}
+                weekday="long"
+                day="numeric"
+                month="long"
+                year="numeric"
+              />
+            )) ||
+              "loading"}
           </WithSkeleton>
         </TableCell>
         <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
-            <FormattedTime
-              value={data?.subject_attendance.date_time ?? "loading"}
-            />
+            {(data?.subject_attendance.date_time && (
+              <FormattedTime value={data?.subject_attendance.date_time} />
+            )) ||
+              "loading"}
           </WithSkeleton>
         </TableCell>
         <TableCell className="px-4">
