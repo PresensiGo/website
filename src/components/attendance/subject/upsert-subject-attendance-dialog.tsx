@@ -36,6 +36,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { FormattedDate } from "react-intl";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -68,7 +69,7 @@ export const UpsertSubjectAttendanceDialog = ({
 
   const { isSuccess: isSuccessSubjects, data: dataSubjects } = $api.useQuery(
     "get",
-    "/api/v1/subjects"
+    "/api/v1/subjects",
   );
   const { mutate: mutateCreate, isPending: isPendingCreate } = $api.useMutation(
     "post",
@@ -81,7 +82,7 @@ export const UpsertSubjectAttendanceDialog = ({
         });
         onOpenChange(false, true);
       },
-    }
+    },
   );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -167,11 +168,17 @@ export const UpsertSubjectAttendanceDialog = ({
                             variant={"outline"}
                             className={cn(
                               "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "PPP")
+                              <FormattedDate
+                                value={field.value}
+                                weekday="long"
+                                day="numeric"
+                                month="long"
+                                year="numeric"
+                              />
                             ) : (
                               <span>Pilih tanggal</span>
                             )}

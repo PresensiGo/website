@@ -16,10 +16,17 @@ import {
 } from "@/components/ui/select";
 import { $api } from "@/lib/api/api";
 import { useEffect, useState } from "react";
+import z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
-interface FilterDialogProps {
+export const FilterStudentDialogSchema = z.object({
+  batch: z.number().optional(),
+  major: z.number().optional(),
+  classroom: z.number().optional(),
+});
+
+interface FilterStudentDialogProps {
   open: boolean;
   onOpenChange: (
     open: boolean,
@@ -31,11 +38,11 @@ interface FilterDialogProps {
     classroomId?: number;
   };
 }
-export const FilterDialog = ({
+export const FilterStudentDialog = ({
   open,
   onOpenChange,
   data,
-}: FilterDialogProps) => {
+}: FilterStudentDialogProps) => {
   const [selectedBatch, setSelectedBatch] = useState<number>();
   const [selectedMajor, setSelectedMajor] = useState<number>();
   const [selectedClassroom, setSelectedClassroom] = useState<number>();

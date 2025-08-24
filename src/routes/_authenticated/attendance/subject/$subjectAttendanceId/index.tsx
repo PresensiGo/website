@@ -1,4 +1,5 @@
 import { WithSkeleton } from "@/components";
+import { DeleteAttendanceRecordDialog } from "@/components/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,20 +13,45 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Edit2Icon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
 import ReactQRCode from "react-qr-code";
+import z from "zod";
+
+const searchSchema = z.object({
+  batch: z.number(),
+  major: z.number(),
+  classroom: z.number(),
+  section: z.string().default("qr-code"),
+});
 
 export const Route = createFileRoute(
-  "/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/"
+  "/_authenticated/attendance/subject/$subjectAttendanceId/"
 )({
   component: RouteComponent,
+  validateSearch: searchSchema,
 });
 
 function RouteComponent() {
-  const { batchId, majorId, classroomId, subjectAttendanceId } =
-    Route.useParams();
+  const { subjectAttendanceId } = Route.useParams();
+  const { batch, major, classroom, section } = Route.useSearch();
+
+  const navigate = useNavigate({ from: Route.fullPath });
+
+  const [deleteRecordDialogState, setDeleteRecordDialogState] = useState<{
+    open: boolean;
+    data?: {
+      batchId: number;
+      majorId: number;
+      classroomId: number;
+      attendanceId: number;
+      recordId: number;
+      studentNIS: string;
+      studentName: string;
+    };
+  }>({ open: false });
 
   const { isSuccess, data } = $api.useQuery(
     "get",
@@ -33,12 +59,15 @@ function RouteComponent() {
     {
       params: {
         path: {
-          batch_id: Number(batchId),
-          major_id: Number(majorId),
-          classroom_id: Number(classroomId),
+          batch_id: batch ?? 0,
+          major_id: major ?? 0,
+          classroom_id: classroom ?? 0,
           subject_attendance_id: Number(subjectAttendanceId),
         },
       },
+    },
+    {
+      enabled: !!batch && !!major && !!classroom && !!subjectAttendanceId,
     }
   );
   const { data: dataSubject } = $api.useQuery(
@@ -57,18 +86,22 @@ function RouteComponent() {
     isLoading: isLoadingRecords,
     isSuccess: isSuccessRecords,
     data: dataRecords,
+    refetch: refetchRecords,
   } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}/records",
     {
       params: {
         path: {
-          batch_id: Number(batchId),
-          major_id: Number(majorId),
-          classroom_id: Number(classroomId),
+          batch_id: batch ?? 0,
+          major_id: major ?? 0,
+          classroom_id: classroom ?? 0,
           subject_attendance_id: Number(subjectAttendanceId),
         },
       },
+    },
+    {
+      enabled: !!batch && !!major && !!classroom && !!subjectAttendanceId,
     }
   );
 
@@ -81,7 +114,21 @@ function RouteComponent() {
           </p>
         </div>
 
-        <Tabs defaultValue="records" className="mt-4">
+        <Tabs
+          value={section}
+          onValueChange={(e) =>
+            navigate({
+              search: {
+                batch: batch,
+                major: major,
+                classroom: classroom,
+                section: e,
+              },
+              replace: true,
+            })
+          }
+          className="mt-4"
+        >
           <TabsList>
             <TabsTrigger value="qr-code">QR Code</TabsTrigger>
             <TabsTrigger value="records">Daftar Siswa</TabsTrigger>
@@ -142,7 +189,25 @@ function RouteComponent() {
                   {isSuccessRecords &&
                     dataRecords &&
                     dataRecords.items.map((item, index) => (
-                      <Item key={"student-item-" + index} data={item} />
+                      <Item
+                        key={"student-item-" + index}
+                        data={item}
+                        onClickUpdate={() => {}}
+                        onClickDelete={() =>
+                          setDeleteRecordDialogState({
+                            open: true,
+                            data: {
+                              batchId: batch ?? 0,
+                              majorId: major ?? 0,
+                              classroomId: classroom ?? 0,
+                              attendanceId: Number(subjectAttendanceId),
+                              recordId: item.record.id,
+                              studentName: item.student.name,
+                              studentNIS: item.student.nis,
+                            },
+                          })
+                        }
+                      />
                     ))}
                 </TableBody>
               </Table>
@@ -150,6 +215,18 @@ function RouteComponent() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* dialogs */}
+      <DeleteAttendanceRecordDialog
+        open={deleteRecordDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteRecordDialogState({ open });
+          if (status) {
+            refetchRecords();
+          }
+        }}
+        data={deleteRecordDialogState.data}
+      />
     </>
   );
 }
@@ -157,8 +234,10 @@ function RouteComponent() {
 interface ItemProps {
   isLoading?: boolean;
   data?: components["schemas"]["GetAllSubjectAttendanceRecordsItem"];
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
 }
-const Item = ({ isLoading, data }: ItemProps) => {
+const Item = ({ isLoading, data, onClickUpdate, onClickDelete }: ItemProps) => {
   const isAttended = (data?.record.id ?? 0) > 0;
 
   return (
@@ -205,12 +284,16 @@ const Item = ({ isLoading, data }: ItemProps) => {
         </TableCell>
         <TableCell className="px-4 flex gap-1">
           <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"outline"} size={"icon"}>
+            <Button variant={"outline"} size={"icon"} onClick={onClickUpdate}>
               <Edit2Icon />
             </Button>
           </WithSkeleton>
           <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"destructive"} size={"icon"}>
+            <Button
+              variant={"destructive"}
+              size={"icon"}
+              onClick={onClickDelete}
+            >
               <TrashIcon />
             </Button>
           </WithSkeleton>

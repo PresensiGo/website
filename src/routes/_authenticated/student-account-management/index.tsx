@@ -1,4 +1,5 @@
-import { FilterDialog, WithSkeleton } from "@/components";
+import { FilterStudentDialog, WithSkeleton } from "@/components";
+import { FilterStudentDialogSchema } from "@/components/filter-student-dialog";
 import { EjectStudentAccountDialog } from "@/components/student-account-management";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,19 +16,12 @@ import type { components } from "@/lib/api/v1";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { FilterIcon, XIcon } from "lucide-react";
 import { useState } from "react";
-import z from "zod";
-
-const studentFilterSchema = z.object({
-  batch: z.number().optional(),
-  major: z.number().optional(),
-  classroom: z.number().optional(),
-});
 
 export const Route = createFileRoute(
   "/_authenticated/student-account-management/",
 )({
   component: RouteComponent,
-  validateSearch: studentFilterSchema,
+  validateSearch: FilterStudentDialogSchema,
 });
 
 function RouteComponent() {
@@ -140,7 +134,7 @@ function RouteComponent() {
       </div>
 
       {/* dialogs */}
-      <FilterDialog
+      <FilterStudentDialog
         open={isFilterOpen}
         onOpenChange={(open, data) => {
           setIsFilterOpen(open);

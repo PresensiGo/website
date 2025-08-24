@@ -18,17 +18,14 @@ import { Route as AuthenticatedStudentAccountManagementIndexRouteImport } from '
 import { Route as AuthenticatedSettingIndexRouteImport } from './routes/_authenticated/setting/index'
 import { Route as AuthenticatedSchoolManagementIndexRouteImport } from './routes/_authenticated/school-management/index'
 import { Route as AuthenticatedDataManagementBatchesIndexRouteImport } from './routes/_authenticated/data-management/batches/index'
+import { Route as AuthenticatedAttendanceSubjectIndexRouteImport } from './routes/_authenticated/attendance/subject/index'
 import { Route as AuthenticatedAttendanceGeneralIndexRouteImport } from './routes/_authenticated/attendance/general/index'
 import { Route as AuthAuthLoginIndexRouteImport } from './routes/_auth/auth.login/index'
-import { Route as AuthenticatedAttendanceSubjectBatchesIndexRouteImport } from './routes/_authenticated/attendance/subject.batches/index'
+import { Route as AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRouteImport } from './routes/_authenticated/attendance/subject/$subjectAttendanceId/index'
 import { Route as AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRouteImport } from './routes/_authenticated/attendance/general/$generalAttendanceId/index'
 import { Route as AuthenticatedDataManagementBatchesBatchIdMajorsIndexRouteImport } from './routes/_authenticated/data-management/batches/$batchId.majors/index'
-import { Route as AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRouteImport } from './routes/_authenticated/attendance/subject.batches/$batchId.majors/index'
 import { Route as AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport } from './routes/_authenticated/data-management/batches/$batchId.majors/$majorId.classrooms/index'
-import { Route as AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport } from './routes/_authenticated/attendance/subject.batches/$batchId.majors/$majorId.classrooms/index'
 import { Route as AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRouteImport } from './routes/_authenticated/data-management/batches/$batchId.majors/$majorId.classrooms/$classroomId.students/index'
-import { Route as AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRouteImport } from './routes/_authenticated/attendance/subject.batches/$batchId.majors/$majorId.classrooms/$classroomId.attendances/index'
-import { Route as AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRouteImport } from './routes/_authenticated/attendance/subject.batches/$batchId.majors/$majorId.classrooms/$classroomId.attendances/$subjectAttendanceId/index'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -79,6 +76,12 @@ const AuthenticatedDataManagementBatchesIndexRoute =
     path: '/data-management/batches/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAttendanceSubjectIndexRoute =
+  AuthenticatedAttendanceSubjectIndexRouteImport.update({
+    id: '/attendance/subject/',
+    path: '/attendance/subject/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAttendanceGeneralIndexRoute =
   AuthenticatedAttendanceGeneralIndexRouteImport.update({
     id: '/attendance/general/',
@@ -90,10 +93,10 @@ const AuthAuthLoginIndexRoute = AuthAuthLoginIndexRouteImport.update({
   path: '/auth/login/',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthenticatedAttendanceSubjectBatchesIndexRoute =
-  AuthenticatedAttendanceSubjectBatchesIndexRouteImport.update({
-    id: '/attendance/subject/batches/',
-    path: '/attendance/subject/batches/',
+const AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute =
+  AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRouteImport.update({
+    id: '/attendance/subject/$subjectAttendanceId/',
+    path: '/attendance/subject/$subjectAttendanceId/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute =
@@ -108,12 +111,6 @@ const AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute =
     path: '/data-management/batches/$batchId/majors/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute =
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRouteImport.update({
-    id: '/attendance/subject/batches/$batchId/majors/',
-    path: '/attendance/subject/batches/$batchId/majors/',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
 const AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute =
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport.update(
     {
@@ -122,35 +119,11 @@ const AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
       getParentRoute: () => AuthenticatedRoute,
     } as any,
   )
-const AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute =
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport.update(
-    {
-      id: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/',
-      path: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/',
-      getParentRoute: () => AuthenticatedRoute,
-    } as any,
-  )
 const AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute =
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRouteImport.update(
     {
       id: '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/',
       path: '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/',
-      getParentRoute: () => AuthenticatedRoute,
-    } as any,
-  )
-const AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute =
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRouteImport.update(
-    {
-      id: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/',
-      path: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/',
-      getParentRoute: () => AuthenticatedRoute,
-    } as any,
-  )
-const AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute =
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRouteImport.update(
-    {
-      id: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/',
-      path: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/',
       getParentRoute: () => AuthenticatedRoute,
     } as any,
   )
@@ -164,16 +137,13 @@ export interface FileRoutesByFullPath {
   '/teacher-management': typeof AuthenticatedTeacherManagementIndexRoute
   '/auth/login': typeof AuthAuthLoginIndexRoute
   '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
+  '/attendance/subject': typeof AuthenticatedAttendanceSubjectIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/attendance/general/$generalAttendanceId': typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
-  '/attendance/subject/batches': typeof AuthenticatedAttendanceSubjectBatchesIndexRoute
+  '/attendance/subject/$subjectAttendanceId': typeof AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute
   '/data-management/batches/$batchId/majors': typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
-  '/attendance/subject/batches/$batchId/majors': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute
   '/data-management/batches/$batchId/majors/$majorId/classrooms': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
-  '/attendance/subject/batches/$batchId/majors/$majorId/classrooms': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
   '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute
-  '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute
-  '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
@@ -184,16 +154,13 @@ export interface FileRoutesByTo {
   '/teacher-management': typeof AuthenticatedTeacherManagementIndexRoute
   '/auth/login': typeof AuthAuthLoginIndexRoute
   '/attendance/general': typeof AuthenticatedAttendanceGeneralIndexRoute
+  '/attendance/subject': typeof AuthenticatedAttendanceSubjectIndexRoute
   '/data-management/batches': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/attendance/general/$generalAttendanceId': typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
-  '/attendance/subject/batches': typeof AuthenticatedAttendanceSubjectBatchesIndexRoute
+  '/attendance/subject/$subjectAttendanceId': typeof AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute
   '/data-management/batches/$batchId/majors': typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
-  '/attendance/subject/batches/$batchId/majors': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute
   '/data-management/batches/$batchId/majors/$majorId/classrooms': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
-  '/attendance/subject/batches/$batchId/majors/$majorId/classrooms': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
   '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute
-  '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute
-  '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -207,16 +174,13 @@ export interface FileRoutesById {
   '/_authenticated/teacher-management/': typeof AuthenticatedTeacherManagementIndexRoute
   '/_auth/auth/login/': typeof AuthAuthLoginIndexRoute
   '/_authenticated/attendance/general/': typeof AuthenticatedAttendanceGeneralIndexRoute
+  '/_authenticated/attendance/subject/': typeof AuthenticatedAttendanceSubjectIndexRoute
   '/_authenticated/data-management/batches/': typeof AuthenticatedDataManagementBatchesIndexRoute
   '/_authenticated/attendance/general/$generalAttendanceId/': typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
-  '/_authenticated/attendance/subject/batches/': typeof AuthenticatedAttendanceSubjectBatchesIndexRoute
+  '/_authenticated/attendance/subject/$subjectAttendanceId/': typeof AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute
   '/_authenticated/data-management/batches/$batchId/majors/': typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
-  '/_authenticated/attendance/subject/batches/$batchId/majors/': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute
   '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
-  '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
   '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/': typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute
-  '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute
-  '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/': typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -229,16 +193,13 @@ export interface FileRouteTypes {
     | '/teacher-management'
     | '/auth/login'
     | '/attendance/general'
+    | '/attendance/subject'
     | '/data-management/batches'
     | '/attendance/general/$generalAttendanceId'
-    | '/attendance/subject/batches'
+    | '/attendance/subject/$subjectAttendanceId'
     | '/data-management/batches/$batchId/majors'
-    | '/attendance/subject/batches/$batchId/majors'
     | '/data-management/batches/$batchId/majors/$majorId/classrooms'
-    | '/attendance/subject/batches/$batchId/majors/$majorId/classrooms'
     | '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students'
-    | '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances'
-    | '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -249,16 +210,13 @@ export interface FileRouteTypes {
     | '/teacher-management'
     | '/auth/login'
     | '/attendance/general'
+    | '/attendance/subject'
     | '/data-management/batches'
     | '/attendance/general/$generalAttendanceId'
-    | '/attendance/subject/batches'
+    | '/attendance/subject/$subjectAttendanceId'
     | '/data-management/batches/$batchId/majors'
-    | '/attendance/subject/batches/$batchId/majors'
     | '/data-management/batches/$batchId/majors/$majorId/classrooms'
-    | '/attendance/subject/batches/$batchId/majors/$majorId/classrooms'
     | '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students'
-    | '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances'
-    | '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId'
   id:
     | '__root__'
     | '/_auth'
@@ -271,16 +229,13 @@ export interface FileRouteTypes {
     | '/_authenticated/teacher-management/'
     | '/_auth/auth/login/'
     | '/_authenticated/attendance/general/'
+    | '/_authenticated/attendance/subject/'
     | '/_authenticated/data-management/batches/'
     | '/_authenticated/attendance/general/$generalAttendanceId/'
-    | '/_authenticated/attendance/subject/batches/'
+    | '/_authenticated/attendance/subject/$subjectAttendanceId/'
     | '/_authenticated/data-management/batches/$batchId/majors/'
-    | '/_authenticated/attendance/subject/batches/$batchId/majors/'
     | '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/'
-    | '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/'
     | '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/'
-    | '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/'
-    | '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -353,6 +308,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDataManagementBatchesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/attendance/subject/': {
+      id: '/_authenticated/attendance/subject/'
+      path: '/attendance/subject'
+      fullPath: '/attendance/subject'
+      preLoaderRoute: typeof AuthenticatedAttendanceSubjectIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/attendance/general/': {
       id: '/_authenticated/attendance/general/'
       path: '/attendance/general'
@@ -367,11 +329,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAuthLoginIndexRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_authenticated/attendance/subject/batches/': {
-      id: '/_authenticated/attendance/subject/batches/'
-      path: '/attendance/subject/batches'
-      fullPath: '/attendance/subject/batches'
-      preLoaderRoute: typeof AuthenticatedAttendanceSubjectBatchesIndexRouteImport
+    '/_authenticated/attendance/subject/$subjectAttendanceId/': {
+      id: '/_authenticated/attendance/subject/$subjectAttendanceId/'
+      path: '/attendance/subject/$subjectAttendanceId'
+      fullPath: '/attendance/subject/$subjectAttendanceId'
+      preLoaderRoute: typeof AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/attendance/general/$generalAttendanceId/': {
@@ -388,13 +350,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/attendance/subject/batches/$batchId/majors/': {
-      id: '/_authenticated/attendance/subject/batches/$batchId/majors/'
-      path: '/attendance/subject/batches/$batchId/majors'
-      fullPath: '/attendance/subject/batches/$batchId/majors'
-      preLoaderRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/': {
       id: '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/'
       path: '/data-management/batches/$batchId/majors/$majorId/classrooms'
@@ -402,32 +357,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/': {
-      id: '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/'
-      path: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms'
-      fullPath: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms'
-      preLoaderRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/': {
       id: '/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/'
       path: '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students'
       fullPath: '/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students'
       preLoaderRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/': {
-      id: '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/'
-      path: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances'
-      fullPath: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances'
-      preLoaderRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/': {
-      id: '/_authenticated/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId/'
-      path: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId'
-      fullPath: '/attendance/subject/batches/$batchId/majors/$majorId/classrooms/$classroomId/attendances/$subjectAttendanceId'
-      preLoaderRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
   }
@@ -451,16 +385,13 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSubjectManagementIndexRoute: typeof AuthenticatedSubjectManagementIndexRoute
   AuthenticatedTeacherManagementIndexRoute: typeof AuthenticatedTeacherManagementIndexRoute
   AuthenticatedAttendanceGeneralIndexRoute: typeof AuthenticatedAttendanceGeneralIndexRoute
+  AuthenticatedAttendanceSubjectIndexRoute: typeof AuthenticatedAttendanceSubjectIndexRoute
   AuthenticatedDataManagementBatchesIndexRoute: typeof AuthenticatedDataManagementBatchesIndexRoute
   AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute: typeof AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute
-  AuthenticatedAttendanceSubjectBatchesIndexRoute: typeof AuthenticatedAttendanceSubjectBatchesIndexRoute
+  AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute: typeof AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute
   AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute: typeof AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute: typeof AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -476,26 +407,20 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedTeacherManagementIndexRoute,
   AuthenticatedAttendanceGeneralIndexRoute:
     AuthenticatedAttendanceGeneralIndexRoute,
+  AuthenticatedAttendanceSubjectIndexRoute:
+    AuthenticatedAttendanceSubjectIndexRoute,
   AuthenticatedDataManagementBatchesIndexRoute:
     AuthenticatedDataManagementBatchesIndexRoute,
   AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute:
     AuthenticatedAttendanceGeneralGeneralAttendanceIdIndexRoute,
-  AuthenticatedAttendanceSubjectBatchesIndexRoute:
-    AuthenticatedAttendanceSubjectBatchesIndexRoute,
+  AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute:
+    AuthenticatedAttendanceSubjectSubjectAttendanceIdIndexRoute,
   AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute:
     AuthenticatedDataManagementBatchesBatchIdMajorsIndexRoute,
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute:
-    AuthenticatedAttendanceSubjectBatchesBatchIdMajorsIndexRoute,
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute:
     AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsIndexRoute,
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute:
-    AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsIndexRoute,
   AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute:
     AuthenticatedDataManagementBatchesBatchIdMajorsMajorIdClassroomsClassroomIdStudentsIndexRoute,
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute:
-    AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesIndexRoute,
-  AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute:
-    AuthenticatedAttendanceSubjectBatchesBatchIdMajorsMajorIdClassroomsClassroomIdAttendancesSubjectAttendanceIdIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

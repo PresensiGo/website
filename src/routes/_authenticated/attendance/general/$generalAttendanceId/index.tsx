@@ -1,4 +1,4 @@
-import { FilterDialog, WithSkeleton } from "@/components";
+import { FilterStudentDialog, WithSkeleton } from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +19,7 @@ import { FormattedDate, FormattedTime } from "react-intl";
 import ReactQRCode from "react-qr-code";
 
 export const Route = createFileRoute(
-  "/_authenticated/attendance/general/$generalAttendanceId/"
+  "/_authenticated/attendance/general/$generalAttendanceId/",
 )({
   component: RouteComponent,
 });
@@ -40,7 +40,7 @@ function RouteComponent() {
     "/api/v1/general-attendances/{general_attendance_id}",
     {
       params: { path: { general_attendance_id: Number(generalAttendanceId) } },
-    }
+    },
   );
   const {
     isLoading: isLoadingRecords,
@@ -59,7 +59,7 @@ function RouteComponent() {
     },
     {
       enabled: !!filter,
-    }
+    },
   );
 
   // const isEarly = useCallback(
@@ -160,7 +160,7 @@ function RouteComponent() {
       </div>
 
       {/* dialogs */}
-      <FilterDialog
+      <FilterStudentDialog
         open={isFilterOpen}
         onOpenChange={(open, data) => {
           setIsFilterOpen(open);
