@@ -1,5 +1,9 @@
 import { WithSkeleton } from "@/components";
-import { DeleteAttendanceRecordDialog } from "@/components/attendance";
+import {
+  CreateAttendanceRecordDialog,
+  DeleteAttendanceRecordDialog,
+  type CreateAttendanceRecordDialogDataProps,
+} from "@/components/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +17,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
+import { checkIsAfter } from "@/lib/utils";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Edit2Icon, TrashIcon } from "lucide-react";
 import { useState } from "react";
@@ -40,6 +45,10 @@ function RouteComponent() {
 
   const navigate = useNavigate({ from: Route.fullPath });
 
+  const [createRecordState, setCreateRecordState] = useState<{
+    open: boolean;
+    data?: CreateAttendanceRecordDialogDataProps;
+  }>({ open: false });
   const [deleteRecordDialogState, setDeleteRecordDialogState] = useState<{
     open: boolean;
     data?: {
@@ -192,7 +201,24 @@ function RouteComponent() {
                       <Item
                         key={"student-item-" + index}
                         data={item}
-                        onClickUpdate={() => {}}
+                        subjectAttendanceDateTime={
+                          data?.subject_attendance.date_time
+                        }
+                        onClickUpdate={() =>
+                          setCreateRecordState({
+                            open: true,
+                            data: {
+                              type: "subject",
+                              batchId: batch ?? 0,
+                              majorId: major ?? 0,
+                              classroomId: classroom ?? 0,
+                              attendanceId: Number(subjectAttendanceId),
+                              studentId: item.student.id,
+                              studentName: item.student.name,
+                              studentNIS: item.student.nis,
+                            },
+                          })
+                        }
                         onClickDelete={() =>
                           setDeleteRecordDialogState({
                             open: true,
@@ -217,6 +243,16 @@ function RouteComponent() {
       </div>
 
       {/* dialogs */}
+      <CreateAttendanceRecordDialog
+        open={createRecordState.open}
+        onOpenChange={(open, status) => {
+          setCreateRecordState({ open });
+          if (status) {
+            refetchRecords();
+          }
+        }}
+        data={createRecordState.data}
+      />
       <DeleteAttendanceRecordDialog
         open={deleteRecordDialogState.open}
         onOpenChange={(open, status) => {
@@ -234,11 +270,23 @@ function RouteComponent() {
 interface ItemProps {
   isLoading?: boolean;
   data?: components["schemas"]["GetAllSubjectAttendanceRecordsItem"];
+  subjectAttendanceDateTime?: string;
   onClickUpdate?: () => void;
   onClickDelete?: () => void;
 }
-const Item = ({ isLoading, data, onClickUpdate, onClickDelete }: ItemProps) => {
+const Item = ({
+  isLoading,
+  data,
+  subjectAttendanceDateTime,
+  onClickUpdate,
+  onClickDelete,
+}: ItemProps) => {
   const isAttended = (data?.record.id ?? 0) > 0;
+
+  let isLate = false;
+  if (data && subjectAttendanceDateTime) {
+    isLate = checkIsAfter(data.record.date_time, subjectAttendanceDateTime);
+  }
 
   return (
     <>
@@ -256,7 +304,13 @@ const Item = ({ isLoading, data, onClickUpdate, onClickDelete }: ItemProps) => {
         <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             {isAttended ? (
-              <FormattedDate value={data?.record.date_time} />
+              <FormattedDate
+                value={data?.record.date_time}
+                weekday="long"
+                day="numeric"
+                month="long"
+                year="numeric"
+              />
             ) : (
               "-"
             )}
@@ -275,7 +329,13 @@ const Item = ({ isLoading, data, onClickUpdate, onClickDelete }: ItemProps) => {
           <WithSkeleton isLoading={isLoading}>
             {isAttended ? (
               <Badge variant={"outline"}>
-                {data?.record.status ?? "loading"}
+                {(data?.record.status &&
+                  (data.record.status === "hadir"
+                    ? isLate
+                      ? "hadir terlambat"
+                      : "hadir"
+                    : data.record.status)) ||
+                  "loading"}
               </Badge>
             ) : (
               <Badge variant={"destructive"}>tidak hadir</Badge>
@@ -283,20 +343,24 @@ const Item = ({ isLoading, data, onClickUpdate, onClickDelete }: ItemProps) => {
           </WithSkeleton>
         </TableCell>
         <TableCell className="px-4 flex gap-1">
-          <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"outline"} size={"icon"} onClick={onClickUpdate}>
-              <Edit2Icon />
-            </Button>
-          </WithSkeleton>
-          <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button
-              variant={"destructive"}
-              size={"icon"}
-              onClick={onClickDelete}
-            >
-              <TrashIcon />
-            </Button>
-          </WithSkeleton>
+          {(isLoading || !isAttended) && (
+            <WithSkeleton isLoading={isLoading} className="w-fit">
+              <Button variant={"outline"} size={"icon"} onClick={onClickUpdate}>
+                <Edit2Icon />
+              </Button>
+            </WithSkeleton>
+          )}
+          {(isLoading || isAttended) && (
+            <WithSkeleton isLoading={isLoading} className="w-fit">
+              <Button
+                variant={"destructive"}
+                size={"icon"}
+                onClick={onClickDelete}
+              >
+                <TrashIcon />
+              </Button>
+            </WithSkeleton>
+          )}
         </TableCell>
       </TableRow>
     </>

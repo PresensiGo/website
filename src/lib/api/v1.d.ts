@@ -949,8 +949,7 @@ export interface components {
             note?: string;
         };
         CreateSubjectAttendanceRecordReq: {
-            datetime: string;
-            status: components["schemas"]["constants.AttendanceStatus"];
+            status: components["schemas"]["constants.AttendanceStatusType"];
             student_id: number;
         };
         CreateSubjectAttendanceRecordStudentReq: {
@@ -1153,6 +1152,8 @@ export interface components {
         };
         /** @enum {string} */
         "constants.AttendanceStatus": "hadir" | "alpha" | "sakit" | "izin";
+        /** @enum {string} */
+        "constants.AttendanceStatusType": "present-on-time" | "present-late" | "sick" | "permission" | "alpha";
         "domains.GeneralAttendanceRecord": {
             date_time: string;
             general_attendance_id: number;
