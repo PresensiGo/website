@@ -1,5 +1,9 @@
 import { WithSkeleton } from "@/components";
-import { UpsertSubjectAttendanceDialog } from "@/components/attendance/subject";
+import {
+  ExportSubjectAttendanceRecapDialog,
+  UpsertSubjectAttendanceDialog,
+  type ExportSubjectAttendanceRecapDialogDataProps,
+} from "@/components/attendance/subject";
 import {
   FilterStudentDialog,
   FilterStudentDialogSchema,
@@ -41,6 +45,10 @@ function RouteComponent() {
     open: boolean;
     data?: {};
   }>({ open: false });
+  const [exportDialogState, setExportDialogState] = useState<{
+    open: boolean;
+    data?: ExportSubjectAttendanceRecapDialogDataProps;
+  }>({ open: false });
 
   const { isLoading, isSuccess, data, refetch } = $api.useQuery(
     "get",
@@ -80,7 +88,20 @@ function RouteComponent() {
             </Button>
 
             <div className="flex items-center gap-2">
-              <Button variant={"outline"}>
+              <Button
+                variant={"outline"}
+                onClick={() => {
+                  if (batch && major && classroom)
+                    setExportDialogState({
+                      open: true,
+                      data: {
+                        batchId: batch,
+                        majorId: major,
+                        classroomId: classroom,
+                      },
+                    });
+                }}
+              >
                 <DownloadIcon />
                 Ekspor Rekap
               </Button>
@@ -164,6 +185,11 @@ function RouteComponent() {
           majorId: major,
           classroomId: classroom,
         }}
+      />
+      <ExportSubjectAttendanceRecapDialog
+        open={exportDialogState.open}
+        onOpenChange={(open) => setExportDialogState({ open })}
+        data={exportDialogState.data}
       />
       <UpsertSubjectAttendanceDialog
         open={upsertDialogState.open}

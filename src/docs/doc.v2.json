@@ -923,6 +923,56 @@
                 }
             }
         },
+        "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/export": {
+            "post": {
+                "produces": [
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ],
+                "tags": [
+                    "attendance"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "batch id",
+                        "name": "batch_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "major id",
+                        "name": "major_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "classroom id",
+                        "name": "classroom_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ExportSubjectAttendance"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ExportSubjectAttendance"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}": {
             "get": {
                 "tags": [
@@ -2756,6 +2806,25 @@
                 }
             }
         },
+        "requests.ExportSubjectAttendance": {
+            "type": "object",
+            "required": [
+                "end_date",
+                "start_date",
+                "subject_id"
+            ],
+            "properties": {
+                "end_date": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "subject_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.UpdateAccountPassword": {
             "type": "object",
             "required": [
@@ -3015,6 +3084,21 @@
             ],
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.ExportSubjectAttendance": {
+            "type": "object",
+            "required": [
+                "file",
+                "file_name"
+            ],
+            "properties": {
+                "file": {
+                    "type": "string"
+                },
+                "file_name": {
                     "type": "string"
                 }
             }

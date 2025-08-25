@@ -572,6 +572,53 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.ExportSubjectAttendance"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": components["schemas"]["responses.ExportSubjectAttendance"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}": {
         parameters: {
             query?: never;
@@ -1196,6 +1243,11 @@ export interface components {
         "requests.CreateSubject": {
             name: string;
         };
+        "requests.ExportSubjectAttendance": {
+            end_date: string;
+            start_date: string;
+            subject_id: number;
+        };
         "requests.UpdateAccountPassword": {
             password: string;
         };
@@ -1270,6 +1322,10 @@ export interface components {
         };
         "responses.EjectStudentToken": {
             message: string;
+        };
+        "responses.ExportSubjectAttendance": {
+            file: string;
+            file_name: string;
         };
         "responses.GetAll": {
             classrooms: components["schemas"]["classroom"][];
