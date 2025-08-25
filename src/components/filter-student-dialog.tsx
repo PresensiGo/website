@@ -20,6 +20,12 @@ import z from "zod";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
+export interface FilterStudentDialogDataProps {
+  batchId?: number;
+  majorId?: number;
+  classroomId?: number;
+}
+
 export const FilterStudentDialogSchema = z.object({
   batch: z.number().optional(),
   major: z.number().optional(),
@@ -30,13 +36,9 @@ interface FilterStudentDialogProps {
   open: boolean;
   onOpenChange: (
     open: boolean,
-    data?: { batchId: number; majorId: number; classroomId: number },
+    data?: { batchId: number; majorId: number; classroomId: number }
   ) => void;
-  data: {
-    batchId?: number;
-    majorId?: number;
-    classroomId?: number;
-  };
+  data?: FilterStudentDialogDataProps;
 }
 export const FilterStudentDialog = ({
   open,
@@ -74,7 +76,7 @@ export const FilterStudentDialog = ({
         },
       },
     },
-    { enabled: !!selectedBatch },
+    { enabled: !!selectedBatch }
   );
   const {
     isLoading: isLoadingClassrooms,
@@ -91,7 +93,7 @@ export const FilterStudentDialog = ({
         },
       },
     },
-    { enabled: !!selectedBatch && !!selectedMajor },
+    { enabled: !!selectedBatch && !!selectedMajor }
   );
 
   return (
