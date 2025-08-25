@@ -608,7 +608,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": components["schemas"]["responses.ExportSubjectAttendance"];
+                        "*/*": components["schemas"]["responses.ExportSubjectAttendance"];
                     };
                 };
             };
@@ -709,6 +709,46 @@ export interface paths {
         get: operations["GetAllGeneralAttendances"];
         put?: never;
         post: operations["CreateGeneralAttendance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/general-attendances/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.ExportGeneralAttendance"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.ExportGeneralAttendance"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1243,6 +1283,10 @@ export interface components {
         "requests.CreateSubject": {
             name: string;
         };
+        "requests.ExportGeneralAttendance": {
+            end_date: string;
+            start_date: string;
+        };
         "requests.ExportSubjectAttendance": {
             end_date: string;
             start_date: string;
@@ -1322,6 +1366,10 @@ export interface components {
         };
         "responses.EjectStudentToken": {
             message: string;
+        };
+        "responses.ExportGeneralAttendance": {
+            file: string;
+            file_name: string;
         };
         "responses.ExportSubjectAttendance": {
             file: string;

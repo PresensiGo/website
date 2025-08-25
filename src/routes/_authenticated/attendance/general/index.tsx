@@ -1,6 +1,7 @@
 import { WithSkeleton } from "@/components";
 import {
   DeleteGeneralAttendanceDialog,
+  ExportGeneralAttendanceRecapDialog,
   UpsertGeneralAttendanceDialog,
 } from "@/components/attendance/general";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,13 @@ import {
 import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Edit2Icon, EyeIcon, PlusIcon, TrashIcon } from "lucide-react";
+import {
+  DownloadIcon,
+  Edit2Icon,
+  EyeIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
 
@@ -36,6 +43,9 @@ function RouteComponent() {
     open: boolean;
     data?: { id: number };
   }>({ open: false });
+  const [exportDialogState, setExportDialogState] = useState<{ open: boolean }>(
+    { open: false }
+  );
 
   const { isLoading, isSuccess, data, refetch } = $api.useQuery(
     "get",
@@ -55,7 +65,14 @@ function RouteComponent() {
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button
+              variant={"outline"}
+              onClick={() => setExportDialogState({ open: true })}
+            >
+              <DownloadIcon />
+              Ekspor Rekap
+            </Button>
             <Button onClick={() => setUpsertDialogState({ open: true })}>
               <PlusIcon />
               Tambah Presensi Kehadiran
@@ -129,6 +146,12 @@ function RouteComponent() {
           if (status) refetch();
         }}
         data={deleteDialogState.data}
+      />
+      <ExportGeneralAttendanceRecapDialog
+        open={exportDialogState.open}
+        onOpenChange={(open) => {
+          setExportDialogState({ open });
+        }}
       />
     </>
   );
