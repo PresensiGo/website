@@ -125,6 +125,8 @@ function RouteComponent() {
                   <Item
                     key={"classroom-item-" + index}
                     data={item}
+                    batchId={batchId}
+                    majorId={majorId}
                     onClickUpdate={() =>
                       setDialogUpsertState({
                         open: true,
