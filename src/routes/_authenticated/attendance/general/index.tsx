@@ -99,6 +99,18 @@ function RouteComponent() {
                     />
                   ))}
 
+                {/* empty state */}
+                {isSuccess && data && data.items.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-muted-foreground py-4 px-4 text-center"
+                    >
+                      Tidak ada data presensi yang tersedia.
+                    </TableCell>
+                  </TableRow>
+                )}
+
                 {/* success state */}
                 {isSuccess &&
                   data &&
