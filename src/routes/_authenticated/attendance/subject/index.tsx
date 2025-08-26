@@ -134,7 +134,7 @@ function RouteComponent() {
                       className="text-muted-foreground py-4 px-4 text-center"
                     >
                       Silakan pilih angkatan, jurusan, dan kelas terlebih dahulu
-                      dengan menekan tombol filter di pojok kanan atas.
+                      dengan menekan tombol filter di pojok kiri atas.
                     </TableCell>
                   </TableRow>
                 )}
@@ -144,6 +144,18 @@ function RouteComponent() {
                   Array.from({ length: 3 }).map((_, index) => (
                     <Item key={"loading-attendance-item-" + index} isLoading />
                   ))}
+
+                {/* empty state */}
+                {isSuccess && data && data.items.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-muted-foreground py-4 px-4 text-center"
+                    >
+                      Tidak ada data presensi yang tersedia.
+                    </TableCell>
+                  </TableRow>
+                )}
 
                 {/* success state */}
                 {isSuccess &&
