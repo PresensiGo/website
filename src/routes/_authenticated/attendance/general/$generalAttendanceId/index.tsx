@@ -1,4 +1,8 @@
-import { FilterStudentDialog, WithSkeleton } from "@/components";
+import {
+  FilterStudentDialog,
+  FilterStudentDialogSchema,
+  WithSkeleton,
+} from "@/components";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,28 +16,32 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
-import { createFileRoute } from "@tanstack/react-router";
+import { checkIsAfter } from "@/lib/utils";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Edit2Icon, FilterIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { FormattedDate, FormattedTime } from "react-intl";
 import ReactQRCode from "react-qr-code";
+import z from "zod";
 
 export const Route = createFileRoute(
   "/_authenticated/attendance/general/$generalAttendanceId/"
 )({
   component: RouteComponent,
+  validateSearch: FilterStudentDialogSchema.and(
+    z.object({
+      section: z.string().default("qr-code"),
+    })
+  ),
 });
 
 function RouteComponent() {
   const { generalAttendanceId } = Route.useParams();
+  const { batch, major, classroom, section } = Route.useSearch();
+
+  const navigate = useNavigate({ from: Route.fullPath });
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filter, setFilter] = useState<{
-    batchId: number;
-    majorId: number;
-    classroomId: number;
-  }>();
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
 
   const { isSuccess, data } = $api.useQuery(
     "get",
@@ -53,22 +61,14 @@ function RouteComponent() {
       params: {
         path: {
           general_attendance_id: Number(generalAttendanceId),
-          classroom_id: filter?.classroomId ?? 0,
+          classroom_id: classroom ?? 0,
         },
       },
     },
     {
-      enabled: !!filter,
+      enabled: !!classroom,
     }
   );
-
-  // const isEarly = useCallback(
-  //   (date: string) => {
-  //     if (data) return isBefore(date, data.general_attendance.datetime);
-  //     return false;
-  //   },
-  //   [data]
-  // );
 
   return (
     <>
@@ -76,16 +76,18 @@ function RouteComponent() {
         <p className="text-3xl font-semibold">Presensi Kehadiran</p>
 
         <Tabs
-          defaultValue="qr-code"
+          value={section}
           className="mt-4"
-          onValueChange={(e) => setIsFilterVisible(e === "students")}
+          onValueChange={(e) =>
+            navigate({ search: { batch, major, classroom, section: e } })
+          }
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
             <TabsList>
               <TabsTrigger value="qr-code">QR Code</TabsTrigger>
               <TabsTrigger value="students">Daftar Siswa</TabsTrigger>
             </TabsList>
-            {isFilterVisible && (
+            {section === "students" && (
               <Button variant={"outline"} onClick={() => setIsFilterOpen(true)}>
                 <FilterIcon />
                 Filter Data Siswa
@@ -140,17 +142,51 @@ function RouteComponent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
+                  {/* initial state */}
+                  {(!batch || !major || !classroom) && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={6}
+                        className="text-center text-muted-foreground py-4"
+                      >
+                        Silahkan pilih angkatan, jurusan, dan kelas terlebih
+                        dahulu menggunakan tombol filter data siswa di kiri
+                        atas.
+                      </TableCell>
+                    </TableRow>
+                  )}
+
                   {/* loading state */}
-                  {(isLoadingRecords || !filter) &&
+                  {isLoadingRecords &&
                     Array.from({ length: 3 }).map((_, index) => (
                       <Item key={"student-loading-" + index} isLoading />
                     ))}
+
+                  {/* empty state */}
+                  {isSuccessRecords &&
+                    dataRecords &&
+                    dataRecords.items.length === 0 && (
+                      <TableRow>
+                        <TableCell
+                          colSpan={6}
+                          className="text-muted-foreground text-center py-4"
+                        >
+                          Tidak ada data siswa yang tersedia.
+                        </TableCell>
+                      </TableRow>
+                    )}
 
                   {/* success state */}
                   {isSuccessRecords &&
                     dataRecords &&
                     dataRecords.items.map((item, index) => (
-                      <Item key={"student-item-" + index} data={item} />
+                      <Item
+                        key={"student-item-" + index}
+                        data={item}
+                        generalAttendanceDateTime={
+                          data?.general_attendance.datetime
+                        }
+                      />
                     ))}
                 </TableBody>
               </Table>
@@ -165,10 +201,17 @@ function RouteComponent() {
         onOpenChange={(open, data) => {
           setIsFilterOpen(open);
           if (data) {
-            setFilter(data);
+            navigate({
+              search: {
+                batch: data.batchId,
+                major: data.majorId,
+                classroom: data.classroomId,
+                section,
+              },
+            });
           }
         }}
-        data={filter}
+        data={{ batchId: batch, majorId: major, classroomId: classroom }}
       />
     </>
   );
@@ -176,10 +219,16 @@ function RouteComponent() {
 
 interface ItemProps {
   isLoading?: boolean;
+  generalAttendanceDateTime?: string;
   data?: components["schemas"]["GetAllGeneralAttendanceRecordsByClassroomIdItem"];
 }
-const Item = ({ isLoading, data }: ItemProps) => {
+const Item = ({ isLoading, generalAttendanceDateTime, data }: ItemProps) => {
   const isAttended = (data?.record.id ?? 0) > 0;
+
+  let isLate = false;
+  if (data && generalAttendanceDateTime) {
+    isLate = checkIsAfter(data.record.date_time, generalAttendanceDateTime);
+  }
 
   return (
     <>
@@ -197,7 +246,13 @@ const Item = ({ isLoading, data }: ItemProps) => {
         <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
             {isAttended ? (
-              <FormattedDate value={data?.record.date_time} />
+              <FormattedDate
+                value={data?.record.date_time}
+                weekday="long"
+                day="numeric"
+                month="long"
+                year="numeric"
+              />
             ) : (
               "-"
             )}
@@ -216,7 +271,13 @@ const Item = ({ isLoading, data }: ItemProps) => {
           <WithSkeleton isLoading={isLoading}>
             {isAttended ? (
               <Badge variant={"outline"}>
-                data?.record.status ?? "loading"
+                {(data?.record.status &&
+                  (data.record.status === "hadir"
+                    ? isLate
+                      ? "hadir terlambat"
+                      : "hadir"
+                    : data.record.status)) ||
+                  "loading"}
               </Badge>
             ) : (
               <Badge variant={"destructive"}>tidak hadir</Badge>
