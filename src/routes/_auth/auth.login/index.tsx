@@ -30,10 +30,6 @@ function RouteComponent() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "admin@gmail.com",
-      password: "admin123",
-    },
   });
 
   const { mutate, isPending } = $api.useMutation("post", "/api/v1/auth/login", {
