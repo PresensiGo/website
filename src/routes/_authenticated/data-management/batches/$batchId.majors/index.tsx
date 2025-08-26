@@ -1,3 +1,4 @@
+import { WithSkeleton } from "@/components";
 import {
   DeleteMajorDialog,
   UpsertMajorDialog,
@@ -12,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
@@ -44,7 +46,7 @@ function RouteComponent() {
       params: { path: { batch_id: Number(batchId) } },
     }
   );
-  const { isSuccess, data, refetch } = $api.useQuery(
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors",
     {
@@ -74,52 +76,51 @@ function RouteComponent() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {/* loading state */}
+              {isLoading &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <Item key={"major-item-loading-" + index} isLoading />
+                ))}
+
+              {/* empty state */}
+              {isSuccess && data && data.items.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={2}
+                    className="text-muted-foreground text-center py-4"
+                  >
+                    Tidak ada data jurusan
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {/* success state */}
               {isSuccess &&
                 data &&
-                data.items.map(({ major }, index) => (
-                  <TableRow key={"major-item-" + index}>
-                    <TableCell className="px-4">{major.name}</TableCell>
-                    <TableCell className="space-x-1 px-4">
-                      <Button size={"icon"} asChild variant={"outline"}>
-                        <Link
-                          to="/data-management/batches/$batchId/majors/$majorId/classrooms"
-                          params={{ batchId, majorId: String(major.id) }}
-                        >
-                          <EyeIcon />
-                        </Link>
-                      </Button>
-                      <Button
-                        size={"icon"}
-                        variant={"outline"}
-                        onClick={() =>
-                          setUpsertDialogState({
-                            open: true,
-                            data: {
-                              id: major.id,
-                              name: major.name,
-                            },
-                          })
-                        }
-                      >
-                        <Edit2Icon />
-                      </Button>
-                      <Button
-                        size={"icon"}
-                        variant={"destructive"}
-                        onClick={() =>
-                          setDeleteDialogState({
-                            open: true,
-                            data: {
-                              id: major.id,
-                              name: major.name,
-                            },
-                          })
-                        }
-                      >
-                        <TrashIcon />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                data.items.map((item, index) => (
+                  <Item
+                    key={"major-item-" + index}
+                    data={item}
+                    batchId={batchId}
+                    onClickUpdate={() =>
+                      setUpsertDialogState({
+                        open: true,
+                        data: {
+                          id: item.major.id,
+                          name: item.major.name,
+                        },
+                      })
+                    }
+                    onClickDelete={() =>
+                      setDeleteDialogState({
+                        open: true,
+                        data: {
+                          id: item.major.id,
+                          name: item.major.name,
+                        },
+                      })
+                    }
+                  />
                 ))}
             </TableBody>
           </Table>
@@ -148,3 +149,59 @@ function RouteComponent() {
     </>
   );
 }
+
+interface ItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["GetAllMajorsByBatchIdItem"];
+  batchId?: string;
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
+}
+const Item = ({
+  isLoading,
+  data,
+  batchId,
+  onClickUpdate,
+  onClickDelete,
+}: ItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.major.name ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="flex gap-1 px-4">
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} asChild variant={"outline"}>
+              <Link
+                to="/data-management/batches/$batchId/majors/$majorId/classrooms"
+                params={{
+                  batchId: batchId ?? "",
+                  majorId: String(data?.major.id),
+                }}
+              >
+                <EyeIcon />
+              </Link>
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} variant={"outline"} onClick={onClickUpdate}>
+              <Edit2Icon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button
+              size={"icon"}
+              variant={"destructive"}
+              onClick={onClickDelete}
+            >
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};

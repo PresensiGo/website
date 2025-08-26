@@ -1,3 +1,4 @@
+import { WithSkeleton } from "@/components";
 import {
   DeleteBatchDialog,
   ImportDataDialog,
@@ -13,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, TrashIcon, UploadIcon } from "lucide-react";
 import { useState } from "react";
@@ -36,7 +38,10 @@ function Page() {
     open: boolean;
   }>({ open: false });
 
-  const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/batches");
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
+    "get",
+    "/api/v1/batches"
+  );
 
   return (
     <>
@@ -67,52 +72,50 @@ function Page() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {/* loading state */}
+                {isLoading &&
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <Item isLoading key={"batch-loading-" + index} />
+                  ))}
+
+                {/* empty state */}
+                {isSuccess && data && data.items.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      className="text-muted-foreground text-center py-4"
+                      colSpan={2}
+                    >
+                      Tidak ada data angkatan
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {/* success state */}
                 {isSuccess &&
                   data &&
-                  data.items.map(({ batch }, index) => (
-                    <TableRow key={"batch-item-" + index}>
-                      <TableCell className="px-4">{batch.name}</TableCell>
-                      <TableCell className="space-x-1 px-4">
-                        <Button size={"icon"} asChild variant={"outline"}>
-                          <Link
-                            to="/data-management/batches/$batchId/majors"
-                            params={{ batchId: String(batch.id) }}
-                          >
-                            <EyeIcon />
-                          </Link>
-                        </Button>
-                        <Button
-                          size={"icon"}
-                          onClick={() =>
-                            setDialogUpsertBatchState({
-                              open: true,
-                              data: {
-                                id: batch.id,
-                                name: batch.name,
-                              },
-                            })
-                          }
-                          variant={"outline"}
-                        >
-                          <Edit2Icon />
-                        </Button>
-                        <Button
-                          size={"icon"}
-                          onClick={() =>
-                            setDialogDeleteBatchState({
-                              open: true,
-                              data: {
-                                id: batch.id,
-                                name: batch.name,
-                              },
-                            })
-                          }
-                          variant={"destructive"}
-                        >
-                          <TrashIcon />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                  data.items.map((item, index) => (
+                    <Item
+                      key={"batch-item-" + index}
+                      data={item}
+                      onClickUpdate={() =>
+                        setDialogUpsertBatchState({
+                          open: true,
+                          data: {
+                            id: item.batch.id,
+                            name: item.batch.name,
+                          },
+                        })
+                      }
+                      onClickDelete={() =>
+                        setDialogDeleteBatchState({
+                          open: true,
+                          data: {
+                            id: item.batch.id,
+                            name: item.batch.name,
+                          },
+                        })
+                      }
+                    />
                   ))}
               </TableBody>
             </Table>
@@ -147,3 +150,54 @@ function Page() {
     </>
   );
 }
+
+interface ItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["GetAllBatchesItem"];
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
+}
+const Item = ({
+  isLoading = false,
+  data,
+  onClickUpdate,
+  onClickDelete,
+}: ItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.batch.name ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="flex gap-1 px-4">
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} asChild variant={"outline"}>
+              <Link
+                to="/data-management/batches/$batchId/majors"
+                params={{ batchId: String(data?.batch.id) }}
+              >
+                <EyeIcon />
+              </Link>
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} onClick={onClickUpdate} variant={"outline"}>
+              <Edit2Icon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button
+              size={"icon"}
+              onClick={onClickDelete}
+              variant={"destructive"}
+            >
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
