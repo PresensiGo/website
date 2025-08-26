@@ -1,5 +1,6 @@
 import {
   DeleteBatchDialog,
+  ImportDataDialog,
   UpsertBatchDialog,
 } from "@/components/data-management";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,9 @@ function Page() {
     open: boolean;
     data?: { id: number; name: string };
   }>({ open: false });
+  const [importDialogState, setImportDialogState] = useState<{
+    open: boolean;
+  }>({ open: false });
 
   const { isSuccess, data, refetch } = $api.useQuery("get", "/api/v1/batches");
 
@@ -48,9 +52,9 @@ function Page() {
 
         <div className="space-y-2">
           <div className="flex justify-end">
-            <Button>
+            <Button onClick={() => setImportDialogState({ open: true })}>
               <UploadIcon />
-              Import Data
+              Impor Data
             </Button>
           </div>
 
@@ -132,6 +136,13 @@ function Page() {
           if (status) refetch();
         }}
         data={dialogDeleteBatchState.data}
+      />
+      <ImportDataDialog
+        open={importDialogState.open}
+        onOpenChange={(open, status) => {
+          setImportDialogState({ open });
+          if (status) refetch();
+        }}
       />
     </>
   );
