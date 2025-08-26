@@ -1,3 +1,4 @@
+import { WithSkeleton } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -8,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute } from "@tanstack/react-router";
 import { Edit2Icon, TrashIcon } from "lucide-react";
 
@@ -56,7 +58,7 @@ function RouteComponent() {
       },
     }
   );
-  const { isSuccess, data } = $api.useQuery(
+  const { isLoading, isSuccess, data } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/students",
     {
@@ -90,29 +92,35 @@ function RouteComponent() {
               <TableRow className="bg-muted">
                 <TableHead className="px-4">NIS</TableHead>
                 <TableHead className="px-4">Nama</TableHead>
+                <TableHead className="px-4">Jenis Kelamin</TableHead>
                 <TableHead className="px-4 w-1">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
+              {/* loading state */}
+              {isLoading &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <Item key={"student-loading-" + index} isLoading />
+                ))}
+
+              {/* empty state */}
+              {isSuccess && data && data.students.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="text-muted-foreground text-center py-4"
+                  >
+                    Tidak ada data siswa
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {/* success state */}
               {isSuccess &&
                 data &&
+                data.students.length > 0 &&
                 data.students.map((item, index) => (
-                  <TableRow key={"student-item-" + index}>
-                    <TableCell className="px-4">{item.nis}</TableCell>
-                    <TableCell className="px-4">{item.name}</TableCell>
-                    <TableCell className="px-4 space-x-1">
-                      <Button
-                        size={"icon"}
-                        variant={"outline"}
-                        onClick={() => {}}
-                      >
-                        <Edit2Icon />
-                      </Button>
-                      <Button size={"icon"} variant={"destructive"}>
-                        <TrashIcon />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  <Item key={"student-item-" + index} data={item} />
                 ))}
             </TableBody>
           </Table>
@@ -121,3 +129,54 @@ function RouteComponent() {
     </>
   );
 }
+
+interface ItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["Student"];
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
+}
+const Item = ({
+  isLoading = false,
+  data,
+  onClickUpdate,
+  onClickDelete,
+}: ItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.nis ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.name ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.gender ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="px-4 flex gap-1">
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} variant={"outline"} onClick={onClickUpdate}>
+              <Edit2Icon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button
+              size={"icon"}
+              variant={"destructive"}
+              onClick={onClickDelete}
+            >
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/")({
@@ -8,10 +7,11 @@ export const Route = createFileRoute("/_authenticated/")({
 function Page() {
   return (
     <>
-      <div className="p-4">
-        <p>gatau mau diisi apa</p>
-        <Button>Tambah Presensi Kehadiran</Button>
-        <Button>Tambah Presensi Mata Pelajaran</Button>
+      <div className="py-6">
+        <p className="text-muted-foreground">
+          Selamat datang di halaman dashboard PresensiGo. Silahkan akses semua
+          fitur yang tersedia melalui bilah navigasi di samping kiri.
+        </p>
       </div>
     </>
   );
