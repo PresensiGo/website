@@ -1,4 +1,8 @@
 import { WithSkeleton } from "@/components";
+import {
+  DeleteStudentDialog,
+  type DeleteStudentDialogDataProps,
+} from "@/components/data-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -12,6 +16,7 @@ import { $api } from "@/lib/api/api";
 import type { components } from "@/lib/api/v1";
 import { createFileRoute } from "@tanstack/react-router";
 import { Edit2Icon, TrashIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute(
   "/_authenticated/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students/"
@@ -21,6 +26,11 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { batchId, majorId, classroomId } = Route.useParams();
+
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    open: boolean;
+    data?: DeleteStudentDialogDataProps;
+  }>({ open: false });
 
   const { data: dataBatch } = $api.useQuery(
     "get",
@@ -58,7 +68,7 @@ function RouteComponent() {
       },
     }
   );
-  const { isLoading, isSuccess, data } = $api.useQuery(
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/students",
     {
@@ -120,12 +130,37 @@ function RouteComponent() {
                 data &&
                 data.students.length > 0 &&
                 data.students.map((item, index) => (
-                  <Item key={"student-item-" + index} data={item} />
+                  <Item
+                    key={"student-item-" + index}
+                    data={item}
+                    onClickDelete={() =>
+                      setDeleteDialogState({
+                        open: true,
+                        data: {
+                          batchId: Number(batchId),
+                          majorId: Number(majorId),
+                          classroomId: Number(classroomId),
+                          studentId: item.id,
+                          studentName: item.name,
+                        },
+                      })
+                    }
+                  />
                 ))}
             </TableBody>
           </Table>
         </div>
       </div>
+
+      {/* dialogs */}
+      <DeleteStudentDialog
+        open={deleteDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteDialogState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        data={deleteDialogState.data}
+      />
     </>
   );
 }

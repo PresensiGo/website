@@ -573,10 +573,87 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["getAllStudentsByClassroomId"];
+        get: operations["GetAllStudentsByClassroomId"];
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/students/{student_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                    /** @description student id */
+                    student_id: number;
+                };
+                cookie?: never;
+            };
+            /** @description body */
+            requestBody: {
+                content: {
+                    "*/*": components["schemas"]["requests.UpdateStudent"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.UpdateStudent"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                    /** @description student id */
+                    student_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.DeleteStudent"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -1387,6 +1464,11 @@ export interface components {
             code: string;
             name: string;
         };
+        "requests.UpdateStudent": {
+            gender: string;
+            name: string;
+            nis: string;
+        };
         "requests.UpdateSubject": {
             name: string;
         };
@@ -1429,6 +1511,9 @@ export interface components {
         };
         "responses.DeleteGeneralAttendanceRecord": {
             message?: string;
+        };
+        "responses.DeleteStudent": {
+            message: string;
         };
         "responses.DeleteSubject": {
             message: string;
@@ -1494,6 +1579,9 @@ export interface components {
         };
         "responses.UpdateSchool": {
             school: components["schemas"]["School"];
+        };
+        "responses.UpdateStudent": {
+            student: components["schemas"]["Student"];
         };
         "responses.UpdateSubject": {
             subject: components["schemas"]["Subject"];
@@ -1954,7 +2042,7 @@ export interface operations {
             };
         };
     };
-    getAllStudentsByClassroomId: {
+    GetAllStudentsByClassroomId: {
         parameters: {
             query?: never;
             header?: never;
