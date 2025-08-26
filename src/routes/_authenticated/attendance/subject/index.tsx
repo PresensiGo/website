@@ -121,6 +121,7 @@ function RouteComponent() {
                 <TableRow className="bg-muted">
                   <TableHead className="px-4">Tanggal</TableHead>
                   <TableHead className="px-4">Tenggat Waktu</TableHead>
+                  <TableHead className="px-4">Mata Pelajaran</TableHead>
                   <TableHead className="px-4">Kode Akses</TableHead>
                   <TableHead className="px-4 w-1">Aksi</TableHead>
                 </TableRow>
@@ -263,6 +264,11 @@ const Item = ({
               <FormattedTime value={data?.subject_attendance.date_time} />
             )) ||
               "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.subject.name ?? "loading"}
           </WithSkeleton>
         </TableCell>
         <TableCell className="px-4">
