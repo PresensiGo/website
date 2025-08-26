@@ -2,7 +2,8 @@ import { WithSkeleton } from "@/components";
 import {
   CreateAttendanceRecordDialog,
   DeleteAttendanceRecordDialog,
-  type CreateAttendanceRecordDialogDataProps,
+  type CreateSubjectAttendanceRecordDialogDataProps,
+  type DeleteSubjectAttendanceRecordDialogDataProps,
 } from "@/components/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,19 +48,11 @@ function RouteComponent() {
 
   const [createRecordState, setCreateRecordState] = useState<{
     open: boolean;
-    data?: CreateAttendanceRecordDialogDataProps;
+    data?: CreateSubjectAttendanceRecordDialogDataProps;
   }>({ open: false });
   const [deleteRecordDialogState, setDeleteRecordDialogState] = useState<{
     open: boolean;
-    data?: {
-      batchId: number;
-      majorId: number;
-      classroomId: number;
-      attendanceId: number;
-      recordId: number;
-      studentNIS: string;
-      studentName: string;
-    };
+    data?: DeleteSubjectAttendanceRecordDialogDataProps;
   }>({ open: false });
 
   const { isSuccess, data } = $api.useQuery(
@@ -193,6 +186,21 @@ function RouteComponent() {
                     Array.from({ length: 3 }).map((_, index) => (
                       <Item key={"student-loading-" + index} isLoading />
                     ))}
+
+                  {/* empty state */}
+                  {isSuccessRecords &&
+                    dataRecords &&
+                    dataRecords.items.length === 0 && (
+                      <TableRow>
+                        <TableCell
+                          colSpan={6}
+                          className="text-center text-muted-foreground py-4"
+                        >
+                          Tidak ada data siswa yang tersedia. Tidak ada data
+                          siswa yang tersedia.
+                        </TableCell>
+                      </TableRow>
+                    )}
 
                   {/* success state */}
                   {isSuccessRecords &&

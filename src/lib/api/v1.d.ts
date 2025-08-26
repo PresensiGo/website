@@ -1172,8 +1172,7 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         CreateGeneralAttendanceRecordReq: {
-            datetime: string;
-            status: components["schemas"]["constants.AttendanceStatus"];
+            status: components["schemas"]["constants.AttendanceStatusType"];
             student_id: number;
         };
         CreateGeneralAttendanceRecordStudentReq: {

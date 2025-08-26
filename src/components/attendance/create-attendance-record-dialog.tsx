@@ -37,8 +37,9 @@ const formSchema = z.object({
   ),
 });
 
-export interface CreateAttendanceRecordDialogDataProps {
+export interface CreateSubjectAttendanceRecordDialogDataProps {
   type: "subject" | "general";
+
   batchId: number;
   majorId: number;
   classroomId: number;
@@ -48,10 +49,21 @@ export interface CreateAttendanceRecordDialogDataProps {
   studentName: string;
 }
 
+export interface CreateGeneralAttendanceRecordDialogDataProps {
+  type: "subject" | "general";
+
+  attendanceId: number;
+  studentId: number;
+  studentNIS: string;
+  studentName: string;
+}
+
 interface CreateAttendanceRecordDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
-  data?: CreateAttendanceRecordDialogDataProps;
+  data?:
+    | CreateSubjectAttendanceRecordDialogDataProps
+    | CreateGeneralAttendanceRecordDialogDataProps;
 }
 export const CreateAttendanceRecordDialog = ({
   open,
@@ -77,10 +89,27 @@ export const CreateAttendanceRecordDialog = ({
         },
       }
     );
+  const { mutate: mutateGeneral, isPending: isPendingGeneral } =
+    $api.useMutation(
+      "post",
+      "/api/v1/general-attendances/{general_attendance_id}/records",
+      {
+        onSuccess: () => {
+          form.reset({ status: undefined });
+          onOpenChange(false, true);
+          toast.success("Berhasil!", {
+            description: "Status presensi siswa berhasil disimpan!",
+            position: "top-right",
+          });
+        },
+      }
+    );
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (data) {
       if (data.type === "subject") {
+        const { batchId, majorId, classroomId } =
+          data as CreateSubjectAttendanceRecordDialogDataProps;
         mutateSubject({
           body: {
             student_id: data.studentId,
@@ -88,14 +117,25 @@ export const CreateAttendanceRecordDialog = ({
           },
           params: {
             path: {
-              batch_id: data.batchId,
-              major_id: data.majorId,
-              classroom_id: data.classroomId,
+              batch_id: batchId,
+              major_id: majorId,
+              classroom_id: classroomId,
               subject_attendance_id: data.attendanceId,
             },
           },
         });
       } else {
+        mutateGeneral({
+          params: {
+            path: {
+              general_attendance_id: data.attendanceId,
+            },
+          },
+          body: {
+            student_id: data.studentId,
+            status: values.status,
+          },
+        });
       }
     }
   };
@@ -152,14 +192,19 @@ export const CreateAttendanceRecordDialog = ({
           </Form>
 
           <DialogFooter>
-            <DialogClose asChild disabled={isPendingSubject}>
+            <DialogClose
+              asChild
+              disabled={isPendingSubject || isPendingGeneral}
+            >
               <Button variant={"outline"}>Batal</Button>
             </DialogClose>
             <Button
               onClick={form.handleSubmit(onSubmit)}
-              disabled={isPendingSubject}
+              disabled={isPendingSubject || isPendingGeneral}
             >
-              {isPendingSubject && <Loader2Icon className="animate-spin" />}
+              {(isPendingSubject || isPendingGeneral) && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Simpan
             </Button>
           </DialogFooter>

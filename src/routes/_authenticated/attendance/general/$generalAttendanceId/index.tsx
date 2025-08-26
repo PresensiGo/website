@@ -3,6 +3,12 @@ import {
   FilterStudentDialogSchema,
   WithSkeleton,
 } from "@/components";
+import {
+  CreateAttendanceRecordDialog,
+  DeleteAttendanceRecordDialog,
+  type CreateGeneralAttendanceRecordDialogDataProps,
+  type DeleteGeneralAttendanceRecordDialogDataProps,
+} from "@/components/attendance";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,6 +48,14 @@ function RouteComponent() {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [createRecordState, setCreateRecordState] = useState<{
+    open: boolean;
+    data?: CreateGeneralAttendanceRecordDialogDataProps;
+  }>({ open: false });
+  const [deleteRecordDialogState, setDeleteRecordDialogState] = useState<{
+    open: boolean;
+    data?: DeleteGeneralAttendanceRecordDialogDataProps;
+  }>({ open: false });
 
   const { isSuccess, data } = $api.useQuery(
     "get",
@@ -54,6 +68,7 @@ function RouteComponent() {
     isLoading: isLoadingRecords,
     isSuccess: isSuccessRecords,
     data: dataRecords,
+    refetch: refetchRecords,
   } = $api.useQuery(
     "get",
     "/api/v1/general-attendances/{general_attendance_id}/classrooms/{classroom_id}/records",
@@ -186,6 +201,29 @@ function RouteComponent() {
                         generalAttendanceDateTime={
                           data?.general_attendance.datetime
                         }
+                        onClickUpdate={() =>
+                          setCreateRecordState({
+                            open: true,
+                            data: {
+                              type: "general",
+                              attendanceId: Number(generalAttendanceId),
+                              studentId: item.student.id,
+                              studentName: item.student.name,
+                              studentNIS: item.student.nis,
+                            },
+                          })
+                        }
+                        onClickDelete={() =>
+                          setDeleteRecordDialogState({
+                            open: true,
+                            data: {
+                              attendanceId: Number(generalAttendanceId),
+                              recordId: item.record.id,
+                              studentName: item.student.name,
+                              studentNIS: item.student.nis,
+                            },
+                          })
+                        }
                       />
                     ))}
                 </TableBody>
@@ -213,7 +251,7 @@ function RouteComponent() {
         }}
         data={{ batchId: batch, majorId: major, classroomId: classroom }}
       />
-      {/* <CreateAttendanceRecordDialog
+      <CreateAttendanceRecordDialog
         open={createRecordState.open}
         onOpenChange={(open, status) => {
           setCreateRecordState({ open });
@@ -232,7 +270,7 @@ function RouteComponent() {
           }
         }}
         data={deleteRecordDialogState.data}
-      /> */}
+      />
     </>
   );
 }
@@ -241,8 +279,16 @@ interface ItemProps {
   isLoading?: boolean;
   generalAttendanceDateTime?: string;
   data?: components["schemas"]["GetAllGeneralAttendanceRecordsByClassroomIdItem"];
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
 }
-const Item = ({ isLoading, generalAttendanceDateTime, data }: ItemProps) => {
+const Item = ({
+  isLoading,
+  generalAttendanceDateTime,
+  data,
+  onClickUpdate,
+  onClickDelete,
+}: ItemProps) => {
   const isAttended = (data?.record.id ?? 0) > 0;
 
   let isLate = false;
@@ -305,16 +351,24 @@ const Item = ({ isLoading, generalAttendanceDateTime, data }: ItemProps) => {
           </WithSkeleton>
         </TableCell>
         <TableCell className="px-4 flex gap-1">
-          <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"outline"} size={"icon"}>
-              <Edit2Icon />
-            </Button>
-          </WithSkeleton>
-          <WithSkeleton isLoading={isLoading} className="w-fit">
-            <Button variant={"destructive"} size={"icon"}>
-              <TrashIcon />
-            </Button>
-          </WithSkeleton>
+          {(isLoading || !isAttended) && (
+            <WithSkeleton isLoading={isLoading} className="w-fit">
+              <Button variant={"outline"} size={"icon"} onClick={onClickUpdate}>
+                <Edit2Icon />
+              </Button>
+            </WithSkeleton>
+          )}
+          {(isLoading || isAttended) && (
+            <WithSkeleton isLoading={isLoading} className="w-fit">
+              <Button
+                variant={"destructive"}
+                size={"icon"}
+                onClick={onClickDelete}
+              >
+                <TrashIcon />
+              </Button>
+            </WithSkeleton>
+          )}
         </TableCell>
       </TableRow>
     </>

@@ -12,18 +12,29 @@ import { $api } from "@/lib/api/api";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "sonner";
 
+export interface DeleteSubjectAttendanceRecordDialogDataProps {
+  batchId: number;
+  majorId: number;
+  classroomId: number;
+  attendanceId: number;
+  recordId: number;
+  studentNIS: string;
+  studentName: string;
+}
+
+export interface DeleteGeneralAttendanceRecordDialogDataProps {
+  attendanceId: number;
+  recordId: number;
+  studentNIS: string;
+  studentName: string;
+}
+
 interface DeleteAttendanceRecordDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
-  data?: {
-    batchId: number;
-    majorId: number;
-    classroomId: number;
-    attendanceId: number;
-    recordId: number;
-    studentNIS: string;
-    studentName: string;
-  };
+  data?:
+    | DeleteSubjectAttendanceRecordDialogDataProps
+    | DeleteGeneralAttendanceRecordDialogDataProps;
 }
 
 export const DeleteAttendanceRecordDialog = ({
