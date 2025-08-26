@@ -121,7 +121,7 @@ export const UpsertClassroomDialog = ({
           </DialogHeader>
 
           <Form {...form}>
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
               <FormField
                 control={form.control}
                 name="name"

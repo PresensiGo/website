@@ -492,7 +492,33 @@ export interface paths {
             };
         };
         post?: never;
-        delete?: never;
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description batch id */
+                    batch_id: number;
+                    /** @description major id */
+                    major_id: number;
+                    /** @description classroom id */
+                    classroom_id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.DeleteClassroom"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -708,7 +734,36 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["ImportData"];
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "multipart/form-data": {
+                        /**
+                         * Format: binary
+                         * @description file
+                         */
+                        file: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "*/*": components["schemas"]["responses.ImportData"];
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -1364,6 +1419,9 @@ export interface components {
             message: string;
         };
         "responses.DeleteAccount": {
+            message: string;
+        };
+        "responses.DeleteClassroom": {
             message: string;
         };
         "responses.DeleteGeneralAttendance": {
@@ -2173,36 +2231,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["responses.GetAllClassroomWithMajors"];
-                };
-            };
-        };
-    };
-    ImportData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /**
-                     * Format: binary
-                     * @description file
-                     */
-                    file: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["responses.ImportData"];
                 };
             };
         };

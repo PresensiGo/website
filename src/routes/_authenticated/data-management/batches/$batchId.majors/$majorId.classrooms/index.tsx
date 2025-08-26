@@ -1,4 +1,9 @@
-import { UpsertClassroomDialog } from "@/components/data-management";
+import { WithSkeleton } from "@/components";
+import {
+  DeleteClassroomDialog,
+  UpsertClassroomDialog,
+  type DeleteClassroomDialogDataProps,
+} from "@/components/data-management";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -9,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { $api } from "@/lib/api/api";
+import type { components } from "@/lib/api/v1";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Edit2Icon, EyeIcon, TrashIcon } from "lucide-react";
 import { useState } from "react";
@@ -28,6 +34,10 @@ function RouteComponent() {
       id: number;
       name: string;
     };
+  }>({ open: false });
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    open: boolean;
+    data?: DeleteClassroomDialogDataProps;
   }>({ open: false });
 
   const { data: dataBatch } = $api.useQuery(
@@ -53,7 +63,7 @@ function RouteComponent() {
       },
     }
   );
-  const { isSuccess, data, refetch } = $api.useQuery(
+  const { isLoading, isSuccess, data, refetch } = $api.useQuery(
     "get",
     "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms",
     {
@@ -89,44 +99,53 @@ function RouteComponent() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {/* loading state */}
+              {isLoading &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <Item key={"classroom-loading-" + index} isLoading />
+                ))}
+
+              {/* empty state */}
+              {isSuccess && data && data.items.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={2}
+                    className="text-center text-muted-foreground py-4"
+                  >
+                    Tidak ada data kelas
+                  </TableCell>
+                </TableRow>
+              )}
+
+              {/* success state */}
               {isSuccess &&
                 data &&
-                data.items.map(({ classroom }, index) => (
-                  <TableRow key={"classroom-item-" + index}>
-                    <TableCell className="px-4">{classroom.name}</TableCell>
-                    <TableCell className="space-x-1 px-4">
-                      <Button size={"icon"} asChild variant={"outline"}>
-                        <Link
-                          to="/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students"
-                          params={{
-                            batchId,
-                            majorId,
-                            classroomId: String(classroom.id),
-                          }}
-                        >
-                          <EyeIcon />
-                        </Link>
-                      </Button>
-                      <Button
-                        size={"icon"}
-                        variant={"outline"}
-                        onClick={() =>
-                          setDialogUpsertState({
-                            open: true,
-                            data: {
-                              id: classroom.id,
-                              name: classroom.name,
-                            },
-                          })
-                        }
-                      >
-                        <Edit2Icon />
-                      </Button>
-                      <Button size={"icon"} variant={"destructive"}>
-                        <TrashIcon />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                data.items.length > 0 &&
+                data.items.map((item, index) => (
+                  <Item
+                    key={"classroom-item-" + index}
+                    data={item}
+                    onClickUpdate={() =>
+                      setDialogUpsertState({
+                        open: true,
+                        data: {
+                          id: item.classroom.id,
+                          name: item.classroom.name,
+                        },
+                      })
+                    }
+                    onClickDelete={() =>
+                      setDeleteDialogState({
+                        open: true,
+                        data: {
+                          batchId: Number(batchId),
+                          majorId: Number(majorId),
+                          classroomId: item.classroom.id,
+                          classroomName: item.classroom.name,
+                        },
+                      })
+                    }
+                  />
                 ))}
             </TableBody>
           </Table>
@@ -144,6 +163,73 @@ function RouteComponent() {
         majorId={Number(majorId)}
         data={dialogUpsertState.data}
       />
+      <DeleteClassroomDialog
+        open={deleteDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteDialogState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        data={deleteDialogState.data}
+      />
     </>
   );
 }
+
+interface ItemProps {
+  isLoading?: boolean;
+  data?: components["schemas"]["GetAllClassroomsByMajorIdItem"];
+  batchId?: string;
+  majorId?: string;
+  onClickUpdate?: () => void;
+  onClickDelete?: () => void;
+}
+const Item = ({
+  isLoading = false,
+  data,
+  batchId,
+  majorId,
+  onClickUpdate,
+  onClickDelete,
+}: ItemProps) => {
+  return (
+    <>
+      <TableRow>
+        <TableCell className="px-4">
+          <WithSkeleton isLoading={isLoading}>
+            {data?.classroom.name ?? "loading"}
+          </WithSkeleton>
+        </TableCell>
+        <TableCell className="flex gap-1 px-4">
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} asChild variant={"outline"}>
+              <Link
+                to="/data-management/batches/$batchId/majors/$majorId/classrooms/$classroomId/students"
+                params={{
+                  batchId: batchId ?? "",
+                  majorId: majorId ?? "",
+                  classroomId: String(data?.classroom.id),
+                }}
+              >
+                <EyeIcon />
+              </Link>
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button size={"icon"} variant={"outline"} onClick={onClickUpdate}>
+              <Edit2Icon />
+            </Button>
+          </WithSkeleton>
+          <WithSkeleton isLoading={isLoading}>
+            <Button
+              size={"icon"}
+              variant={"destructive"}
+              onClick={onClickDelete}
+            >
+              <TrashIcon />
+            </Button>
+          </WithSkeleton>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};
