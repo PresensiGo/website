@@ -1,7 +1,9 @@
 import { WithSkeleton } from "@/components";
 import {
   DeleteStudentDialog,
+  UpdateStudentDialog,
   type DeleteStudentDialogDataProps,
+  type UpdateStudentDialogDataProps,
 } from "@/components/data-management";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,10 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { batchId, majorId, classroomId } = Route.useParams();
 
+  const [updateDialogState, setUpdateDialogState] = useState<{
+    open: boolean;
+    data?: UpdateStudentDialogDataProps;
+  }>({ open: false });
   const [deleteDialogState, setDeleteDialogState] = useState<{
     open: boolean;
     data?: DeleteStudentDialogDataProps;
@@ -133,6 +139,20 @@ function RouteComponent() {
                   <Item
                     key={"student-item-" + index}
                     data={item}
+                    onClickUpdate={() =>
+                      setUpdateDialogState({
+                        open: true,
+                        data: {
+                          batchId: Number(batchId),
+                          majorId: Number(majorId),
+                          classroomId: Number(classroomId),
+                          studentId: item.id,
+                          studentName: item.name,
+                          studentNIS: item.nis,
+                          studentGender: item.gender,
+                        },
+                      })
+                    }
                     onClickDelete={() =>
                       setDeleteDialogState({
                         open: true,
@@ -153,6 +173,14 @@ function RouteComponent() {
       </div>
 
       {/* dialogs */}
+      <UpdateStudentDialog
+        open={updateDialogState.open}
+        onOpenChange={(open, status) => {
+          setUpdateDialogState({ open, data: undefined });
+          if (status) refetch();
+        }}
+        data={updateDialogState.data}
+      />
       <DeleteStudentDialog
         open={deleteDialogState.open}
         onOpenChange={(open, status) => {
