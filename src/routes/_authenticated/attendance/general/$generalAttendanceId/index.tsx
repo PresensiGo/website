@@ -213,6 +213,26 @@ function RouteComponent() {
         }}
         data={{ batchId: batch, majorId: major, classroomId: classroom }}
       />
+      {/* <CreateAttendanceRecordDialog
+        open={createRecordState.open}
+        onOpenChange={(open, status) => {
+          setCreateRecordState({ open });
+          if (status) {
+            refetchRecords();
+          }
+        }}
+        data={createRecordState.data}
+      />
+      <DeleteAttendanceRecordDialog
+        open={deleteRecordDialogState.open}
+        onOpenChange={(open, status) => {
+          setDeleteRecordDialogState({ open });
+          if (status) {
+            refetchRecords();
+          }
+        }}
+        data={deleteRecordDialogState.data}
+      /> */}
     </>
   );
 }

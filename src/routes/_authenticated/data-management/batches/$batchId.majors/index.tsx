@@ -1,6 +1,6 @@
 import { WithSkeleton } from "@/components";
 import {
-  DeleteStudentDialog,
+  DeleteMajorDialog,
   UpsertMajorDialog,
 } from "@/components/data-management";
 import { Button } from "@/components/ui/button";
@@ -137,7 +137,7 @@ function RouteComponent() {
         batchId={Number(batchId)}
         data={upsertDialogState.data}
       />
-      <DeleteStudentDialog
+      <DeleteMajorDialog
         open={deleteDialogState.open}
         onOpenChange={(open, status) => {
           setDeleteDialogState({ open, data: undefined });
