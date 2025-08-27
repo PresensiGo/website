@@ -32,6 +32,7 @@ export interface DeleteGeneralAttendanceRecordDialogDataProps {
 interface DeleteAttendanceRecordDialogProps {
   open: boolean;
   onOpenChange: (open: boolean, status?: boolean) => void;
+  type: "subject" | "general";
   data?:
     | DeleteSubjectAttendanceRecordDialogDataProps
     | DeleteGeneralAttendanceRecordDialogDataProps;
@@ -40,22 +41,66 @@ interface DeleteAttendanceRecordDialogProps {
 export const DeleteAttendanceRecordDialog = ({
   open,
   onOpenChange,
+  type,
   data,
 }: DeleteAttendanceRecordDialogProps) => {
-  const { mutate, isPending } = $api.useMutation(
-    "delete",
-    "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}/records/{record_id}",
-    {
-      onSuccess: () => {
-        toast.success("Berhasil!", {
-          description:
-            "Presensi kehadiran dan data-data terkait berhasil dihapus.",
-          position: "top-right",
+  const { mutate: mutateSubject, isPending: isPendingSubject } =
+    $api.useMutation(
+      "delete",
+      "/api/v1/batches/{batch_id}/majors/{major_id}/classrooms/{classroom_id}/subject-attendances/{subject_attendance_id}/records/{record_id}",
+      {
+        onSuccess: () => {
+          toast.success("Berhasil!", {
+            description: "Status presensi siswa berhasil dihapus.",
+            position: "top-right",
+          });
+          onOpenChange(false, true);
+        },
+      }
+    );
+  const { mutate: mutateGeneral, isPending: isPendingGeneral } =
+    $api.useMutation(
+      "delete",
+      "/api/v1/general-attendances/{general_attendance_id}/records/{record_id}",
+      {
+        onSuccess: () => {
+          toast.success("Berhasil!", {
+            description: "Status presensi siswa berhasil dihapus.",
+            position: "top-right",
+          });
+          onOpenChange(false, true);
+        },
+      }
+    );
+
+  const handleSubmit = () => {
+    if (data) {
+      if (type === "subject") {
+        const { batchId, majorId, classroomId } =
+          data as DeleteSubjectAttendanceRecordDialogDataProps;
+        mutateSubject({
+          params: {
+            path: {
+              batch_id: batchId,
+              major_id: majorId,
+              classroom_id: classroomId,
+              subject_attendance_id: data.attendanceId,
+              record_id: data.recordId,
+            },
+          },
         });
-        onOpenChange(false, true);
-      },
+      } else {
+        mutateGeneral({
+          params: {
+            path: {
+              general_attendance_id: data.attendanceId,
+              record_id: data.recordId,
+            },
+          },
+        });
+      }
     }
-  );
+  };
 
   return (
     <>
@@ -76,25 +121,16 @@ export const DeleteAttendanceRecordDialog = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPending}>Batal</AlertDialogCancel>
+            <AlertDialogCancel disabled={isPendingSubject || isPendingGeneral}>
+              Batal
+            </AlertDialogCancel>
             <AlertDialogAction
-              disabled={isPending}
-              onClick={() => {
-                if (data)
-                  mutate({
-                    params: {
-                      path: {
-                        batch_id: 0,
-                        major_id: 0,
-                        classroom_id: 0,
-                        subject_attendance_id: 0,
-                        record_id: data.recordId,
-                      },
-                    },
-                  });
-              }}
+              disabled={isPendingSubject || isPendingGeneral}
+              onClick={handleSubmit}
             >
-              {isPending && <Loader2Icon className="animate-spin" />}
+              {(isPendingSubject || isPendingGeneral) && (
+                <Loader2Icon className="animate-spin" />
+              )}
               Hapus
             </AlertDialogAction>
           </AlertDialogFooter>

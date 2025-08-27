@@ -269,6 +269,7 @@ function RouteComponent() {
             refetchRecords();
           }
         }}
+        type="general"
         data={deleteRecordDialogState.data}
       />
     </>
