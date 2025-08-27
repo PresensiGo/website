@@ -18,7 +18,7 @@ import { FilterIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute(
-  "/_authenticated/student-account-management/",
+  "/_authenticated/student-account-management/"
 )({
   component: RouteComponent,
   validateSearch: FilterStudentDialogSchema,
@@ -59,7 +59,7 @@ function RouteComponent() {
         },
       },
     },
-    { enabled: !!batch && !!major && !!classroom },
+    { enabled: !!batch && !!major && !!classroom }
   );
 
   return (
@@ -75,7 +75,7 @@ function RouteComponent() {
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-end">
+          <div className="flex justify-start">
             <Button variant={"outline"} onClick={() => setIsFilterOpen(true)}>
               <FilterIcon />
               Filter Data Siswa
@@ -101,7 +101,7 @@ function RouteComponent() {
                       className="text-muted-foreground py-4 px-4 text-center"
                     >
                       Silakan pilih angkatan, jurusan, dan kelas terlebih dahulu
-                      dengan menekan tombol di pojok kanan atas.
+                      dengan menekan tombol di pojok kiri atas.
                     </TableCell>
                   </TableRow>
                 )}
@@ -172,6 +172,8 @@ interface ItemProps {
   onClickEject?: () => void;
 }
 const Item = ({ isLoading = false, data, onClickEject }: ItemProps) => {
+  const isNotAttached = data?.student_token.device_id.length === 0;
+
   return (
     <>
       <TableRow>
@@ -187,7 +189,7 @@ const Item = ({ isLoading = false, data, onClickEject }: ItemProps) => {
         </TableCell>
         <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
-            {data?.student_token.device_id.length === 0 ? (
+            {isNotAttached ? (
               <Badge variant={"outline"}>Belum masuk</Badge>
             ) : (
               (data?.student_token.device_id ?? "loading")
@@ -196,7 +198,11 @@ const Item = ({ isLoading = false, data, onClickEject }: ItemProps) => {
         </TableCell>
         <TableCell className="px-4">
           <WithSkeleton isLoading={isLoading}>
-            <Button variant={"outline"} onClick={onClickEject}>
+            <Button
+              variant={"outline"}
+              onClick={onClickEject}
+              disabled={isNotAttached}
+            >
               <XIcon />
               Lepas
             </Button>
