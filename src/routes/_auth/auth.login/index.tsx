@@ -12,7 +12,8 @@ import { $api, handleError } from "@/lib/api/api";
 import { auth } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Loader2Icon } from "lucide-react";
+import { EyeClosedIcon, EyeIcon, Loader2Icon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -31,6 +32,8 @@ function RouteComponent() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  const [isShowPassword, setIsShowPassword] = useState(false);
 
   const { mutate, isPending } = $api.useMutation("post", "/api/v1/auth/login", {
     onSuccess: (data) => {
@@ -84,9 +87,22 @@ function RouteComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Kata Sandi</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Masukkan kata sandi" {...field} />
-                  </FormControl>
+                  <div className="flex items-center gap-1">
+                    <FormControl>
+                      <Input
+                        placeholder="Masukkan kata sandi"
+                        {...field}
+                        type={isShowPassword ? "text" : "password"}
+                      />
+                    </FormControl>
+                    <Button
+                      variant={"secondary"}
+                      size={"icon"}
+                      onClick={() => setIsShowPassword((prev) => !prev)}
+                    >
+                      {isShowPassword ? <EyeClosedIcon /> : <EyeIcon />}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
