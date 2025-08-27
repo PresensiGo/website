@@ -1,5 +1,6 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -81,7 +82,7 @@ export const UpdateTeacherRoleDialog = ({
   return (
     <>
       <Dialog open={open} onOpenChange={(e) => onOpenChange(e)}>
-        <DialogContent>
+        <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>Ubah Role Guru</DialogTitle>
             <DialogDescription>
@@ -117,9 +118,11 @@ export const UpdateTeacherRoleDialog = ({
           </Form>
 
           <DialogFooter>
-            <Button variant={"outline"} disabled={isPending}>
-              Batal
-            </Button>
+            <DialogClose asChild>
+              <Button variant={"outline"} disabled={isPending}>
+                Batal
+              </Button>
+            </DialogClose>
             <Button onClick={form.handleSubmit(onSubmit)} disabled={isPending}>
               {isPending && <Loader2Icon className="animate-spin" />}
               Simpan
